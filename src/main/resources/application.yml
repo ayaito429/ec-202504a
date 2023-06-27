@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/ec-202110c
+    username: postgres
+    password: postgres
+  mail:
+    host: localhost
+    port: 1025
+server:
+  servlet:
+    context-path: /ec-202110c
