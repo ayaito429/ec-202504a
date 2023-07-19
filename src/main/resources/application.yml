@@ -1,12 +1,12 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/ec-202110c
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:ec-202110c}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:postgres}
   mail:
-    host: localhost
-    port: 1025
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:1025}
 server:
   servlet:
     context-path: /ec-202110c

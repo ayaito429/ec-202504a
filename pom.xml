@@ -10,6 +10,7 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>ec-202110c</artifactId>
+	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ec-202110c</name>
 	<description>Demo project for Spring Boot</description>
@@ -61,7 +62,12 @@
         	<groupId>org.springframework.boot</groupId>
         	<artifactId>spring-boot-devtools</artifactId>
         </dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
@@ -70,6 +76,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<finalName>ec-202110c</finalName>
 	</build>
 
 </project>
