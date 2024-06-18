@@ -90,55 +90,6 @@ public class ItemController {
 			return pageNumbers;
 		}
 	
-	/*@RequestMapping("/searchItem")
-	public String searchItem(Model model,Integer page, String searchName) {
-		
-		List<Item> itemList = itemService.findByName(searchName);
-		//System.out.println(itemList.get(0));
-		
-		if(itemList == null) {
-	// ページング機能追加
-			if (page == null) {
-	// ページ数の指定が無い場合は1ページ目を表示させる
-				page = 1;
-			}
-			
-			if(searchName == null) {
-// 検索文字列が空なら全件検索
-			itemList = itemService.findAll();
-			} else {
-// 検索文字列があれば曖昧検索
-			itemList = itemService.findByName(searchName);
-// ページングの数字からも検索できるように検索文字列をスコープに格納しておく
-			model.addAttribute("searchName", searchName);
-			}
-			
-	// 表示させたいページ数、ページサイズ、従業員リストを渡し１ページに表示させる従業員リストを絞り込み
-			Page<Item> itemPage = itemService.showListPaging(page, VIEW_SIZE, itemList);
-			model.addAttribute("itemPage", itemPage);
-
-	// ページングのリンクに使うページ数をスコープに格納 (例)28件あり1ページにつき10件表示させる場合→1,2,3がpageNumbersに入る
-			List<Integer> pageNumbers = calcPageNumbers(model, itemPage);
-			model.addAttribute("pageNumbers", pageNumbers);
-			model.addAttribute("message", "該当する商品がありません");
-			
-		}
-		else{
-			
-	// 表示させたいページ数、ページサイズ、従業員リストを渡し１ページに表示させる従業員リストを絞り込み
-			Page<Item> itemPage = itemService.showListPaging(page, VIEW_SIZE, itemList);
-			
-
-	// ページングのリンクに使うページ数をスコープに格納 (例)28件あり1ページにつき5件表示させる場合→1,2,3がpageNumbersに入る
-			List<Integer> pageNumbers = calcPageNumbers(model, itemPage);
-			model.addAttribute("pageNumbers", pageNumbers);
-			
-			model.addAttribute("itemPage", itemList);
-		}
-		model.addAttribute("name", searchName);
-
-		return showItem(model,page,searchName);
-	}*/
 	
 	/**
 	 * 商品詳細画面を表示
