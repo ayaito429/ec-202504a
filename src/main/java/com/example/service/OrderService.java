@@ -139,7 +139,7 @@ public class OrderService {
     public void sendMail(String email) {
         SimpleMailMessage msg = new SimpleMailMessage();
 
-        msg.setFrom("on99.matsunaga.dai@gmail.com");
+        msg.setFrom("curry-admin@example.com");
         msg.setTo(email);
         msg.setSubject("注文完了！！！");//タイトルの設定
         msg.setText("ラクラクカリー より　注文完了"); //本文の設定
