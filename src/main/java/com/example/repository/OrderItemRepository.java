@@ -34,8 +34,8 @@ public class OrderItemRepository {
 	public Integer order(OrderItem orderItem) {
 		SqlParameterSource param = new BeanPropertySqlParameterSource(orderItem);
 		
-		String sql = "INSERT INTO order_items(item_id, order_id, quantity, size) "
-				+ "VALUES(:itemId, :orderId, :quantity, :size)";
+		String sql = "INSERT INTO order_items(item_id, order_id, quantity, size, price) "
+				+ "VALUES(:itemId, :orderId, :quantity, :size, :itemPrice)";
 		
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		String[] keyColumnNames = {"id"};
