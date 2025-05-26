@@ -29,7 +29,7 @@ create table items (
 ) ;
 
 insert into items (name, description, price_m, price_l, image_path) values('カツカレー', '食べると勝負に勝てると言われる勝つカレー。ラクラクカレー定番の１品です', 1490, 2570, '1.jpg');
-insert into items (name, description, price_m, price_l, image_path) values('ポークポークカレー・ミート', 'グリーンアスパラと相性の良いベーコンにいろどりのフレッシュトマトをトッピングし特製マヨソースでまとめた商品です', 1490, 2570, '2.jpg');
+insert into items (name, description, price_m, price_l, image_path) values('ポークポークカレー・ミート', '旨味が凝縮されたトンカツを贅沢にダブルで。さらにポークミートの豊かな味わいが、カレーのスパイシーな風味の上で踊ります。この旨さ、まさにメガトン級！！', 1490, 2570, '2.jpg');
 insert into items (name, description, price_m, price_l, image_path) values('牛すじカレー', 'トロトロの牛すじとネギの風味が格別な味わいシンプルなカレーです！', 1490, 2570, '3.jpg');
 insert into items (name, description, price_m, price_l, image_path) values('味噌カツカレー', 'マイルドな味付けのカレーに大きくカットした味噌カツをのせた、バターとチーズの風味が食欲をそそるお子様でも楽しめる商品です', 1900, 2980, '4.jpg');
 insert into items (name, description, price_m, price_l, image_path) values('とんかつカレーラーメン', 'カレーはライスだけではありません。ラクラクカレーが開発したカレーラーメンは絶品の美味しさ！', 1900, 2980, '5.jpg');
