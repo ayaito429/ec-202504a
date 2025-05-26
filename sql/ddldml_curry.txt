@@ -126,8 +126,3 @@ create table order_toppings (
   , order_item_id integer not null
   , FOREIGN KEY (order_item_id) REFERENCES order_items (id) on delete cascade
 ) ;
-
--- 注文トッピングにカラムを追加
-ALTER TABLE order_toppings ADD price int;
--- 注文商品にカラムを追加
-ALTER TABLE order_items ADD price int;
