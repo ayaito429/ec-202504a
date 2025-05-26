@@ -30,7 +30,7 @@
             col-xs-12
           "
         >
-          <h3 class="text-center">注文内容確認</h3>
+          <h3 class="text-center" id="order-list">注文内容確認</h3>
           <table class="table table-striped item-list-table">
             <tbody>
               <tr>
@@ -49,17 +49,17 @@
               </tr>
               <tr th:each="cart:${session.cartItemList}">
                 <td>
-                  <div class="center">
+                  <div class="text-center">
                     <img
                       th:src="@{/img_curry/}+${cart.imagePath}"
-                      class="img-responsive img-rounded item-img-center"
+                      class="img-responsive img-rounded center-block"
                       width="100"
                       height="300"
-                    /><br />
+                    />
                     <span th:text="${cart.name}"></span>
                   </div>
                 </td>
-                <td>
+                <td class="text-center">
                   <span th:text="${cart.size}" class="price">&nbsp;Ｌ</span>
                   
                   &nbsp;&nbsp;<span th:text="${#numbers.formatInteger(cart.itemPrice,1,'COMMA')}+'円'"></span>
@@ -67,7 +67,7 @@
                 </td>
                 <td>
                   <ul th:each="topping:${cart.toppingList}">
-                    <li th:if="${cart.size=='M'}" th:text="${topping.name}+${topping.priceM}+'円'" >ピーマン300円</li>
+                    <li th:if="${cart.size=='M'}" th:text="${topping.name}+${topping.priceM}+'円'" >ピーマン200円</li>
                     <li th:if="${cart.size=='L'}" th:text="${topping.name}+${topping.priceL}+'円'" >ピーマン300円</li>
                   </ul>
                 </td>
@@ -165,11 +165,11 @@
                   <td>
                     <div class="form-group">
                       <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-xs-12">
                           <label th:text="${errorDeliveryDate}" class="control-label" style="color: red" for="inputPeriod">
                           配達日時を入力してください</label>
                         </div>
-                        <div class="col-sm-5">
+                        <div class="col-xs-5">
                           <input
                             type="date"
                             name="orderDate"
