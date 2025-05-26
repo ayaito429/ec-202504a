@@ -1,0 +1,4 @@
+-- 注文トッピングにカラムを追加
+ALTER TABLE order_toppings ADD price int;
+-- 注文商品にカラムを追加
+ALTER TABLE order_items ADD price int;
