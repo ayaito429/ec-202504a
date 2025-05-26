@@ -29,10 +29,10 @@ create table items (
 ) ;
 
 insert into items (name, description, price_m, price_l, image_path) values('カツカレー', '食べると勝負に勝てると言われる勝つカレー。ラクラクカレー定番の１品です', 1490, 2570, '1.jpg');
-insert into items (name, description, price_m, price_l, image_path) values('ポークポークカレー・ミート', 'グリーンアスパラと相性の良いベーコンにいろどりのフレッシュトマトをトッピングし特製マヨソースでまとめた商品です', 1490, 2570, '2.jpg');
+insert into items (name, description, price_m, price_l, image_path) values('ポークポークカレー・ミート', '旨味が凝縮されたトンカツを贅沢にダブルで。さらにポークミートの豊かな味わいが、カレーのスパイシーな風味の上で踊ります。この旨さ、まさにメガトン級！！', 1490, 2570, '2.jpg');
 insert into items (name, description, price_m, price_l, image_path) values('牛すじカレー', 'トロトロの牛すじとネギの風味が格別な味わいシンプルなカレーです！', 1490, 2570, '3.jpg');
 insert into items (name, description, price_m, price_l, image_path) values('味噌カツカレー', 'マイルドな味付けのカレーに大きくカットした味噌カツをのせた、バターとチーズの風味が食欲をそそるお子様でも楽しめる商品です', 1900, 2980, '4.jpg');
-insert into items (name, description, price_m, price_l, image_path) values('とんかつカレーラーメン', 'カレーはライスだけではありません。ラクラクピザが開発したカレーラーメンは絶品の美味しさ！', 1900, 2980, '5.jpg');
+insert into items (name, description, price_m, price_l, image_path) values('とんかつカレーラーメン', 'カレーはライスだけではありません。ラクラクカレーが開発したカレーラーメンは絶品の美味しさ！', 1900, 2980, '5.jpg');
 insert into items (name, description, price_m, price_l, image_path) values('ヒレカツカレー', 'やわらかくあっさりとしたヒレ肉を上質な衣で包み込みました。4種類の濃厚な味わいが一つで楽しめるカレーです', 2700, 4050, '6.jpg');
 insert into items (name, description, price_m, price_l, image_path) values('濃厚Gorgeous4', 'こだわりのソースで、旨みとコクを堪能！濃厚Gorgeous4とは、動物由来の原材料を使用していないカレーです。ベジタリアンの方にオススメです', 2570, 3780, '7.jpg');
 insert into items (name, description, price_m, price_l, image_path) values('カレーうどん', 'ラクラクカレー自慢のカレーに魚介のダシ、ローストオニオンのコクが加わった絶妙なスープをお楽しみください', 2160, 3380, '8.jpg');
@@ -76,7 +76,7 @@ insert into toppings values(15, 'カマンベールチーズ', 200, 300);
 insert into toppings values(16, 'フレッシュモッツァレラチーズ', 200, 300);
 insert into toppings values(17, 'イタリアンソーセージ', 200, 300);
 insert into toppings values(18, 'ガーリックスライス', 200, 300);
-insert into toppings values(19, 'あらびきスライスソｰセｰジ', 200, 300);
+insert into toppings values(19, 'あらびきスライスソーセージ', 200, 300);
 insert into toppings values(20, 'ブロッコリー', 200, 300);
 insert into toppings values(21, 'グリーンアスパラ', 200, 300);
 insert into toppings values(22, 'パルメザンチーズ', 200, 300);
