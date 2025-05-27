@@ -186,8 +186,20 @@ public class OrderService {
 		String template = Files.readString(Path.of(templatePath));
 
 		String orderSummary = cartItemList.stream()
-			.map(item -> "- " + item.getName() + "（" + item.getSize() + "）×" + item.getQuantity() + "個")
-			.collect(Collectors.joining("\n"));
+        .map(item -> {
+            StringBuilder sb = new StringBuilder();
+            sb.append(item.getName())
+              .append("（").append(item.getSize()).append("）×").append(item.getQuantity()).append("個");
+
+            if (item.getToppingList() != null && !item.getToppingList().isEmpty()) {
+                String toppings = item.getToppingList().stream()
+                    .map(Topping::getName)
+                    .collect(Collectors.joining("・"));
+                sb.append("\n    トッピング: ").append(toppings);
+            }
+            return sb.toString();
+        })
+        .collect(Collectors.joining("\n"));
 
 		return template
 			.replace("{userName}", user.getName())
