@@ -1,9 +1,14 @@
 package com.example.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
@@ -44,6 +49,15 @@ public class OrderService {
 	
 	@Autowired
 	private MailSender sender;
+
+	@Value("${custom.mail.from}")
+    private String from;
+
+    @Value("${custom.mail.subject}")
+    private String subject;
+
+	@Value("${custom.mail.template}")
+    private String templatePath;
 	
 	/**
 	 * 注文詳細一件を取得
@@ -135,15 +149,49 @@ public class OrderService {
 	/**
 	 * 引数で受け取ったemailに完了メールを送付
 	 * @param email
+	 * @throws IOException 
 	 */
-    public void sendMail(String email) {
-        SimpleMailMessage msg = new SimpleMailMessage();
+    public void sendMail(String email){
+		User user = (User) session.getAttribute("user");
+		List<CartItem> cartItemList = (List<CartItem>) session.getAttribute("cartItemList");
+		Integer totalPrice = (Integer) session.getAttribute("totalPrice");
 
-        msg.setFrom("curry-admin@example.com");
-        msg.setTo(email);
-        msg.setSubject("注文完了！！！");//タイトルの設定
-        msg.setText("ラクラクカリー より　注文完了"); //本文の設定
+		String body;
+		try {
+			body = generateMailBody(user, cartItemList, totalPrice);
+		} catch (IOException e) {
+			body = "ご注文ありがとうございます。";
+		}
 
-        this.sender.send(msg);
+		SimpleMailMessage msg = new SimpleMailMessage();
+		
+		msg.setFrom(from);
+		msg.setTo(email);
+		msg.setSubject(subject);
+		msg.setText(body);
+
+		sender.send(msg);
     }
+
+	/**
+	 * メール本文を生成するメソッド
+	 * 
+	 * @param user ユーザー情報
+	 * @param cartItemList カート内の商品リスト
+	 * @param totalPrice 合計金額
+	 * @return 生成されたメール本文
+	 * @throws IOException 
+	 */
+	private String generateMailBody(User user, List<CartItem> cartItemList, int totalPrice) throws IOException {
+		String template = Files.readString(Path.of(templatePath));
+
+		String orderSummary = cartItemList.stream()
+			.map(item -> "- " + item.getName() + "（" + item.getSize() + "）×" + item.getQuantity() + "個")
+			.collect(Collectors.joining("\n"));
+
+		return template
+			.replace("{userName}", user.getName())
+			.replace("{orderSummary}", orderSummary)
+			.replace("{totalPrice}", String.valueOf(totalPrice));
+	}
 }
