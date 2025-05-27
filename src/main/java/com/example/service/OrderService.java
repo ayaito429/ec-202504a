@@ -149,7 +149,6 @@ public class OrderService {
 	/**
 	 * 引数で受け取ったemailに完了メールを送付
 	 * @param email
-	 * @throws IOException 
 	 */
     public void sendMail(String email){
 		User user = (User) session.getAttribute("user");
@@ -164,7 +163,7 @@ public class OrderService {
 		}
 
 		SimpleMailMessage msg = new SimpleMailMessage();
-		
+
 		msg.setFrom(from);
 		msg.setTo(email);
 		msg.setSubject(subject);
