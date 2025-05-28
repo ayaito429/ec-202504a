@@ -100,16 +100,24 @@ public class ItemController {
 	 */
 	@RequestMapping("/detail")
 	public String showItemDetail(String id, Model model) {
-		
-		
-		//商品詳細を表示させる
-		Item item = itemService.showItemDetail(Integer.parseInt(id));
-		model.addAttribute("item", item);
-		
-		//トッピング一覧を表示
-		List<Topping> toppingList = itemService.findAllTopping();
-		
-		application.setAttribute("toppingList", toppingList);
-		return "item/item_detail";
+		try {
+
+			//商品IDが存在するかチェック
+			if(!itemService.existsbyId(Integer.parseInt(id))){
+				return "item/item_detail_notFound";
+			}
+
+			//商品詳細を表示させる
+			Item item = itemService.showItemDetail(Integer.parseInt(id));
+			model.addAttribute("item", item);
+			
+			//トッピング一覧を表示
+			List<Topping> toppingList = itemService.findAllTopping();
+			
+			application.setAttribute("toppingList", toppingList);
+			return "item/item_detail";
+		} catch (NumberFormatException e) {
+			return "item/item_detail_notFound";
+		}
 	}
 }
