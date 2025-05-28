@@ -33,6 +33,7 @@
                     <a th:href="@{/orderHistory}" class="navbar-link">注文履歴</a>&nbsp;&nbsp;
 
                     <!-- Spring Securityの認証状態に応じて表示 -->
+                    <a sec:authorize="isAnonymous()" th:href="@{/login}" class="navbar-link">ログイン</a>&nbsp;&nbsp;
                     <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="navbar-link">ログアウト</a>
                 </p>
             </div>
