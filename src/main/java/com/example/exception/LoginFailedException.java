@@ -1,4 +1,4 @@
-package com.example.exception.handle;
+package com.example.exception;
 
 /**
  * 認証（ログイン）失敗時にスローされる例外クラス

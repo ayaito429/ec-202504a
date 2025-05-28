@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.domain.Order;
 import com.example.domain.User;
+import com.example.exception.LoginFailedException;
+import com.example.exception.UnauthorizedAccessException;
 import com.example.exception.dto.OrderResponse;
-import com.example.exception.handle.LoginFailedException;
-import com.example.exception.handle.UnauthorizedAccessException;
 import com.example.service.OrderService;
 import com.example.service.UserService;
 
@@ -31,7 +31,7 @@ import com.example.service.UserService;
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET })
 @RestController
 @RequestMapping("/users")
-public class OrdersApiController {
+public class UsersApiController {
 
     @Autowired
     private UserService userService;
@@ -45,24 +45,23 @@ public class OrdersApiController {
      * @return 取得した注文履歴
      */
     @GetMapping("/{userId}/orders")
-    public ResponseEntity<List<OrderResponse>> getUserId(@RequestHeader("Authorization") String encoding,
+    public ResponseEntity<List<OrderResponse>> getUserId(@RequestHeader("Authorization") String loginInfo,
             @PathVariable Integer userId) {
 
         // デコード
-        String base64Credentials = encoding.substring("Basic ".length()).trim();
+        String base64Credentials = loginInfo.substring("Basic ".length()).trim();
         String decoded = new String(Base64.getDecoder().decode(base64Credentials), StandardCharsets.UTF_8);
-        System.out.println("デコードした文字列：" + decoded);
 
         // メールアドレスとパスワードに分ける
-        String[] loginInfo = decoded.split(":");
+        String[] loginInfoList = decoded.split(":");
 
         // ユーザー情報を取得
-        User user = userService.login(loginInfo[1], loginInfo[0]);
+        User user = userService.login(loginInfoList[1], loginInfoList[0]);
 
         if (user == null) {
-            throw new LoginFailedException("ログイン情報が正しくありません");
+            throw new LoginFailedException("ログインに失敗しました。");
         } else if (!userId.equals(user.getId())) {
-            throw new UnauthorizedAccessException("不正なリクエストです。");
+            throw new UnauthorizedAccessException("リクエストを処理できませんでした。");
         }
 
         // 注文履歴を取得

@@ -1,4 +1,4 @@
-package com.example.exception.handle;
+package com.example.exception;
 
 /**
  * 不正なログイン時にスローされる例外クラス
