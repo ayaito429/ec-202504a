@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -13,7 +15,7 @@
   </head>
   <body>
     <div class="container">
-     <span th:insert="header::header"></span>
+     <span th:insert="~{header::header}"></span>
 
       <!-- login form -->
       <div class="row">
@@ -28,39 +30,43 @@
           "
         >
           <div class="well">
-            <form method="post" action="item_list_pizza.html" th:action="@{/login}" th:object="${loginForm}">
+            <form method="post" th:action="@{/login}">
               <fieldset>
-                <legend>ログイン</legend>
-                <label th:text="${loginError}" style="color: red" for="inputError"
-                  >メールアドレス、またはパスワードが間違っています</label
-                >
-                <div class="form-group" >
-                  <label for="inputEmail">メールアドレス:</label>
-                  <input
-                    type="text"
-                    th:field="*{email}"
-                    id="inputEmail"
-                    class="form-control"
-                    placeholder="xxx@xxx"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="inputPassword">パスワード:</label>
-                  <input
-                    type="password"
-                    th:field="*{password}"
-                    id="inputPassword"
-                    class="form-control"
-                    placeholder="Password"
-                  />
-                </div>
-                <div class="form-group">
-                  <button type="submit" class="btn btn-primary">
-                    ログイン
-                  </button>
-                </div>
+                  <legend>ログイン</legend>
+
+                  <div th:if="${loginError}">
+                      <label th:text="${loginError}" style="color: red" for="inputError"></label>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="inputEmail">メールアドレス:</label>
+                      <input
+                          type="text"
+                          name="username"
+                          id="inputEmail"
+                          class="form-control"
+                          placeholder="xxx@xxx"
+                      />
+                  </div>
+
+                  <div class="form-group">
+                      <label for="inputPassword">パスワード:</label>
+                      <input
+                          type="password"
+                          name="password"
+                          id="inputPassword"
+                          class="form-control"
+                          placeholder="Password"
+                      />
+                  </div>
+
+                  <div class="form-group">
+                      <button type="submit" class="btn btn-primary">
+                          ログイン
+                      </button>
+                  </div>
               </fieldset>
-            </form>
+          </form>
           </div>
         </div>
       </div>
@@ -72,6 +78,6 @@
     </div>
     <!-- end container -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
   </body>
 </html>
