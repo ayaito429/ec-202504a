@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.example.controller.apiController.OrdersApiController;
 import com.example.exception.dto.ErrorResponse;
@@ -39,18 +38,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
         ErrorResponse body = new ErrorResponse(401, ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
-    }
-
-    /**
-     * 不正リクエストエラー NoResourceFoundException
-     * 
-     * @param ex NoResourceFoundException
-     * @return 404エラー
-     */
-    @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNoResourceFoundException(NoResourceFoundException ex) {
-        ErrorResponse body = new ErrorResponse(404, "リクエストされたリソースは存在しません。");
-        return new ResponseEntity<>(body, HttpStatus.BAD_GATEWAY);
     }
 
     /**

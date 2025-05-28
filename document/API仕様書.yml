@@ -14,12 +14,13 @@ paths:
     get:
       tags: 
         - 注文情報エンドポイント
+      summary: 注文履歴取得
       description: 注文履歴を取得
       security:
         - basicAuth: []
       parameters:
         - name: userId
-          in: query
+          in: path
           required: true
           schema:
             type: integer
@@ -30,7 +31,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Orders'
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderResponse'
         '401':
           description: 認証情報の不正
           content:
@@ -43,18 +46,6 @@ paths:
                   value:
                     status: 401
                     message: "認証に失敗しました。"
-        '404':
-          description: 存在しないページへのアクセス
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                unAuthorization:
-                  summary: "404エラー"
-                  value:
-                    status: 404
-                    message: "お探しのページが見つかりません。"
         '500':
           description: 内部エラー
           content:
@@ -71,21 +62,29 @@ paths:
 components:
   schemas:
     # 注文
-    Orders:
+    OrderResponse:
       type: object 
       properties: 
         id:
           type: integer
           description: 注文ID
           example: 1
-        order_date:
+        status:
           type: string
-          format: date
-          description:  注文日
+          description: 状態
+          example: 入金済
         sub_total:
           type: integer
-          description: 小計
+          description: 合計金額
           example: 2980
+        order_date:
+          type: string
+          description:  注文日
+          format: date
+        destination_name:
+          type: string
+          description: 宛先氏名
+          example: 山田太郎
         destination_zipcode:
           type: string
           description: 宛先郵便番号
@@ -98,6 +97,14 @@ components:
           type: string
           description: 宛先電話番号
           example: "123-1234-5678"
+        delivery_time:
+          type: string
+          description: 配達時間
+          format: date
+        payment_method:
+          type: string
+          description: 支払方法
+          example: クレジットカード払い
         items:
           type: array
           items: 
