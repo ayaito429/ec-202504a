@@ -96,7 +96,7 @@ public class ItemController {
 	 * 
 	 * @param id　商品ID
 	 * @param model リクエストスコープ
-	 * @return item/detail.html
+	 * @return フォワード処理
 	 */
 	@RequestMapping("/detail")
 	public String showItemDetail(String id, Model model) {
