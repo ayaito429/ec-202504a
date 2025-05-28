@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import com.example.controller.apiController.OrdersApiController;
 import com.example.exception.dto.ErrorResponse;
 
 /**
@@ -13,7 +14,7 @@ import com.example.exception.dto.ErrorResponse;
  * 
  * @author aya_ito
  */
-@RestControllerAdvice
+@RestControllerAdvice(assignableTypes = OrdersApiController.class)
 public class GlobalExceptionHandler {
 
     /**
