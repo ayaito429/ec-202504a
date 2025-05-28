@@ -1,0 +1,187 @@
+openapi: 3.0.3
+
+info:
+ title: Orders API
+ version: "1.0.0"
+ description: このAPIはユーザー注文履歴の情報管理を目的としています。
+servers:
+  - url: http://localhost:8080
+    description: ローカル環境
+
+
+paths:
+  /users/{userId}/orders:
+    get:
+      tags: 
+        - 注文情報エンドポイント
+      description: 注文履歴を取得
+      security:
+        - basicAuth: []
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: 注文履歴を取得する対象ユーザーID
+      responses:
+        "200":
+          description: 取得完了
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Orders'
+        '401':
+          description: 認証情報の不正
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                unAuthorization:
+                  summary: "401エラー"
+                  value:
+                    status: 401
+                    message: "認証に失敗しました。"
+        '404':
+          description: 存在しないページへのアクセス
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                unAuthorization:
+                  summary: "404エラー"
+                  value:
+                    status: 404
+                    message: "お探しのページが見つかりません。"
+        '500':
+          description: 内部エラー
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                InternalServerError :
+                  summary: "500エラー"
+                  value:
+                    status: 500
+                    message: "内部エラーが発生しました。"
+
+components:
+  schemas:
+    # 注文
+    Orders:
+      type: object 
+      properties: 
+        id:
+          type: integer
+          description: 注文ID
+          example: 1
+        order_date:
+          type: string
+          format: date
+          description:  注文日
+        sub_total:
+          type: integer
+          description: 小計
+          example: 2980
+        destination_zipcode:
+          type: string
+          description: 宛先郵便番号
+          example: "279-0031"
+        destination_address:
+          type: string
+          description: 宛先住所
+          example: "千葉県浦安市舞浜"
+        destination_tel:
+          type: string
+          description: 宛先電話番号
+          example: "123-1234-5678"
+        items:
+          type: array
+          items: 
+            $ref: "#/components/schemas/OrderItem"
+          example:
+            - id: 2
+              name: "牛すじカレー"
+              quantity: 1
+              size: "L"
+              price: 2680
+              toppings:
+                - id: 2
+                  name: "オニオン"
+                  price: 300
+                - id: 3
+                  name: "ツナマヨ"
+                  price: 300
+    # 注文商品
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 注文商品ID
+        name:
+          type: string
+          description: 商品名
+        quantity:
+          type: integer
+          description: 数量
+        size: 
+          type: string
+          description: サイズ
+        price: 
+          type: integer
+          description: 注文時の価格
+        toppings:
+          type: array
+          description: トッピングの一覧
+          items:
+            $ref: "#/components/schemas/OrderTopping"
+      
+    # 注文トッピング
+    OrderTopping:
+     type: object
+     properties:
+      id:
+        type: integer
+        description: トッピングID
+      name: 
+        type: string
+        description: トッピング名
+      price:
+        type: integer
+        description: 注文時の価格
+    # ログイン情報
+    UserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          description: メールアドレス
+          example: teat@mail.com
+        password:
+          type: string
+          description: パスワード
+          example: password
+       # 入力が必須プロパティ
+      required:
+        - email
+        - password
+    
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer     
+          description: "HTTPステータスコード"
+          example: 400
+        message:
+          type: string
+          description: "エラー内容を示すメッセージ"
+          example: "Bad Request"
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
