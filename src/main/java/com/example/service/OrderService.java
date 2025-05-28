@@ -195,7 +195,7 @@ public class OrderService {
                 String toppings = item.getToppingList().stream()
                     .map(Topping::getName)
                     .collect(Collectors.joining("・"));
-                sb.append("\n    トッピング: ").append(toppings);
+                sb.append("\nトッピング: ").append(toppings);
             }
             return sb.toString();
         })
