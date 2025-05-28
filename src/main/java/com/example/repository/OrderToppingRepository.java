@@ -1,11 +1,12 @@
 package com.example.repository;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.jdbc.core.BeanPropertyRowMapper;
-//import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.example.domain.OrderTopping;
@@ -18,10 +19,12 @@ import com.example.domain.OrderTopping;
 @Repository
 public class OrderToppingRepository {
 
-	//private static final RowMapper<OrderTopping> ORDER_TOPPING_ROW_MAPPER = new BeanPropertyRowMapper<>(OrderTopping.class);
+	
 	
 	@Autowired
 	private NamedParameterJdbcTemplate template;
+
+	//private static final RowMapper<OrderTopping> ORDER_TOPPING_ROW_MAPPER = (rs,i) -> {
 	
 	/**
 	 * 注文トッピングを追加
@@ -29,8 +32,10 @@ public class OrderToppingRepository {
 	 */
 	public void insert(OrderTopping orderTopping) {
 		SqlParameterSource param = new BeanPropertySqlParameterSource(orderTopping);
-		String insertSql = "INSERT INTO order_toppings (topping_id, order_item_id) "
-				+ "VALUES (:toppingId, :orderItemId);";
-		template.update(insertSql, param);
+		String insertSql = "INSERT INTO order_toppings (topping_id, order_item_id, price) "
+				+ "VALUES (:toppingId, :orderItemId, :price);";
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		String[] keyColumnNames = {"id"};
+		template.update(insertSql, param, keyHolder, keyColumnNames);
 	}
 }
