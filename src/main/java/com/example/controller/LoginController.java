@@ -5,9 +5,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * ログイン画面に遷移するためのコントローラクラス
+ * 
+ * @author shirota sho
+ */
 @Controller
 public class LoginController {
 
+	/**
+	 * ログイン画面の表示
+	 * 
+	 * @param error  エラーステータス
+	 * @param logout ログアウトステータス
+	 * @param model  リクエストスコープの格納用
+	 * @return ログイン画面
+	 */
 	@GetMapping("/login")
 	public String loginPage(@RequestParam(value = "error", required = false) String error,
 			@RequestParam(value = "logout", required = false) String logout,

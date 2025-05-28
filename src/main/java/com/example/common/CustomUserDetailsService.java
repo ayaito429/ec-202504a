@@ -9,6 +9,11 @@ import org.springframework.stereotype.Service;
 import com.example.domain.User;
 import com.example.repository.UserRepository;
 
+/**
+ * Spring security用のカスタムユーザーのサービスクラス
+ * 
+ * @author shirota sho
+ */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 

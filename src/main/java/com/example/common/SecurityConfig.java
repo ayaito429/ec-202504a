@@ -9,6 +9,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * Spring securityの認証・認可用クラス
+ * 
+ * @author shirota sho
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {

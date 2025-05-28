@@ -8,6 +8,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.domain.User;
 
+/**
+ * カスタムユーザークラス
+ * 
+ * @author shirota sho
+ */
 public class CustomUserDetails implements UserDetails {
 
     private final User user;
