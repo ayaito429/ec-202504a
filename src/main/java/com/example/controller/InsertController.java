@@ -80,6 +80,7 @@ public class InsertController {
 		//フォームの値をドメインにコピー
 		User user = new User();
 		BeanUtils.copyProperties(form, user);
+		user.setEmail((String) session.getAttribute("email"));
 		//郵便番号のハイフンを消してドメインにセット
 		user.setZipcode(form.getZipcode().replace("-", ""));
 		
