@@ -92,4 +92,13 @@ public class ItemService {
 	      = new PageImpl<Item>(list, PageRequest.of(page, size), itemList.size());
 	    return employeePage;
 	}
+	
+	/**
+	 * 商品をidで検索してDBにあるか確認する
+	 * @param id 検索するid
+	 * @return 確認結果
+	 */
+	public boolean existsById(Integer id){
+		return repository.existsById(id);
+	}
 }
