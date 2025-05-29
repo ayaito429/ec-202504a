@@ -97,7 +97,7 @@ public class ItemRepository {
 	 * @param id 検索するid
 	 * @return 調べた結果(真偽値)
 	 */
-	public boolean existsbyId(Integer id){
+	public boolean existsById(Integer id){
 		String sql = "SELECT count(*) from items WHERE id = :id";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
 		String count = template.queryForObject(sql, param, String.class);
