@@ -23,6 +23,8 @@ import com.example.service.UserService;
 
 /**
  * 注文確認画面に遷移するためのコントローラー
+ * @author MatsunagaDai,MiyazawaNami
+ *
  */
 @Controller
 @RequestMapping("")
@@ -50,7 +52,9 @@ public class OrderController {
 	}
 
 	/**
-	 * 注文完了処理
+	 * 注文完了画面に遷移
+	 * @param form
+	 * @return　完了画面
 	 */
 	@RequestMapping("/order")
 	public String orderCompletion(@Validated OrderForm form, BindingResult result, Model model,
@@ -115,7 +119,9 @@ public class OrderController {
 	}
 
 	/**
-	 * 注文履歴表示
+	 * 注文履歴のページを表示
+	 * @param model リクエストスコープ
+	 * @return　注文履歴
 	 */
 	@RequestMapping("/orderHistory")
 	public String orderHistory(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
