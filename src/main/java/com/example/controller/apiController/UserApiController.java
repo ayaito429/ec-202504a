@@ -31,7 +31,7 @@ import com.example.service.UserService;
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET })
 @RestController
 @RequestMapping("/users")
-public class UsersApiController {
+public class UserApiController {
 
     @Autowired
     private UserService userService;
