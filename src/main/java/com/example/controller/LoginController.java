@@ -28,13 +28,17 @@ public class LoginController {
 	@Autowired
 	private HttpSession session;
 	
-
+	
 	@ModelAttribute
 	public LoginForm setUpLoginForm() {
 		LoginForm loginForm = new LoginForm();
 		return loginForm;//リクエストパラメーターにloginFormが格納された
 	}
 	
+    @RequestMapping("")
+    public String index() {
+        return "redirect:/showList";
+    }
 	
 	@RequestMapping("/toLogin")
 	public String toLogin() {
@@ -57,7 +61,7 @@ public class LoginController {
 		List<CartItem> cartItemList = (List<CartItem>) session.getAttribute("cartItemList");
 		
 		if(cartItemList == null || cartItemList.size() == 0) {
-			return "forward:/showList";
+			return "redirect:/showList";
 		} else {
 			return "redirect:/orderCo";
 		}
@@ -66,7 +70,7 @@ public class LoginController {
 	@RequestMapping("/logout")
 	public String logout() {
 		session.invalidate();
-		return "forward:/showList";
+		return "redirect:/showList";
 	}
 	
 }
