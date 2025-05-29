@@ -98,7 +98,7 @@ public class ItemService {
 	 * @param id 検索するid
 	 * @return 確認結果
 	 */
-	public boolean existsbyId(Integer id){
-		return repository.existsbyId(id);
+	public boolean existsById(Integer id){
+		return repository.existsById(id);
 	}
 }

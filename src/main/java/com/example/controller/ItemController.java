@@ -103,7 +103,7 @@ public class ItemController {
 		try {
 
 			//商品IDが存在するかチェック
-			if(!itemService.existsbyId(Integer.parseInt(id))){
+			if(!itemService.existsById(Integer.parseInt(id))){
 				return "item/item_detail_notFound";
 			}
 
