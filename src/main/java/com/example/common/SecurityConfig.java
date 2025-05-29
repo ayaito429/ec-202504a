@@ -31,26 +31,25 @@ public class SecurityConfig {
                 http
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers("/login",
-                                                                 "/css/**",
-                                                                 "/js/**",
-                                                                 "/img_curry/**",
+                                                                "/css/**",
+                                                                "/js/**",
+                                                                "/img_curry/**",
                                                                 "/mailInsert",
-                                                                 "/insert/**",
-                                                                 "/inCart",
-                                                                 "/searchItem",
-                                                                 "/showCart",
-                                                                 "/delete",
-                                                                 "/showList",
-                                                                 "/detail",
-                                                                 "/orderHistory",
-                                                                 "/mailsend",
-                                                                 "/pass_check",
-                                                                 "/check"
-                                                                )
+                                                                "/insert/**",
+                                                                "/inCart",
+                                                                "/searchItem",
+                                                                "/showCart",
+                                                                "/delete",
+                                                                "/showList",
+                                                                "/detail",
+                                                                "/orderHistory",
+                                                                "/mailsend",
+                                                                "/pass_check",
+                                                                "/check")
                                                 .permitAll()
                                                 .anyRequest().authenticated())
                                 .formLogin(form -> form
-                                                .loginPage("/login")
+                                                .loginPage("/toLogin")
                                                 .loginProcessingUrl("/login")
                                                 .defaultSuccessUrl("/showList", true)
                                                 .failureUrl("/login?error=true")

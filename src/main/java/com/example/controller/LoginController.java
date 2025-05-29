@@ -21,7 +21,7 @@ public class LoginController {
 	 * @param model  リクエストスコープの格納用
 	 * @return ログイン画面
 	 */
-	@GetMapping("/login")
+	@GetMapping("/toLogin")
 	public String loginPage(@RequestParam(value = "error", required = false) String error,
 			@RequestParam(value = "logout", required = false) String logout,
 			Model model) {
