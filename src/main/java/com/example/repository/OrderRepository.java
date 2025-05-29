@@ -210,7 +210,7 @@ public class OrderRepository {
 				+ "RIGHT JOIN items i ON oi.item_id = i.id "
 				+ "LEFT OUTER JOIN order_toppings ot ON oi.id = ot.order_item_id "
 				+ "LEFT OUTER JOIN toppings t ON ot.topping_id = t.id "
-				+ "WHERE o.user_id = :userId ORDER BY o.order_date DESC, o.id DESC, i.id DESC";
+				+ "WHERE o.user_id = :userId ORDER BY o.order_date DESC, o.id DESC, i.id DESC,ot.topping_id ASC";
 
 		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
 		
