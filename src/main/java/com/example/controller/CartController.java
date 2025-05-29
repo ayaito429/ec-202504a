@@ -93,17 +93,17 @@ public class CartController {
     }
 
     @RequestMapping("/delete")
-    public String delete(String item) {
+    public String delete(String index) {
         try {
             List<CartItem> cartItemList = (List<CartItem>) session.getAttribute("cartItemList");
             if (cartItemList != null) {
-                int idx = Integer.parseInt(item);
+                int idx = Integer.parseInt(index);
                 if (idx >= 0 && idx < cartItemList.size()) {
                     cartItemList.remove(idx);
                 }
             }
         } catch (NumberFormatException e) {
-            System.out.println("インデックスが不正です: " + item);
+            System.out.println("インデックスが不正です: " + index);
         }
         return "redirect:/showCart";
     }
