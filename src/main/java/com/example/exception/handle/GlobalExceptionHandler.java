@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.example.controller.apiController.UsersApiController;
+import com.example.controller.apiController.UserApiController;
 import com.example.exception.UnauthorizedAccessException;
 import com.example.exception.LoginFailedException;
 import com.example.exception.dto.ErrorResponse;
@@ -15,7 +15,7 @@ import com.example.exception.dto.ErrorResponse;
  * 
  * @author aya_ito
  */
-@RestControllerAdvice(assignableTypes = UsersApiController.class)
+@RestControllerAdvice(assignableTypes = UserApiController.class)
 public class GlobalExceptionHandler {
 
     /**
