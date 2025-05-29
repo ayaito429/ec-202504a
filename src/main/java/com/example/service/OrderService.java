@@ -72,6 +72,7 @@ public class OrderService {
 	 * 
 	 * @param order
 	 */
+	// TODO
 	public void order(Order order) {
 		order.setStatus(paymentMethodJudge(order));
 		order.setUserId(getUserId());
@@ -121,9 +122,8 @@ public class OrderService {
 			BeanUtils.copyProperties(cartItem, orderItem);
 
 			orderItem.setOrderId(orderId);
-			Integer orderItemid = orderItemRepository.order(orderItem);
 
-			InsertOrdertopping(orderItemid, cartItem.getToppingList());
+			InsertOrdertopping(orderItem, cartItem.getToppingList());
 		}
 	}
 
@@ -133,11 +133,13 @@ public class OrderService {
 	 * @param orderItemId 注文商品の主キー
 	 * @param toppingList 注文商品が持っているtoppingList
 	 */
-	private void InsertOrdertopping(Integer orderItemId, List<Topping> toppingList) {
+	private void InsertOrdertopping(OrderItem orderItem, List<Topping> toppingList) {
+		Integer orderId = orderItemRepository.order(orderItem);
 		for (Topping topping : toppingList) {
 			OrderTopping orderTopping = new OrderTopping();
-			orderTopping.setOrderItemId(orderItemId);
+			orderTopping.setOrderItemId(orderId);
 			orderTopping.setToppingId(topping.getId());
+			orderTopping.setPrice(orderTopping.getSubTotle(orderItem.getSize(), orderItem.getQuantity()));
 			orderToppingRepository.insert(orderTopping);
 		}
 	}

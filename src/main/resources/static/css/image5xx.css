@@ -4,10 +4,8 @@
 	width: 100%;
 	height: 550px;
 	 background-color: rgba( 0, 0, 0, 0.5); /* 背景色を半透明の黒にする */
-}
-
-.btnlink500{
-	margin-left: 470px;
+	align-items: center;
+	text-align: center;
 }
 
 .linktext500 {

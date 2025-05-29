@@ -1,0 +1,13 @@
+-- toppings テーブルの更新
+UPDATE toppings
+SET name = 'あらびきスライスソーセージ'
+WHERE id = 19;
+
+-- items テーブルの更新
+UPDATE items
+SET description = '旨味が凝縮されたトンカツを贅沢にダブルで。さらにポークミートの豊かな味わいが、カレーのスパイシーな風味の上で踊ります。この旨さ、まさにメガトン級！！'
+WHERE id = 2;
+
+UPDATE items
+SET description = 'カレーはライスだけではありません。ラクラクカレーが開発したカレーラーメンは絶品の美味しさ！'
+WHERE id = 5;
