@@ -160,7 +160,10 @@ public class OrderService {
 		try {
 			body = generateMailBody(user, cartItemList, totalPrice);
 		} catch (IOException e) {
-			body = "ご注文ありがとうございます。";
+			body = "ご注文ありがとうございます。\n" +
+				   "メール送信システムにエラーが発生しました\n" +
+				   "注文処理は完了していますがご心配の方は、\n" +
+				   "カスタマーサポート(0123-456-789)までお問い合わせください。";
 		}
 
 		SimpleMailMessage msg = new SimpleMailMessage();
