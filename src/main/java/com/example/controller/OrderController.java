@@ -19,9 +19,7 @@ import com.example.common.CustomUserDetails;
 import com.example.domain.Order;
 import com.example.form.OrderForm;
 import com.example.service.OrderService;
-import com.example.service.UserService;
 
-import jakarta.servlet.http.HttpSession;
 
 /**
  * 注文確認画面に遷移するためのコントローラー
@@ -35,12 +33,6 @@ public class OrderController {
 
 	@Autowired
 	private OrderService orderService;
-
-	@Autowired
-	private UserService userService;
-
-	@Autowired
-	private HttpSession session;
 
 	@ModelAttribute
 	public OrderForm setOrderForm(Model model) {

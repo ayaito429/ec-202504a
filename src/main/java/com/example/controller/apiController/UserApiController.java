@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.domain.Order;
 import com.example.domain.User;
+import com.example.enums.Status;
 import com.example.exception.LoginFailedException;
 import com.example.exception.UnauthorizedAccessException;
 import com.example.exception.dto.OrderResponse;
@@ -71,35 +72,12 @@ public class UserApiController {
         // Orderの値をOrderResponseにセット
         for (Order order : orderList) {
             OrderResponse orderResponse = new OrderResponse();
+            
             orderResponse.setId(order.getId());
             orderResponse.setUserId(userId);
-            String status = "";
-            switch (order.getStatus()) {
-
-                case 0:
-                    status = "注文前";
-                    break;
-                case 1:
-                    status = "未入金";
-                    break;
-                case 2:
-                    status = "入金済";
-                    break;
-                case 3:
-                    status = "発送済";
-                    break;
-                case 4:
-                    status = "配送完了";
-                    break;
-
-                case 9:
-                    status = "キャンセル";
-                    break;
-
-                default:
-                    break;
-            }
-            orderResponse.setStatus(status);
+            // enumから値を取得
+            Status status = Status.of(order.getStatus());
+            orderResponse.setStatus(status.getValue());
             orderResponse.setTotalPrice(order.getTotalPrice());
             orderResponse.setOrderDate(order.getOrderDate());
             orderResponse.setDestinationName(order.getDestinationName());
