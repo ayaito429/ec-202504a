@@ -23,7 +23,6 @@
       	<div class="row">
         <div
           class="
-            table-responsive
             col-lg-offset-1
             col-lg-10
             col-md-offset-1
@@ -35,8 +34,6 @@
         >
         <h3 class="text-center"><img th:src="@{/img_curry/food_retoruto_curry_rice.png}" height="35"> 注文詳細</h3>
         <br>
-        <div class="text-center">
-        </div>
         <div th:each="orders : ${orderList}">
           <table class="table table-success table-striped item-list-table">
             <tbody>
@@ -107,7 +104,7 @@
           
           <br>
           <h3 class="text-center"><img th:src="@{/img_curry/curry_pot.png}" height="35"> 注文内容</h3>
-          <div class="row">
+          <div class="table-responsive">
           <table class="table table-striped item-list-table">
           	<tbody >
           		<tr>
@@ -128,7 +125,9 @@
           			<th>
           				<img th:src="@{/img_curry/} + ${orderItem.item.imagePath}" width="250" height="150"></img>
           			</th>
-          			<th th:text="${orderItem.item.name}"></th>
+          			<th>
+                  <span th:text="${orderItem.item.name}"></span>
+                </th>
           			<th>
           				<span th:each=" orderTopping : ${orderItem.orderTopping}">
           					・<span th:text="${orderTopping.topping.name}"></span><br>
