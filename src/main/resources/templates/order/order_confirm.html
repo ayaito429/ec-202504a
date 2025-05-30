@@ -70,6 +70,9 @@
                     <li th:if="${cart.size=='M'}" th:text="${topping.name}+${topping.priceM}+'円'" >ピーマン200円</li>
                     <li th:if="${cart.size=='L'}" th:text="${topping.name}+${topping.priceL}+'円'" >ピーマン300円</li>
                   </ul>
+                  <div th:if="${cart.toppingList.size==0}" class="text-center">
+                    <span>トッピングなし</span>
+                  </div>
                 </td>
                 <td>
                   <div class="text-center" th:text="${#numbers.formatInteger(cart.subTotal,1,'COMMA')}+'円'"></div>
