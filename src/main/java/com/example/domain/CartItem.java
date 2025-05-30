@@ -13,12 +13,12 @@ public class CartItem {
 	// 商品画像
 	private String imagePath;
 	// トッピングのList
-	private List<Topping> toppingList;
+	private List<CartTopping> cartToppingList;
 	// 小計金額
 	private Integer subTotal;
 	// 数量
 	private Integer quantity;
-	// 商品の元々の金額
+	// 商品の金額
 	private Integer itemPrice;
 
 	public Integer getItemId() {
@@ -61,20 +61,20 @@ public class CartItem {
 		this.imagePath = imagePath;
 	}
 
-	public List<Topping> getToppingList() {
-		return toppingList;
+	public List<CartTopping> getCartToppingList() {
+		return cartToppingList;
 	}
 
-	public void setToppingList(List<Topping> topping) {
-		this.toppingList = topping;
+	public void setCartToppingList(List<CartTopping> cartToppingList) {
+		this.cartToppingList = cartToppingList;
 	}
 
 	public Integer getSubTotal() {
-		if (size.equals("M")) {
-			return (this.getItemPrice() + (this.getToppingList().size() * 200)) * this.getQuantity();
-		} else {
-			return (this.getItemPrice() + (this.getToppingList().size() * 300)) * this.getQuantity();
+		Integer totaleToppingPrice = 0;
+		for (CartTopping cartTopping : cartToppingList) {
+			totaleToppingPrice += cartTopping.getPrice();
 		}
+		return (this.getItemPrice() + totaleToppingPrice) * this.getQuantity();
 	}
 
 	public void setSubTotal(Integer subTotal) {
@@ -92,7 +92,7 @@ public class CartItem {
 	@Override
 	public String toString() {
 		return "CartItem [itemId=" + itemId + ", name=" + name + ", size=" + size + ", imagePath=" + imagePath
-				+ ", toppingList=" + toppingList + ", subTotalPrice=" + subTotal + ", area=" + quantity
+				+ ", toppingList=" + cartToppingList + ", subTotalPrice=" + subTotal + ", area=" + quantity
 				+ ", itemPrice=" + itemPrice + "]";
 	}
 

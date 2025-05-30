@@ -55,7 +55,7 @@
               	</th>
               </tr>
              
-              <tr th:each="cart,status:${session.cartItemList}">
+              <tr th:each="cart,status:${cartOrder.orderItemList}">
                 <td>
                   <div class="text-center">
                   
@@ -75,9 +75,8 @@
                   &nbsp;&nbsp;<span th:text="${cart.quantity}+'個'"></span>
                 </td>
                 <td>
-                  <ul th:if="${toppingList==null}" th:each="topping:${cart.toppingList}">
-                    <li th:if="${cart.size=='M'}" th:text="${topping.name}+${topping.priceM}+'円'" >ピーマン300円</li>
-                    <li th:if="${cart.size=='L'}" th:text="${topping.name}+${topping.priceL}+'円'" >ピーマン300円</li>
+                  <ul th:if="${toppingList==null}" th:each="topping:${cart.cartToppingList}">
+                    <li th:text="${topping.name}+${topping.price}+'円'" >ピーマン300円</li>
                   </ul>
                   <div th:if="${cart.toppingList.size==0}" class="text-center">
                     <span>トッピングなし</span>

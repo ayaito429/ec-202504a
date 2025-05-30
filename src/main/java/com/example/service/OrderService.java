@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.common.CustomUserDetails;
 import com.example.domain.CartItem;
+import com.example.domain.CartOrder;
 import com.example.domain.Order;
 import com.example.domain.OrderItem;
 import com.example.domain.OrderTopping;
@@ -68,18 +69,28 @@ public class OrderService {
 	}
 
 	/**
+	 * 注文前のorderを取得
+	 * 
+	 * @param userId ユーザーID
+	 * @return 注文情報
+	 */
+	public List<Order> findByStatus0(Integer userId) {
+		return orderRepository.findByStatus0(userId);
+	}
+
+	/**
 	 * orderドメインに足りない物をセット
 	 * 
 	 * @param order
 	 */
 	// TODO
-	public void order(Order order) {
-		order.setStatus(paymentMethodJudge(order));
-		order.setUserId(getUserId());
-		Integer orderId = orderRepository.insert(order);
-		insertOrderItem(orderId);
+	// public void order(Order order) {
+	// order.setStatus(paymentMethodJudge(order));
+	// order.setUserId(getUserId());
+	// Integer orderId = orderRepository.insert(order);
+	// insertOrderItem(orderId);
 
-	}
+	// }
 
 	/**
 	 * statusを判別するメゾット
@@ -114,18 +125,19 @@ public class OrderService {
 	 * 
 	 * @param orderId
 	 */
-	private void insertOrderItem(Integer orderId) {
-		@SuppressWarnings("unchecked")
-		List<CartItem> cartItemList = (List<CartItem>) session.getAttribute("cartItemList");
-		for (CartItem cartItem : cartItemList) {
-			OrderItem orderItem = new OrderItem();
-			BeanUtils.copyProperties(cartItem, orderItem);
+	// private void insertOrderItem(Integer orderId) {
+	// @SuppressWarnings("unchecked")
+	// List<CartItem> cartItemList = (List<CartItem>)
+	// session.getAttribute("cartItemList");
+	// for (CartItem cartItem : cartItemList) {
+	// OrderItem orderItem = new OrderItem();
+	// BeanUtils.copyProperties(cartItem, orderItem);
 
-			orderItem.setOrderId(orderId);
+	// orderItem.setOrderId(orderId);
 
-			InsertOrdertopping(orderItem, cartItem.getToppingList());
-		}
-	}
+	// InsertOrdertopping(orderItem, cartItem.getToppingList());
+	// }
+	// }
 
 	/**
 	 * order_toppingsテーブルにセット
@@ -158,5 +170,15 @@ public class OrderService {
 		msg.setText("ラクラクカリー より　注文完了"); // 本文の設定
 
 		this.sender.send(msg);
+	}
+
+	/**
+	 * カート情報を取得
+	 * 
+	 * @param userId ユーザーID
+	 * @return カート情報
+	 */
+	public CartOrder findForCartByUserId(Integer userId) {
+		return orderRepository.findForCartByUserId(userId);
 	}
 }
