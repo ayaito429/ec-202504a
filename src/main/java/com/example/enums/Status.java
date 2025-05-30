@@ -1,5 +1,10 @@
 package com.example.enums;
 
+/**
+ * 注文ステータスのenumクラス
+ * 
+ * @author aya_ito
+ */
 public enum Status {
 
     PREORDER(0, "注文前"),
