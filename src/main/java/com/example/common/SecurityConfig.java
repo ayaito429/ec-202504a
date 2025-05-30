@@ -30,24 +30,9 @@ public class SecurityConfig {
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                 http
                                 .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/login",
-                                                                "/css/**",
-                                                                "/js/**",
-                                                                "/img_curry/**",
-                                                                "/mailInsert",
-                                                                "/insert/**",
-                                                                "/inCart",
-                                                                "/searchItem",
-                                                                "/showCart",
-                                                                "/delete",
-                                                                "/showList",
-                                                                "/detail",
-                                                                "/orderHistory",
-                                                                "/mailsend",
-                                                                "/pass_check",
-                                                                "/check")
-                                                .permitAll()
-                                                .anyRequest().authenticated())
+                                                .requestMatchers("/order", "/orderHistory", "/toOrder", "/orderCo")
+                                                .authenticated()
+                                                .anyRequest().permitAll())
                                 .formLogin(form -> form
                                                 .loginPage("/toLogin")
                                                 .loginProcessingUrl("/login")

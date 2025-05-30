@@ -14,7 +14,7 @@
   </head>
   <body>
     <div class="container">
-	<span th:insert="header::header"></span>
+	<span th:insert="~{header::header}"></span>
       <form th:action="@{/inCart}" method="post" th:object="${itemCartInForm}">
       	<input type="hidden" name="id" th:value="${item.id}">
         <div class="row">
@@ -163,6 +163,6 @@
     <!-- end container -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script type="text/javascript" src="js/item_deail.js"></script>
-    <script th:src="@{/js/bootstrap.min.js}"></script>
+  <script th:src="@{/js/bootstrap.min.js}"></script>
   </body>
 </html>

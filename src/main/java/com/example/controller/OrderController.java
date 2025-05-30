@@ -21,6 +21,8 @@ import com.example.form.OrderForm;
 import com.example.service.OrderService;
 import com.example.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
+
 /**
  * 注文確認画面に遷移するためのコントローラー
  * 
@@ -37,13 +39,16 @@ public class OrderController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private HttpSession session;
+
 	@ModelAttribute
-	public OrderForm setOrderForm() {
+	public OrderForm setOrderForm(Model model) {
 		return new OrderForm();
 	}
 
 	@RequestMapping("/toOrder")
-	public String toOrder() {
+	public String toOrder(Model model) {
 		return "order/order_confirm";
 	}
 
@@ -140,5 +145,14 @@ public class OrderController {
 		}
 
 		return "order/order_history";
+	}
+
+	@RequestMapping("orderdetail")
+	public String orderDetail(Integer id, Model model) {
+		System.out.println(id);
+		List<Order> orderList = orderService.orderLoad(id);
+		model.addAttribute("orderList", orderList);
+		System.out.println(orderList);
+		return "/order/order_detail";
 	}
 }
