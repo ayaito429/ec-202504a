@@ -86,8 +86,8 @@
 
               <th colspan="6">
                 <span th:text="${orderItem.item.name}"></span><br>
-                <span th:each="orderTopping : ${orderItem.orderTopping}">
-                  <span th:if="${orderTopping.topping.name == null}">トッピングなし</span>
+                <span th:if="${#lists.isEmpty(orderItem.orderTopping)}">トッピングなし</span>
+                <span th:each="orderTopping : ${orderItem.orderTopping}" th:if="${!#lists.isEmpty(orderItem.orderTopping)}">
                   <span th:text="・ + ${orderTopping.topping.name}"></span><br>
                 </span>
               </th>
