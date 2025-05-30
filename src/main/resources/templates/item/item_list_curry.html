@@ -38,10 +38,8 @@
             <div class="panel-body">
               <form method="post" th:action="@{/showList}" class="form-horizontal">
                 <div class="form-group">
-                  <label for="code" class="control-label col-sm-2"
-                    >商品名</label
-                    >
-                    <span th:if="${message} != null" th:text="${message}" style="color:red"></span>
+                  <label for="name" class="control-label col-sm-2">商品名</label>
+                  <span th:if="${message} != null" class="margin-left-md" th:text="${message}" style="color:red"></span>
                   <div class="col-sm-9">
                   
                     <input
