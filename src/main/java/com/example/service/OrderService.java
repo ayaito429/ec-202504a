@@ -165,7 +165,14 @@ public class OrderService {
 	 * @param email
 	 */
     public void sendMail(String email){
-		User user = (User) session.getAttribute("user");
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user;
+
+		if (principal instanceof CustomUserDetails) {
+			user = ((CustomUserDetails) principal).getUser();
+		} else {
+			throw new IllegalStateException("User not authenticated");
+		}
 		List<CartItem> cartItemList = (List<CartItem>) session.getAttribute("cartItemList");
 		Integer totalPrice = (Integer) session.getAttribute("totalPrice");
 
