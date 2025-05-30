@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.common.CustomUserDetails;
 import com.example.domain.CartItem;
 import com.example.domain.Order;
 import com.example.domain.OrderItem;
@@ -28,6 +30,7 @@ import jakarta.servlet.http.HttpSession;
 
 /**
  * orderに関わる内容を行う
+ * 
  * @author naramasato
  *
  */
@@ -37,16 +40,16 @@ public class OrderService {
 
 	@Autowired
 	private OrderRepository orderRepository;
-	
+
 	@Autowired
 	private OrderItemRepository orderItemRepository;
-	
+
 	@Autowired
 	private OrderToppingRepository orderToppingRepository;
-	
+
 	@Autowired
 	private HttpSession session;
-	
+
 	@Autowired
 	private MailSender sender;
 
@@ -65,54 +68,62 @@ public class OrderService {
 	 * @param orderId
 	 * @return
 	 */
-	public List<Order> orderLoad(Integer orderId){
+	public List<Order> orderLoad(Integer orderId) {
 		return orderRepository.orderLoad(orderId);
 	}
-	
+
 	/**
 	 * 注文詳細全件を取得
+	 * 
 	 * @param id
 	 * @return
 	 */
-	public List<Order> findByOrder(Integer id){
+	public List<Order> findByOrder(Integer id) {
 		return orderRepository.findByOrdertable(id);
 	}
-	
+
 	/**
 	 * orderドメインに足りない物をセット
+	 * 
 	 * @param order
 	 */
-	//TODO
+	// TODO
 	public void order(Order order) {
 		order.setStatus(paymentMethodJudge(order));
 		order.setUserId(getUserId());
 		Integer orderId = orderRepository.insert(order);
 		insertOrderItem(orderId);
-		
+
 	}
-	
+
 	/**
 	 * statusを判別するメゾット
+	 * 
 	 * @param order
-	 * @return　statusを整数で返す
+	 * @return statusを整数で返す
 	 */
 	public Integer paymentMethodJudge(Order order) {
-		if(order.getPaymentMethod() == 1) {
+		if (order.getPaymentMethod() == 1) {
 			return 1;
 		} else {
 			return 2;
 		}
 	}
-	
+
 	/**
 	 * ユーザーのIdを返すメゾット
-	 * @return　userId
+	 * 
+	 * @return userId
 	 */
 	public Integer getUserId() {
-		User user = (User) session.getAttribute("user");
-		return user.getId();
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof CustomUserDetails) {
+			return ((CustomUserDetails) principal).getUserId();
+		} else {
+			throw new IllegalStateException("Authenticated user not found");
+		}
 	}
-	
+
 	/**
 	 * order_itemsテーブルにINSERTするメゾット
 	 * 
@@ -124,17 +135,18 @@ public class OrderService {
 		for (CartItem cartItem : cartItemList) {
 			OrderItem orderItem = new OrderItem();
 			BeanUtils.copyProperties(cartItem, orderItem);
+
 			orderItem.setOrderId(orderId);
-			
+
 			InsertOrdertopping(orderItem, cartItem.getToppingList());
 		}
 	}
-	
+
 	/**
 	 * order_toppingsテーブルにセット
 	 * 
 	 * @param orderItemId 注文商品の主キー
-	 * @param toppingList　注文商品が持っているtoppingList
+	 * @param toppingList 注文商品が持っているtoppingList
 	 */
 	private void InsertOrdertopping(OrderItem orderItem, List<Topping> toppingList) {
 		Integer orderId = orderItemRepository.order(orderItem);
@@ -146,9 +158,10 @@ public class OrderService {
 			orderToppingRepository.insert(orderTopping);
 		}
 	}
-	
+
 	/**
 	 * 引数で受け取ったemailに完了メールを送付
+	 * 
 	 * @param email
 	 */
     public void sendMail(String email){

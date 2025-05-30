@@ -18,7 +18,7 @@
       <form th:action="@{/inCart}" method="post" th:object="${itemCartInForm}">
       	<input type="hidden" name="id" th:value="${item.id}">
         <div class="row">
-          <div class="col-xs-offset-2 col-xs-8">
+          <div class="col-xs-offset-1 col-xs-11 col-lg-offset-2 col-lg-8">
           	
             <h3 class="text-center">商品詳細</h3>
             <div class="row">
@@ -85,8 +85,12 @@
                     <div class="col-sm-12">
                       <label for="inputResponsibleCompany">
                         トッピング：&nbsp;1つにつき
-                        <span>&nbsp;М&nbsp;</span>&nbsp;&nbsp;200円(税込み)
-                        <span>&nbsp;Ｌ</span>&nbsp;&nbsp;300円(税込み)
+                        <div>
+                          <span>&nbsp;М&nbsp;</span>&nbsp;&nbsp;200円(税込み)
+                        </div>
+                        <div>
+                          <span>&nbsp;Ｌ</span>&nbsp;&nbsp;300円(税込み)
+                        </div>
                       </label>
                     </div>
                     <div class="col-sm-12" id="topping">
@@ -104,7 +108,7 @@
               <div class="col-xs-offset-2 col-xs-8">
                 <div class="form-group">
                   <div class="row">
-                    <div class="col-xs-5 col-sm-5">
+                    <div class="col-xs-10 col-sm-8">
                       <label for="">数量:</label>
                       <label
                         class="control-label"
@@ -133,14 +137,14 @@
             </div>
             <br />
             <div class="row">
-              <div class="col-xs-offset-2 col-xs-10">
+              <div class="col-xs-offset-2 col-xs-8">
                 <div class="form-group">
                   <span id="total-price">この商品金額：<span id="totalprice"></span> &nbsp;円</span>
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-xs-offset-2 col-xs-3">
+              <div class="col-xs-offset-2 col-xs-6">
                 <div class="form-group">
                   <p>
                     <input
@@ -159,6 +163,6 @@
     <!-- end container -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script type="text/javascript" src="js/item_deail.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
   </body>
 </html>

@@ -16,9 +16,6 @@
     <div class="container">
 	<span th:insert="header::header"></span>
       
-      	
-        <div class="row">
-          <div class= "col-xs-12">
           	<!-- table -->
       	<div class="row">
         <div
@@ -28,16 +25,16 @@
             col-lg-10
             col-md-offset-1
             col-md-10
+            col-sm-offset-1
             col-sm-10
             col-xs-12
           "
         >
         <h3 class="text-center">注文一覧</h3>
         <br>
-        <div class="text-center">
-          <h3 th:if="${orderNothing != null}" th:text="${orderNothing}"></h3>
+        <div class="text-center" th:if="${orderNothing != null}">
+          <h3 th:text="${orderNothing}"></h3>
         </div>
-        <div >
           <table class="table table-striped item-list-table">
             <tbody class="table" th:each="orders: ${orderList}">
               <tr>
@@ -78,19 +75,15 @@
              
               <tr th:each="orderItem : ${orders.orderItemList}">
                 
-                <th colspan="2">
+                <th colspan="8" class="text-center item-img-center">
                 　<a th:href="@{'/detail?id=' + ${orderItem.item.id}}">
                   <img th:src="@{/img_curry/} + ${orderItem.item.imagePath}"
+                  class="img-responsive img-rounded item-img-center"
                   width="300"
                   height="200"
                   ></img>
                   </a>
                 </th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
                 
                 <th colspan="5">
                   
@@ -104,7 +97,6 @@
                 		<span th:text="・ + ${orderTopping.topping.name}"></span><br>
                 	</span>
                 </th>
-                <th></th>
                 <th colspan="5">
                   <label>サイズ：</label>
                   <span th:text="${orderItem.size}"></span><br>
@@ -122,17 +114,11 @@
             </tbody>
           </table>
          </div> 
-            
-            
-          </div>
         </div>
-        </div>
-        </div>
-      
     </div>
     <!-- end container -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script type="text/javascript" src="js/item_deail.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
   </body>
 </html>

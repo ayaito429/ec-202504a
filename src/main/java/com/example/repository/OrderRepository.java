@@ -167,10 +167,10 @@ public class OrderRepository {
 				+ "o.delivery_time AS o_delivery_time, o.payment_method AS o_payment_method, "
 				+ "u.id AS u_id, u.name AS u_name, u.password AS u_password, u.email As u_email, u.zipcode AS u_zipcode, u.address AS u_address, u.telephone AS u_telephone, "
 				+ "oi.id AS oi_id, oi.item_id AS oi_item_id, oi.order_id AS oi_order_id, oi.quantity AS oi_quantity, "
-				+ "oi.size AS oi_size, "
+				+ "oi.size AS oi_size, oi.price AS oi_price, "
 				+ "i.id AS i_id, i.name AS i_name, i.description AS i_description, i.price_m AS i_price_m, i.price_l AS i_price_l, "
 				+ "i.image_path AS i_image_path, i.deleted AS i_deleted, "
-				+ "ot.id AS ot_id, ot.topping_id AS ot_topping_id, ot.order_item_id AS ot_order_item_id, t.id AS t_id, t.name AS t_name, "
+				+ "ot.id AS ot_id, ot.topping_id AS ot_topping_id, ot.order_item_id AS ot_order_item_id, ot.price AS ot_price, t.id AS t_id, t.name AS t_name, "
 				+ "t.price_m AS t_price_m, t.price_l AS t_price_l "
 				+ "FROM orders o "
 				+ "JOIN users u ON o.user_id = u.id "
@@ -210,7 +210,7 @@ public class OrderRepository {
 				+ "RIGHT JOIN items i ON oi.item_id = i.id "
 				+ "LEFT OUTER JOIN order_toppings ot ON oi.id = ot.order_item_id "
 				+ "LEFT OUTER JOIN toppings t ON ot.topping_id = t.id "
-				+ "WHERE o.user_id = :userId ORDER BY o.order_date DESC, o.id DESC, i.id DESC";
+				+ "WHERE o.user_id = :userId ORDER BY o.order_date DESC, o.id DESC, i.id DESC,ot.topping_id ASC";
 
 		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
 		
