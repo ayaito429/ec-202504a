@@ -344,6 +344,7 @@ public class OrderRepository {
 			CartItem cartItem = itemMap.get(orderItemId);
 			if (cartItem == null) {
 				cartItem = new CartItem();
+				cartItem.setId((Integer) row.get("order_item_id"));
 				cartItem.setItemId((Integer) row.get("item_id"));
 				cartItem.setName((String) row.get("item_name"));
 				cartItem.setImagePath((String) row.get("image_path"));
@@ -366,7 +367,6 @@ public class OrderRepository {
 		}
 
 		cartOrder.setOrderItemList(new ArrayList<>(itemMap.values()));
-
 		return cartOrder;
 	}
 

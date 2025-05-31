@@ -54,46 +54,46 @@
               		<h3 th:if="${cartNothing != null}" th:text="${cartNothing}"></h3>
               	</th>
               </tr>
-             
-              <tr th:each="cart,status:${cartOrder.orderItemList}">
-                <td>
-                  <div class="text-center">
-                  
-                    <img
-                      th:src="@{/img_curry/}+${cart.imagePath}"
-                      class="img-responsive img-rounded item-img-center"
-                      width="100"
-                      height="300"
-                    />
-                    <span th:text="${cart.name}"></span>
-                  </div>
-                </td>
-                <td class="text-center">
-                  <span th:text="${cart.size}" class="price">&nbsp;Ｌ</span>
-                  
-                  &nbsp;&nbsp;<span th:text="${#numbers.formatInteger(cart.itemPrice,1,'COMMA')}+'円'"></span>
-                  &nbsp;&nbsp;<span th:text="${cart.quantity}+'個'"></span>
-                </td>
-                <td>
-                  <ul th:if="${toppingList==null}" th:each="topping:${cart.cartToppingList}">
-                    <li th:text="${topping.name}+${topping.price}+'円'" >ピーマン300円</li>
-                  </ul>
-                  <div th:if="${cart.toppingList.size==0}" class="text-center">
-                    <span>トッピングなし</span>
-                  </div>
-                </td>
-                <td>
-                  <div class="text-center" th:text="${#numbers.formatInteger(cart.subTotal,1,'COMMA')}+'円'"></div>
-                </td>
-                <td>
-                  <div class="text-center">
-                  <form th:action="@{/delete}">
-                  <input type="hidden" name="index" th:value="${status.index}">
-                    <button type="submit" class="btn btn-primary" >削除</button>
-                  	</form>
-                  </div>
-                </td>
-              </tr>
+              <th:block th:if="${cartOrder != null and cartOrder.orderItemList != null}">
+                <tr th:each="cart, status : ${cartOrder.orderItemList}">
+                  <td>
+                    <div class="text-center">
+                      <img
+                        th:src="@{/img_curry/}+${cart.imagePath}"
+                        class="img-responsive img-rounded item-img-center"
+                        width="100"
+                        height="300"
+                      />
+                      <span th:text="${cart.name}"></span>
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    <span th:text="${cart.size}" class="price">&nbsp;Ｌ</span>
+                    &nbsp;&nbsp;<span th:text="${#numbers.formatInteger(cart.itemPrice,1,'COMMA')}+'円'"></span>
+                    &nbsp;&nbsp;<span th:text="${cart.quantity}+'個'"></span>
+                  </td>
+                  <td>
+                    <ul th:if="${cart.cartToppingList != null}" th:each="topping : ${cart.cartToppingList}">
+                      <li th:text="${topping.name}+${topping.price}+'円'">ピーマン300円</li>
+                    </ul>
+                    <div th:if="${cart.cartToppingList == null or cart.cartToppingList.size() == 0}" class="text-center">
+                      <span>トッピングなし</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="text-center" th:text="${#numbers.formatInteger(cart.subTotal,1,'COMMA')}+'円'"></div>
+                  </td>
+                  <td>
+                    <div class="text-center">
+                      <form th:action="@{/delete}">
+                        <input type="hidden" name="cartItemId" th:value="${cart.id}">
+                        <input type="hidden" name="index" th:value="${status.index}">
+                        <button type="submit" class="btn btn-primary">削除</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              </th:block>
             </tbody>
           </table>
         </div>

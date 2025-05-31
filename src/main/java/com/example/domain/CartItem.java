@@ -4,6 +4,8 @@ import java.util.List;
 
 public class CartItem {
 
+	// id
+	private Integer id;
 	// 商品Id
 	private Integer itemId;
 	// 商品名
@@ -14,8 +16,6 @@ public class CartItem {
 	private String imagePath;
 	// トッピングのList
 	private List<CartTopping> cartToppingList;
-	// 小計金額
-	private Integer subTotal;
 	// 数量
 	private Integer quantity;
 	// 商品の金額
@@ -77,10 +77,6 @@ public class CartItem {
 		return (this.getItemPrice() + totaleToppingPrice) * this.getQuantity();
 	}
 
-	public void setSubTotal(Integer subTotal) {
-		this.subTotal = subTotal;
-	}
-
 	public Integer getQuantity() {
 		return quantity;
 	}
@@ -89,11 +85,19 @@ public class CartItem {
 		this.quantity = quantity;
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
-		return "CartItem [itemId=" + itemId + ", name=" + name + ", size=" + size + ", imagePath=" + imagePath
-				+ ", toppingList=" + cartToppingList + ", subTotalPrice=" + subTotal + ", area=" + quantity
-				+ ", itemPrice=" + itemPrice + "]";
+		return "CartItem [id=" + id + ", itemId=" + itemId + ", name=" + name + ", size=" + size + ", imagePath="
+				+ imagePath + ", cartToppingList=" + cartToppingList + ", subTotal=" + getSubTotal() + ", quantity="
+				+ quantity + ", itemPrice=" + itemPrice + "]";
 	}
 
 }

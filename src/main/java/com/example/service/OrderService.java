@@ -2,7 +2,6 @@ package com.example.service;
 
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.common.CustomUserDetails;
-import com.example.domain.CartItem;
 import com.example.domain.CartOrder;
 import com.example.domain.Order;
 import com.example.domain.OrderItem;
@@ -172,13 +170,4 @@ public class OrderService {
 		this.sender.send(msg);
 	}
 
-	/**
-	 * カート情報を取得
-	 * 
-	 * @param userId ユーザーID
-	 * @return カート情報
-	 */
-	public CartOrder findForCartByUserId(Integer userId) {
-		return orderRepository.findForCartByUserId(userId);
-	}
 }
