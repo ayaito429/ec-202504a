@@ -2,6 +2,7 @@ package com.example.common;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -30,15 +31,19 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
 
-        // セッションから cartOrder を取得
         Order cartOrder = (Order) session.getAttribute("cartOrder");
 
         if (cartOrder != null) {
             Integer userId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
             cartOrder.setUserId(userId);
             Integer status = 0;
+
             List<Order> orders = orderService.findByStatus(userId, status);
-            if (!orders.isEmpty() && orders.get(0) != null) {
+            if (orders == null) {
+                orders = Collections.emptyList();
+            }
+
+            if (!orders.isEmpty()) {
                 Integer orderId = orders.get(0).getId();
                 for (OrderItem orderItem : cartOrder.getOrderItemList()) {
                     orderItem.setOrderId(orderId);
@@ -51,6 +56,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                     orderService.insertOrderItem(orderItem);
                 }
             }
+
             session.removeAttribute("cartOrder");
         }
 

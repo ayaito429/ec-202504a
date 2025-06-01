@@ -2,8 +2,6 @@ package com.example.service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -12,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.domain.Item;
+import com.example.domain.OrderItem;
 import com.example.domain.Topping;
 import com.example.repository.ItemRepository;
 import com.example.repository.ToppingRepository;
@@ -106,23 +105,13 @@ public class ItemService {
 	}
 
 	/**
-	 * 画像パスの取得
-	 * 
-	 * @param itemId 商品ID
-	 * @return 画像パス一覧
-	 */
-	public List<Map<String, Object>> findAllIdAndImagePath() {
-		return repository.findAllIdAndImagePath();
-	}
-
-	/**
 	 * 在庫情報の取得
 	 * 
 	 * @param name 商品名
 	 * @return 在庫情報
 	 */
-	public Integer findForStockByName(Integer id) {
-		return repository.findForStockByName(id);
+	public Integer findForStockById(Integer id) {
+		return repository.findForStockById(id);
 	}
 
 	/**
@@ -133,5 +122,14 @@ public class ItemService {
 	 */
 	public Topping findToppingById(Integer id) {
 		return toppingRepository.findById(id);
+	}
+
+	/**
+	 * 在庫情報の更新
+	 * 
+	 * @param orderItem 注文商品情報
+	 */
+	public void updateStock(OrderItem orderItem) {
+		repository.updateStock(orderItem);
 	}
 }

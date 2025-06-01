@@ -41,11 +41,11 @@ public class SecurityConfig {
                                                 .loginPage("/toLogin")
                                                 .loginProcessingUrl("/login")
                                                 .successHandler(successHandler)
-                                                .failureUrl("/login?error=true")
+                                                .failureUrl("/toLogin?error=true")
                                                 .permitAll())
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")
-                                                .logoutSuccessUrl("/login?logout=true")
+                                                .logoutSuccessUrl("/toLogin?logout=true")
                                                 .invalidateHttpSession(true)
                                                 .permitAll())
                                 .userDetailsService(userDetailsService)

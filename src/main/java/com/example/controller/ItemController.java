@@ -108,7 +108,7 @@ public class ItemController {
 			model.addAttribute("item", item);
 
 			// 在庫情報を取得
-			Integer stock = itemService.findForStockByName(item.getId());
+			Integer stock = itemService.findForStockById(item.getId());
 			model.addAttribute("stock", stock);
 
 			// トッピングリスト

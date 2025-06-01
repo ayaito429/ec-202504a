@@ -91,6 +91,33 @@ public class OrderService {
 	}
 
 	/**
+	 * 注文時の金額を登録
+	 * 
+	 * @param id 注文商品ID
+	 */
+	public void insertItemPrice(OrderItem orderItem) {
+		orderItemRepository.insertPrice(orderItem);
+	}
+
+	/**
+	 * 注文時の金額を登録
+	 * 
+	 * @param orderTopping トッピング情報
+	 */
+	public void insertToppingPrice(OrderTopping orderTopping) {
+		orderToppingRepository.insertPrice(orderTopping);
+	}
+
+	/**
+	 * 注文情報の更新
+	 * 
+	 * @param order 注文情報
+	 */
+	public void update(Order order) {
+		orderRepository.update(order);
+	}
+
+	/**
 	 * 引数で受け取ったemailに完了メールを送付
 	 * 
 	 * @param email

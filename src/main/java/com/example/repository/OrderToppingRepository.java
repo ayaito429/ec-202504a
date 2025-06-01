@@ -41,6 +41,17 @@ public class OrderToppingRepository {
 	}
 
 	/**
+	 * 注文時の金額を登録
+	 * 
+	 * @param orderTopping トッピング情報
+	 */
+	public void insertPrice(OrderTopping orderTopping) {
+		String sql = "UPDATE order_toppings SET price = :price WHERE id = :id";
+		SqlParameterSource param = new BeanPropertySqlParameterSource(orderTopping);
+		template.update(sql, param);
+	}
+
+	/**
 	 * 注文内のトッピング情報の削除
 	 * 
 	 * @param orderItemId

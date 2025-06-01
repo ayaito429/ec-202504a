@@ -45,7 +45,10 @@ public class CartController {
 	private Order getCartOrder(CustomUserDetails customUserDetails) {
 		if (customUserDetails != null) {
 			List<Order> cartOrders = orderService.findByStatus(customUserDetails.getUserId(), 0);
-			return (!cartOrders.isEmpty()) ? cartOrders.get(0) : null;
+			if (cartOrders == null || cartOrders.isEmpty()) {
+				return null;
+			}
+			return cartOrders.get(0);
 		} else {
 			return (Order) session.getAttribute("cartOrder");
 		}
@@ -59,7 +62,7 @@ public class CartController {
 		orderItem.setOrderTopping(orderToppings);
 		orderItem.setItem(item);
 
-		int itemPrice = form.getSize().equals("M") ? item.getPriceM() : item.getPriceL();
+		Integer itemPrice = form.getSize().equals("M") ? item.getPriceM() : item.getPriceL();
 		orderItem.setItemPrice(itemPrice);
 
 		return orderItem;
@@ -69,15 +72,13 @@ public class CartController {
 	@RequestMapping("/inCart")
 	public String inCart(ItemCartInForm form, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 		Item item = itemService.showItemDetail(form.getId());
-
-		// トッピング作成
 		List<OrderTopping> orderToppings = new ArrayList<>();
 		if (form.getToppingIndex() != null) {
 			for (String toppingId : form.getToppingIndex()) {
 				Topping topping = itemService.findToppingById(Integer.parseInt(toppingId));
 				OrderTopping orderTopping = new OrderTopping();
 				orderTopping.setToppingId(topping.getId());
-				int price = form.getSize().equals("M") ? topping.getPriceM() : topping.getPriceL();
+				Integer price = form.getSize().equals("M") ? topping.getPriceM() : topping.getPriceL();
 				orderTopping.setPrice(price);
 				orderTopping.setTopping(topping);
 				orderToppings.add(orderTopping);
@@ -91,7 +92,7 @@ public class CartController {
 			if (cartOrder == null) {
 				Order newOrder = new Order();
 				newOrder.setStatus(0);
-				int orderId = orderService.insert(newOrder);
+				Integer orderId = orderService.insert(newOrder);
 				orderItem.setOrderId(orderId);
 				orderService.insertOrderItem(orderItem);
 			} else {
@@ -122,16 +123,20 @@ public class CartController {
 		Order cartOrder = getCartOrder(customUserDetails);
 
 		if (cartOrder != null && cartOrder.getOrderItemList() != null && !cartOrder.getOrderItemList().isEmpty()) {
+			Integer totalPrice = 0;
 			for (OrderItem orderItem : cartOrder.getOrderItemList()) {
-				int itemPrice = orderItem.getSize().equals("M") ? orderItem.getItem().getPriceM()
+				Integer itemPrice = orderItem.getSize().equals("M") ? orderItem.getItem().getPriceM()
 						: orderItem.getItem().getPriceL();
 				orderItem.setItemPrice(itemPrice);
+				totalPrice += itemPrice;
 				for (OrderTopping orderTopping : orderItem.getOrderTopping()) {
-					int toppingPrice = orderItem.getSize().equals("M") ? orderTopping.getTopping().getPriceM()
+					Integer toppingPrice = orderItem.getSize().equals("M") ? orderTopping.getTopping().getPriceM()
 							: orderTopping.getTopping().getPriceL();
 					orderTopping.setPrice(toppingPrice);
+					totalPrice += toppingPrice;
 				}
 			}
+			cartOrder.setTotalPrice(totalPrice);
 			model.addAttribute("cartOrder", cartOrder);
 		} else {
 			model.addAttribute("cartNothing", "カートの中身はございません");

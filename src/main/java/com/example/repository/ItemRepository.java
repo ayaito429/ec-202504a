@@ -1,9 +1,6 @@
 package com.example.repository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -13,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import com.example.domain.Item;
+import com.example.domain.OrderItem;
 
 @Repository
 public class ItemRepository {
@@ -112,31 +110,12 @@ public class ItemRepository {
 	}
 
 	/**
-	 * 画像パスの取得
-	 * 
-	 * @param itemId 商品ID
-	 * @return 画像パス一覧
-	 */
-	public List<Map<String, Object>> findAllIdAndImagePath() {
-		String sql = "SELECT id, image_path FROM items";
-
-		List<Map<String, Object>> resultList = template.query(sql, (rs, rowNum) -> {
-			Map<String, Object> map = new HashMap<>();
-			map.put("id", rs.getInt("id"));
-			map.put("image_path", rs.getString("image_path"));
-			return map;
-		});
-
-		return resultList;
-	}
-
-	/**
 	 * 在庫情報の取得
 	 * 
 	 * @param name 商品名
 	 * @return 在庫情報
 	 */
-	public Integer findForStockByName(Integer id) {
+	public Integer findForStockById(Integer id) {
 		String sql = """
 				    SELECT s.stock
 				    FROM items i
@@ -146,5 +125,16 @@ public class ItemRepository {
 
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
 		return template.queryForObject(sql, param, Integer.class);
+	}
+
+	/**
+	 * 在庫情報の更新
+	 * 
+	 * @param orderItem 注文商品情報
+	 */
+	public void updateStock(OrderItem orderItem) {
+		String sql = "UPDATE item_stocks SET stock = stock - :quantity WHERE item_id = :itemId AND stock >= :quantity";
+		SqlParameterSource param = new BeanPropertySqlParameterSource(orderItem);
+		template.update(sql, param);
 	}
 }

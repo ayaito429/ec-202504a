@@ -50,6 +50,17 @@ public class OrderItemRepository {
 	}
 
 	/**
+	 * 注文時の金額を登録
+	 * 
+	 * @param id 注文商品ID
+	 */
+	public void insertPrice(OrderItem orderItem) {
+		String sql = "UPDATE order_items SET price = :itemPrice WHERE id = :id";
+		SqlParameterSource param = new BeanPropertySqlParameterSource(orderItem);
+		template.update(sql, param);
+	}
+
+	/**
 	 * 注文内の商品情報の削除
 	 * 
 	 * @param orderId

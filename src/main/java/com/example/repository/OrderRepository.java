@@ -276,74 +276,26 @@ public class OrderRepository {
 	}
 
 	/**
-	 * カート情報を取得
+	 * 注文情報の更新
 	 * 
-	 * @param userId ユーザーID
-	 * @return カート情報
+	 * @param order 注文情報
 	 */
-	public List<Order> findCartOrderByUserId(Integer userId) {
-		String sql = """
-					SELECT
-						o.id AS o_id,
-						o.user_id AS o_user_id,
-						o.status AS o_status,
-
-						oi.id AS oi_id,
-						oi.item_id AS oi_item_id,
-						oi.order_id AS oi_order_id,
-						oi.quantity AS oi_quantity,
-						oi.size AS oi_size,
-
-						i.id AS i_id,
-						i.name AS i_name,
-						i.description AS i_description,
-						i.price_m AS i_price_m,
-						i.price_l AS i_price_l,
-						i.image_path AS i_image_path,
-						i.deleted AS i_deleted,
-
-						ot.id AS ot_id,
-						ot.topping_id AS ot_topping_id,
-						ot.order_item_id AS ot_order_item_id,
-
-						t.id AS t_id,
-						t.name AS t_name,
-						t.price_m AS t_price_m,
-						t.price_l AS t_price_l
-
-					FROM orders o
-					JOIN order_items oi ON o.id = oi.order_id
-					JOIN items i ON oi.item_id = i.id
-					LEFT JOIN order_toppings ot ON oi.id = ot.order_item_id
-					LEFT JOIN toppings t ON ot.topping_id = t.id
-					WHERE o.user_id = :userId AND o.status = 0
-					ORDER BY o.id, oi.id, ot.id
-				""";
-
-		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
-
-		List<Order> orderList = template.query(sql, param, ORDER_RESULTSET);
-		for (OrderItem orderItem : orderList.get(0).getOrderItemList()) {
-			if (orderItem.getSize() == "M") {
-				orderItem.setItemPrice(orderItem.getItem().getPriceM());
-			} else if (orderItem.getSize() == "L") {
-				orderItem.setItemPrice(orderItem.getItem().getPriceL());
-			}
-
-			for (OrderTopping orderTopping : orderItem.getOrderTopping()) {
-				if (orderItem.getSize() == "M") {
-					orderTopping.setPrice(orderTopping.getTopping().getPriceM());
-				} else if (orderItem.getSize() == "L") {
-					orderTopping.setPrice(orderTopping.getTopping().getPriceL());
-				}
-			}
-		}
-
-		if (orderList.isEmpty()) {
-			return null;
-		}
-
-		return orderList;
+	public void update(Order order) {
+		String sql = "UPDATE orders SET "
+				+ "user_id = :userId, "
+				+ "status = :status, "
+				+ "total_price = :totalPrice, "
+				+ "order_date = :orderDate, "
+				+ "destination_name = :destinationName, "
+				+ "destination_email = :destinationEmail, "
+				+ "destination_zipcode = :destinationZipcode, "
+				+ "destination_address = :destinationAddress, "
+				+ "destination_tel = :destinationTel, "
+				+ "delivery_time = :deliveryTime, "
+				+ "payment_method = :paymentMethod "
+				+ "WHERE id = :id;";
+		SqlParameterSource param = new BeanPropertySqlParameterSource(order);
+		template.update(sql, param);
 	}
 
 }

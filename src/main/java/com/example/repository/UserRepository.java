@@ -1,6 +1,5 @@
 package com.example.repository;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -13,8 +12,8 @@ import com.example.domain.User;
 
 @Repository
 public class UserRepository {
-	
-	private static final RowMapper<User> USER_ROW_MAPPER =(rs,i)->{
+
+	private static final RowMapper<User> USER_ROW_MAPPER = (rs, i) -> {
 		User user = new User();
 		user.setId(rs.getInt("id"));
 		user.setName(rs.getString("name"));
@@ -27,28 +26,26 @@ public class UserRepository {
 
 	@Autowired
 	private NamedParameterJdbcTemplate template;
-	
-	public User  findByMailAddress(String email) {
-		String sql ="SELECT * FROM users WHERE email=:email";
-		
-		SqlParameterSource param = new MapSqlParameterSource().addValue("email",email);
-		
+
+	public User findByMailAddress(String email) {
+		String sql = "SELECT * FROM users WHERE email=:email";
+
+		SqlParameterSource param = new MapSqlParameterSource().addValue("email", email);
+
 		try {
-			User user= template.queryForObject(sql, param, USER_ROW_MAPPER);
-			System.out.println(user);
+			User user = template.queryForObject(sql, param, USER_ROW_MAPPER);
 			return user;
-		}catch(Exception e) {
+		} catch (Exception e) {
 			return null;
 		}
-		
+
 	}
-	
+
 	public void insert(User user) {
-		System.out.println(user);
 		SqlParameterSource param = new BeanPropertySqlParameterSource(user);
 		String sql = "INSERT INTO users (name, email, password, zipcode, address, telephone) "
-				+ "VALUES (:name, :email, :password, :zipcode, :address, :telephone);";	
-		template.update(sql, param);		
+				+ "VALUES (:name, :email, :password, :zipcode, :address, :telephone);";
+		template.update(sql, param);
 	}
-	
+
 }
