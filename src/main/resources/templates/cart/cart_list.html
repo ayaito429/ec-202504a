@@ -59,12 +59,12 @@
                   <td>
                     <div class="text-center">
                       <img
-                        th:src="@{/img_curry/}+${cart.imagePath}"
+                        th:src="@{/img_curry/}+${cart.item.imagePath}"
                         class="img-responsive img-rounded item-img-center"
                         width="100"
                         height="300"
                       />
-                      <span th:text="${cart.name}"></span>
+                      <span th:text="${cart.item.name}"></span>
                     </div>
                   </td>
                   <td class="text-center">
@@ -73,10 +73,10 @@
                     &nbsp;&nbsp;<span th:text="${cart.quantity}+'個'"></span>
                   </td>
                   <td>
-                    <ul th:if="${cart.cartToppingList != null}" th:each="topping : ${cart.cartToppingList}">
-                      <li th:text="${topping.name}+${topping.price}+'円'">ピーマン300円</li>
+                    <ul th:if="${cart.orderTopping != null}" th:each="cartTopping : ${cart.orderTopping}">
+                      <li th:text="${cartTopping.topping.name}+${cartTopping.price}+'円'">ピーマン300円</li>
                     </ul>
-                    <div th:if="${cart.cartToppingList == null or cart.cartToppingList.size() == 0}" class="text-center">
+                    <div th:if="${cart.orderTopping == null or cart.orderTopping.size() == 0}" class="text-center">
                       <span>トッピングなし</span>
                     </div>
                   </td>

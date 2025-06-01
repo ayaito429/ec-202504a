@@ -15,7 +15,7 @@
   <body>
     <div class="container">
 	<span th:insert="~{header::header}"></span>
-      <form th:action="@{/inCart}" method="post" th:object="${itemCartInForm}">
+      <form th:action="@{/inCart}" method="post" th:object="${itemCartInForm}" id="cartForm">
       	<input type="hidden" name="id" th:value="${item.id}">
         <div class="row">
           <div class="col-xs-offset-1 col-xs-11 col-lg-offset-2 col-lg-8">
@@ -94,7 +94,7 @@
                       </label>
                     </div>
                     <div class="col-sm-12" id="topping">
-                    	<div th:each="topping, status : ${application.toppingList}">
+                    	<div th:each="topping, status : ${toppingList}">
 	                      <label class="checkbox-inline">
 	                        <input th:text="${topping.name}" type="checkbox" class="checkbox" name="toppingIndex" th:value="${status.index}"/>
 	                      </label>
@@ -110,12 +110,8 @@
                   <div class="row">
                     <div class="col-xs-10 col-sm-8">
                       <label for="">数量:</label>
-                      <label
-                        class="control-label"
-                        style="color: red"
-                        for="inputError"
-                        >数量を選択してください</label
-                      >
+                      <input type="hidden" id="stock" th:value="${stock}" />
+                      <label id="errorLabel" class="control-label" style="color: red; white-space: pre-line"></label>
                       <select name="quantity" class="form-control" id="currynum">
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -161,8 +157,51 @@
       </form>
     </div>
     <!-- end container -->
+     <!-- 在庫チェック用JS -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const form = document.getElementById('cartForm');
+          if (!form) {
+              console.warn('cartForm が見つかりません。JSをスキップします。');
+              return;
+          }
+
+          const stockElement = document.getElementById('stock');
+          const stock = stockElement ? parseInt(stockElement.value, 10) : 0;
+          const quantitySelect = document.getElementById('currynum');
+          const errorLabel = document.getElementById('errorLabel');
+
+          // ★ 初期表示で10以下なら残り個数メッセージを表示
+          if (errorLabel) {
+              if (stock > 0 && stock <= 10) {
+                  errorLabel.textContent = '残り ' + stock + ' 個です。';
+                  errorLabel.style.display = 'inline';
+              }
+          }
+
+          form.addEventListener('submit', function(event) {
+              const quantity = parseInt(quantitySelect.value, 10);
+
+              if (errorLabel) {
+                  errorLabel.textContent = '';
+                  errorLabel.style.display = 'inline';
+              }
+
+              if (stock === 0) {
+                  if (errorLabel) errorLabel.textContent = '在庫がありません';
+                  event.preventDefault();
+              } else if (quantity > stock) {
+                  if (errorLabel) {
+                      // 改行対応版
+                      errorLabel.innerHTML = '注文数量が在庫を超えています。<br>残りは ' + stock + ' 個です。';
+                  }
+                  event.preventDefault();
+              }
+          });
+      });
+    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script type="text/javascript" src="js/item_deail.js"></script>
-  <script th:src="@{/js/bootstrap.min.js}"></script>
+	  <script type="text/javascript" src="js/item_deail.js"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
   </body>
 </html>

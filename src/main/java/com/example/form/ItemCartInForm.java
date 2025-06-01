@@ -23,7 +23,7 @@ public class ItemCartInForm {
 	// 数量
 	private Integer quantity;
 	// 商品id
-	private Integer id;
+	private Integer itemId;
 	// image
 	private String imagePath;
 
@@ -84,17 +84,17 @@ public class ItemCartInForm {
 	}
 
 	public Integer getId() {
-		return id;
+		return itemId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setId(Integer itemId) {
+		this.itemId = itemId;
 	}
 
 	@Override
 	public String toString() {
 		return "ItemCartInForm [name=" + name + ", size=" + size + ", priceM=" + priceM + ", priceL=" + priceL
-				+ ", toppingIndex=" + toppingIndex + ", quantity=" + quantity + ", id=" + id + ", imagePath="
+				+ ", toppingIndex=" + toppingIndex + ", quantity=" + quantity + ", itemId=" + itemId + ", imagePath="
 				+ imagePath + "]";
 	}
 }

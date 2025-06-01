@@ -1,17 +1,11 @@
 package com.example.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -19,9 +13,6 @@ import com.example.common.CustomUserDetails;
 import com.example.domain.Order;
 import com.example.form.OrderForm;
 import com.example.service.OrderService;
-import com.example.service.UserService;
-
-import jakarta.servlet.http.HttpSession;
 
 /**
  * 注文確認画面に遷移するためのコントローラー
@@ -36,19 +27,13 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 
-	@Autowired
-	private UserService userService;
-
-	@Autowired
-	private HttpSession session;
-
 	@ModelAttribute
-	public OrderForm setOrderForm(Model model) {
+	public OrderForm setOrderForm() {
 		return new OrderForm();
 	}
 
 	@RequestMapping("/toOrder")
-	public String toOrder(Model model) {
+	public String toOrder() {
 		return "order/order_confirm";
 	}
 
@@ -149,10 +134,8 @@ public class OrderController {
 
 	@RequestMapping("orderdetail")
 	public String orderDetail(Integer id, Model model) {
-		System.out.println(id);
 		List<Order> orderList = orderService.orderLoad(id);
 		model.addAttribute("orderList", orderList);
-		System.out.println(orderList);
 		return "/order/order_detail";
 	}
 }

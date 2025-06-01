@@ -129,4 +129,22 @@ public class ItemRepository {
 
 		return resultList;
 	}
+
+	/**
+	 * 在庫情報の取得
+	 * 
+	 * @param name 商品名
+	 * @return 在庫情報
+	 */
+	public Integer findForStockByName(Integer id) {
+		String sql = """
+				    SELECT s.stock
+				    FROM items i
+				    INNER JOIN item_stocks s ON i.id = s.item_id
+				    WHERE i.id = :id
+				""";
+
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+		return template.queryForObject(sql, param, Integer.class);
+	}
 }

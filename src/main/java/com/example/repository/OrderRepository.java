@@ -1,10 +1,7 @@
 package com.example.repository;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -15,9 +12,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.example.domain.CartItem;
-import com.example.domain.CartOrder;
-import com.example.domain.CartTopping;
 import com.example.domain.Item;
 import com.example.domain.Order;
 import com.example.domain.OrderItem;
@@ -231,27 +225,27 @@ public class OrderRepository {
 	 * @param userId
 	 * @return
 	 */
-	public List<Order> findByStatus0(Integer userId) {
+	public List<Order> findByStatus(Integer userId, Integer status) {
 		String sql = "SELECT o.id AS o_id, o.user_id AS o_user_id, o.status AS o_status, o.total_price AS o_total_price, "
 				+ "o.order_date AS o_order_date, o.destination_name AS o_destination_name, o.destination_email AS o_destination_email, "
 				+ "o.destination_zipcode AS o_destination_zipcode, o.destination_address AS o_destination_address, o.destination_tel AS o_destination_tel, "
 				+ "o.delivery_time AS o_delivery_time, o.payment_method AS o_payment_method, "
-				+ "u.id AS u_id, u.name AS u_name, u.password AS u_password, u.email As u_email, u.zipcode AS u_zipcode, u.address AS u_address, u.telephone AS u_telephone, "
+				+ "u.id AS u_id, u.name AS u_name, u.password AS u_password, u.email AS u_email, u.zipcode AS u_zipcode, u.address AS u_address, u.telephone AS u_telephone, "
 				+ "oi.id AS oi_id, oi.item_id AS oi_item_id, oi.order_id AS oi_order_id, oi.quantity AS oi_quantity, "
-				+ "oi.size AS oi_size, oi.price AS oi_price,"
+				+ "oi.size AS oi_size, oi.price AS oi_price, "
 				+ "i.id AS i_id, i.name AS i_name, i.description AS i_description, i.price_m AS i_price_m, i.price_l AS i_price_l, "
 				+ "i.image_path AS i_image_path, i.deleted AS i_deleted, "
-				+ "ot.id AS ot_id, ot.topping_id AS ot_topping_id, ot.order_item_id AS ot_order_item_id, ot.price AS ot_price, t.id AS t_id, t.name AS t_name, "
-				+ "t.price_m AS t_price_m, t.price_l AS t_price_l "
+				+ "ot.id AS ot_id, ot.topping_id AS ot_topping_id, ot.order_item_id AS ot_order_item_id, ot.price AS ot_price, "
+				+ "t.id AS t_id, t.name AS t_name, t.price_m AS t_price_m, t.price_l AS t_price_l "
 				+ "FROM orders o "
 				+ "JOIN users u ON o.user_id = u.id "
-				+ "RIGHT JOIN order_items oi ON o.id = oi.order_id "
-				+ "RIGHT JOIN items i ON oi.item_id = i.id "
-				+ "LEFT OUTER JOIN order_toppings ot ON oi.id = ot.order_item_id "
-				+ "LEFT OUTER JOIN toppings t ON ot.topping_id = t.id "
-				+ "WHERE o.user_id = :userId AND status = :status ORDER BY o.order_date DESC, o.id DESC, i.id DESC,ot.topping_id ASC";
-
-		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
+				+ "LEFT JOIN order_items oi ON o.id = oi.order_id "
+				+ "LEFT JOIN items i ON oi.item_id = i.id "
+				+ "LEFT JOIN order_toppings ot ON oi.id = ot.order_item_id "
+				+ "LEFT JOIN toppings t ON ot.topping_id = t.id "
+				+ "WHERE o.user_id = :userId AND o.status = :status "
+				+ "ORDER BY o.order_date DESC, o.id DESC, i.id DESC, ot.topping_id ASC";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId).addValue("status", status);
 
 		List<Order> orderList = template.query(sql, param, ORDER_RESULTSET);
 
@@ -287,87 +281,69 @@ public class OrderRepository {
 	 * @param userId ユーザーID
 	 * @return カート情報
 	 */
-	public CartOrder findForCartByUserId(Integer userId) {
+	public List<Order> findCartOrderByUserId(Integer userId) {
 		String sql = """
-				SELECT
-					o.id AS order_id,
-					o.user_id,
+					SELECT
+						o.id AS o_id,
+						o.user_id AS o_user_id,
+						o.status AS o_status,
 
-					oi.id AS order_item_id,
-					oi.item_id,
-					i.name AS item_name,
-					i.image_path,
-					oi.size,
-					oi.quantity,
-					CASE
-						WHEN oi.size = 'M' THEN i.price_m
-						WHEN oi.size = 'L' THEN i.price_l
-						ELSE 0
-					END AS item_price,
+						oi.id AS oi_id,
+						oi.item_id AS oi_item_id,
+						oi.order_id AS oi_order_id,
+						oi.quantity AS oi_quantity,
+						oi.size AS oi_size,
 
-					ot.id AS order_topping_id,
-					ot.topping_id,
-					t.name AS topping_name,
-					CASE
-						WHEN oi.size = 'M' THEN t.price_m
-						WHEN oi.size = 'L' THEN t.price_l
-						ELSE 0
-					END AS topping_price
-				FROM orders o
-				JOIN order_items oi ON o.id = oi.order_id
-				JOIN items i ON oi.item_id = i.id
-				LEFT JOIN order_toppings ot ON oi.id = ot.order_item_id
-				LEFT JOIN toppings t ON ot.topping_id = t.id
-				WHERE o.user_id = :userId
-					AND o.status = 0
-				ORDER BY o.id, oi.id, ot.id;
+						i.id AS i_id,
+						i.name AS i_name,
+						i.description AS i_description,
+						i.price_m AS i_price_m,
+						i.price_l AS i_price_l,
+						i.image_path AS i_image_path,
+						i.deleted AS i_deleted,
+
+						ot.id AS ot_id,
+						ot.topping_id AS ot_topping_id,
+						ot.order_item_id AS ot_order_item_id,
+
+						t.id AS t_id,
+						t.name AS t_name,
+						t.price_m AS t_price_m,
+						t.price_l AS t_price_l
+
+					FROM orders o
+					JOIN order_items oi ON o.id = oi.order_id
+					JOIN items i ON oi.item_id = i.id
+					LEFT JOIN order_toppings ot ON oi.id = ot.order_item_id
+					LEFT JOIN toppings t ON ot.topping_id = t.id
+					WHERE o.user_id = :userId AND o.status = 0
+					ORDER BY o.id, oi.id, ot.id
 				""";
 
 		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
 
-		List<Map<String, Object>> resultList = template.queryForList(sql, param);
+		List<Order> orderList = template.query(sql, param, ORDER_RESULTSET);
+		for (OrderItem orderItem : orderList.get(0).getOrderItemList()) {
+			if (orderItem.getSize() == "M") {
+				orderItem.setItemPrice(orderItem.getItem().getPriceM());
+			} else if (orderItem.getSize() == "L") {
+				orderItem.setItemPrice(orderItem.getItem().getPriceL());
+			}
 
-		if (resultList.isEmpty()) {
+			for (OrderTopping orderTopping : orderItem.getOrderTopping()) {
+				if (orderItem.getSize() == "M") {
+					orderTopping.setPrice(orderTopping.getTopping().getPriceM());
+				} else if (orderItem.getSize() == "L") {
+					orderTopping.setPrice(orderTopping.getTopping().getPriceL());
+				}
+			}
+		}
+
+		if (orderList.isEmpty()) {
 			return null;
 		}
 
-		CartOrder cartOrder = new CartOrder();
-		Map<Integer, CartItem> itemMap = new LinkedHashMap<>();
-
-		for (Map<String, Object> row : resultList) {
-			if (cartOrder.getId() == null) {
-				cartOrder.setId((Integer) row.get("order_id"));
-				cartOrder.setUserId((Integer) row.get("user_id"));
-			}
-
-			Integer orderItemId = (Integer) row.get("order_item_id");
-			CartItem cartItem = itemMap.get(orderItemId);
-			if (cartItem == null) {
-				cartItem = new CartItem();
-				cartItem.setId((Integer) row.get("order_item_id"));
-				cartItem.setItemId((Integer) row.get("item_id"));
-				cartItem.setName((String) row.get("item_name"));
-				cartItem.setImagePath((String) row.get("image_path"));
-				cartItem.setSize((String) row.get("size"));
-				cartItem.setQuantity((Integer) row.get("quantity"));
-				cartItem.setItemPrice((Integer) row.get("item_price"));
-				cartItem.setCartToppingList(new ArrayList<>());
-
-				itemMap.put(orderItemId, cartItem);
-			}
-
-			Integer orderToppingId = (Integer) row.get("order_topping_id");
-			if (orderToppingId != null) {
-				CartTopping cartTopping = new CartTopping();
-				cartTopping.setId((Integer) row.get("topping_id"));
-				cartTopping.setName((String) row.get("topping_name"));
-				cartTopping.setPrice((Integer) row.get("topping_price"));
-				cartItem.getCartToppingList().add(cartTopping);
-			}
-		}
-
-		cartOrder.setOrderItemList(new ArrayList<>(itemMap.values()));
-		return cartOrder;
+		return orderList;
 	}
 
 }

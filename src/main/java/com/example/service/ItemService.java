@@ -114,4 +114,24 @@ public class ItemService {
 	public List<Map<String, Object>> findAllIdAndImagePath() {
 		return repository.findAllIdAndImagePath();
 	}
+
+	/**
+	 * 在庫情報の取得
+	 * 
+	 * @param name 商品名
+	 * @return 在庫情報
+	 */
+	public Integer findForStockByName(Integer id) {
+		return repository.findForStockByName(id);
+	}
+
+	/**
+	 * トッピング情報を取得
+	 * 
+	 * @param id トッピングID
+	 * @return トッピング情報
+	 */
+	public Topping findToppingById(Integer id) {
+		return toppingRepository.findById(id);
+	}
 }
