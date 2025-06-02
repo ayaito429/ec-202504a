@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
             errorLabel.textContent = '残り ' + stock + ' 個です。';
             errorLabel.style.display = 'inline';
         } else if (stock == 0) {
-        errorLabel.textContent = '在庫がありません';
+        errorLabel.textContent = '在庫がありません。';
         errorLabel.style.display = 'inline';
         }
     }
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (stock === 0) {
-            if (errorLabel) errorLabel.textContent = '在庫がありません';
+            if (errorLabel) errorLabel.textContent = '在庫がありません。<br>在庫がない為カートに追加できません。';
             event.preventDefault();
         } else if (quantity > stock) {
             if (errorLabel) {
