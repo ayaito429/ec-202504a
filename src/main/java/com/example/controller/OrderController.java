@@ -1,11 +1,12 @@
 package com.example.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -14,12 +15,18 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.common.CustomUserDetails;
 import com.example.domain.Order;
+import com.example.domain.OrderItem;
+import com.example.domain.OrderTopping;
 import com.example.form.OrderForm;
+import com.example.service.ItemService;
 import com.example.service.OrderService;
+import com.example.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
 
 /**
  * 注文確認画面に遷移するためのコントローラー
@@ -34,115 +41,162 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 
+	@Autowired
+	private ItemService itemService;
+
 	@ModelAttribute
-	public OrderForm setOrderForm(Model model) {
+	public OrderForm setOrderForm() {
 		return new OrderForm();
 	}
 
 	@RequestMapping("/toOrder")
-	public String toOrder(Model model) {
+	public String toOrder(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails,
+			RedirectAttributes redirectAttributes) {
+
+		List<Order> cartOrders = orderService.findByStatus(customUserDetails.getUserId(), 0);
+
+		if (cartOrders.isEmpty()) {
+			redirectAttributes.addFlashAttribute("errorMessage", "カートの中身はございません");
+			return "redirect:/showCart";
+		}
+
+		Order cartOrder = cartOrders.get(0);
+		Map<Integer, String> errorMessages = validateStock(cartOrder);
+
+		if (!errorMessages.isEmpty()) {
+			redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
+			redirectAttributes.addFlashAttribute("cartOrder", cartOrder);
+			return "redirect:/showCart";
+		}
+
+		model.addAttribute("cartOrder", cartOrder);
+
+		OrderForm orderForm = new OrderForm();
+		orderForm.setDestinationName(cartOrder.getUser().getName());
+		orderForm.setDestinationEmail(cartOrder.getUser().getEmail());
+		orderForm.setDestinationZipcode(cartOrder.getUser().getZipcode());
+		orderForm.setDestinationAddress(cartOrder.getUser().getAddress());
+		orderForm.setDestinationTel(cartOrder.getUser().getTelephone());
+		model.addAttribute("orderForm", orderForm);
+
 		return "order/order_confirm";
 	}
 
-	@RequestMapping("/orderCo")
-	public String orderCo() {
-		return "order/order_confirm";
-	}
-
-	/**
-	 * 注文完了画面に遷移
-	 * 
-	 * @param form
-	 * @return 完了画面
-	 */
 	@RequestMapping("/order")
 	public String orderCompletion(@Validated OrderForm form, BindingResult result, Model model,
-			@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-		// 配達日チェック
-		Date today = new Date();
-		Calendar yesterday = Calendar.getInstance();
-		yesterday.setTime(today);
-		yesterday.add(Calendar.DAY_OF_MONTH, -1);
-		Date minDate = yesterday.getTime();
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
+			RedirectAttributes redirectAttributes) {
 
-		if (result.hasErrors() || form.getOrderDate() == null) {
-			model.addAttribute("errorDeliveryDate", "配達日を入力してください");
-			return "order/order_confirm";
-		}
-		if (minDate.after(form.getOrderDate())) {
-			model.addAttribute("errorDeliveryDate", "配達日が過去の日付になっています");
-			return "order/order_confirm";
+		List<Order> cartOrders = orderService.findByStatus(customUserDetails.getUserId(), 0);
+		if (cartOrders.isEmpty()) {
+			redirectAttributes.addFlashAttribute("errorMessage", "カートが空です");
+			return "redirect:/showCart";
 		}
 
-		// 3時間後の時間チェック
-		Calendar timePlusThree = Calendar.getInstance();
-		timePlusThree.setTime(today);
-		timePlusThree.add(Calendar.HOUR_OF_DAY, 3);
-		Date minDeliveryTime = timePlusThree.getTime();
+		Order cartOrder = cartOrders.get(0);
+		Map<Integer, String> errorMessages = validateStock(cartOrder);
 
-		SimpleDateFormat yearFmt = new SimpleDateFormat("yyyy");
-		SimpleDateFormat monthFmt = new SimpleDateFormat("MM");
-		SimpleDateFormat dayFmt = new SimpleDateFormat("dd");
+		if (!errorMessages.isEmpty()) {
+			redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
+			redirectAttributes.addFlashAttribute("cartOrder", cartOrder);
+			return "redirect:/showCart";
+		}
 
-		int deliveryYear = Integer.parseInt(yearFmt.format(form.getOrderDate()));
-		int deliveryMonth = Integer.parseInt(monthFmt.format(form.getOrderDate()));
-		int deliveryDay = Integer.parseInt(dayFmt.format(form.getOrderDate()));
+		if (result.hasErrors()) {
+			model.addAttribute("cartOrder", cartOrder);
+			model.addAttribute("orderForm", form);
+			return "order/order_confirm";
+		}
 
-		@SuppressWarnings("deprecation")
-		Date deliveryTime = new Date(deliveryYear - 1900, deliveryMonth - 1, deliveryDay, form.getIntegerDeliveryTime(),
-				0, 0);
-
+		Timestamp deliveryTime = form.getTimestamp();
+		Timestamp minDeliveryTime = new Timestamp(System.currentTimeMillis() + (3 * 60 * 60 * 1000));
 		if (minDeliveryTime.after(deliveryTime)) {
-			model.addAttribute("errorDeliveryDate", "今から3時間後の日時をご入力ください");
+			model.addAttribute("errorDeliveryDate", "今から3時間後の日時をご入力ください。");
+			model.addAttribute("cartOrder", cartOrder);
+			model.addAttribute("orderForm", form);
 			return "order/order_confirm";
 		}
 
-		// 注文情報を作成
-		Order order = new Order();
-		BeanUtils.copyProperties(form, order);
-		order.setDestinationZipcode(form.getDestinationZipcode().replace("-", ""));
-		order.setDeliveryTime(form.getTimestamp());
-		order.setUserId(customUserDetails.getUserId());
+		cartOrder.setOrderDate(Date.valueOf(LocalDate.now()));
+		cartOrder.setDestinationName(form.getDestinationName());
+		cartOrder.setDestinationEmail(form.getDestinationEmail());
+		cartOrder.setDestinationZipcode(form.getDestinationZipcode());
+		cartOrder.setDestinationAddress(form.getDestinationAddress());
+		cartOrder.setDestinationTel(form.getDestinationTel());
+		cartOrder.setDeliveryTime(deliveryTime);
+		cartOrder.setPaymentMethod(form.getPaymentMethod());
+		cartOrder.setStatus(2);
 
-		orderService.order(order);
+		orderService.update(cartOrder);
 
-		// 完了メール送信
+		for (OrderItem orderItem : cartOrder.getOrderItemList()) {
+			orderService.insertItemPrice(orderItem);
+			itemService.updateStock(orderItem);
+			for (OrderTopping orderTopping : orderItem.getOrderTopping()) {
+				orderService.insertToppingPrice(orderTopping);
+			}
+		}
+
 		orderService.sendMail(customUserDetails.getEmail());
-
 		return "redirect:/orderCompletion";
 	}
 
-	@RequestMapping("/orderCompletion")
-	public String orderCompletionPage() {
-		return "order/order_finished";
+	private Map<Integer, String> validateStock(Order cartOrder) {
+		Map<Integer, String> errorMessages = new HashMap<>();
+		Integer totalPrice = 0;
+
+		List<OrderItem> orderItems = cartOrder.getOrderItemList();
+		// Map<Integer, Integer> iteMap = new
+		for (int i = 0; i < orderItems.size(); i++) {
+			OrderItem orderItem = orderItems.get(i);
+
+			Integer itemPrice = orderItem.getSize().equals("M")
+					? orderItem.getItem().getPriceM()
+					: orderItem.getItem().getPriceL();
+			orderItem.setItemPrice(itemPrice);
+			totalPrice += itemPrice * orderItem.getQuantity();
+
+			Integer stock = itemService.findForStockById(orderItem.getItemId());
+			if (stock == 0) {
+				errorMessages.put(i, "「" + orderItem.getItem().getName() + "」は在庫切れです。");
+			} else if (stock < orderItem.getQuantity()) {
+				errorMessages.put(i, "「" + orderItem.getItem().getName()
+						+ "」は在庫が足りません（在庫: " + stock + "）。");
+			}
+
+			for (OrderTopping orderTopping : orderItem.getOrderTopping()) {
+				Integer toppingPrice = orderItem.getSize().equals("M")
+						? orderTopping.getTopping().getPriceM()
+						: orderTopping.getTopping().getPriceL();
+				orderTopping.setPrice(toppingPrice);
+				totalPrice += toppingPrice * orderItem.getQuantity();
+			}
+		}
+		cartOrder.setTotalPrice(totalPrice);
+		return errorMessages;
 	}
 
-	/**
-	 * 注文履歴のページを表示
-	 * 
-	 * @param model リクエストスコープ
-	 * @return 注文履歴
-	 */
 	@RequestMapping("/orderHistory")
 	public String orderHistory(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 		Integer userId = customUserDetails.getUserId();
-
 		List<Order> orderList = orderService.findByOrder(userId);
 		if (orderList == null || orderList.isEmpty()) {
 			model.addAttribute("orderNothing", "注文履歴がありません");
 		} else {
 			model.addAttribute("orderList", orderList);
 		}
-
 		return "order/order_history";
 	}
 
-	@RequestMapping("orderdetail")
+	@RequestMapping("/orderdetail")
 	public String orderDetail(Integer id, Model model) {
-		System.out.println(id);
 		List<Order> orderList = orderService.orderLoad(id);
 		model.addAttribute("orderList", orderList);
-		System.out.println(orderList);
 		return "/order/order_detail";
+	}
+
+	@RequestMapping("/orderCompletion")
+	public String orderCompletionPage() {
+		return "order/order_finished";
 	}
 }

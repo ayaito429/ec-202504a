@@ -1,0 +1,26 @@
+-- item_stocks テーブルの追加
+CREATE TABLE item_stocks (
+    id serial primary key,
+    item_id integer NOT NULL,
+    stock integer NOT NULL
+);
+
+--テスト時に使用するINSERT
+INSERT INTO item_stocks (item_id, stock) VALUES (1, 0);
+INSERT INTO item_stocks (item_id, stock) VALUES (2, 2);
+INSERT INTO item_stocks (item_id, stock) VALUES (3, 100);
+INSERT INTO item_stocks (item_id, stock) VALUES (4, 100);
+INSERT INTO item_stocks (item_id, stock) VALUES (5, 100);
+INSERT INTO item_stocks (item_id, stock) VALUES (6, 100);
+INSERT INTO item_stocks (item_id, stock) VALUES (7, 100);
+INSERT INTO item_stocks (item_id, stock) VALUES (8, 100);
+INSERT INTO item_stocks (item_id, stock) VALUES (9, 100);
+INSERT INTO item_stocks (item_id, stock) VALUES (10, 100);
+INSERT INTO item_stocks (item_id, stock) VALUES (11, 100);
+INSERT INTO item_stocks (item_id, stock) VALUES (12, 100);
+INSERT INTO item_stocks (item_id, stock) VALUES (13, 100);
+INSERT INTO item_stocks (item_id, stock) VALUES (14, 100);
+INSERT INTO item_stocks (item_id, stock) VALUES (15, 100);
+INSERT INTO item_stocks (item_id, stock) VALUES (16, 100);
+INSERT INTO item_stocks (item_id, stock) VALUES (17, 100);
+INSERT INTO item_stocks (item_id, stock) VALUES (18, 100);
