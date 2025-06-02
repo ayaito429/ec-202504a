@@ -2,6 +2,8 @@ package com.example.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -64,6 +66,21 @@ public class CartController {
 		return orderItem;
 	}
 
+	private boolean toppingsEqual(List<OrderTopping> list1, List<OrderTopping> list2) {
+		if (list1.size() != list2.size()) {
+			return false;
+		}
+		Set<Integer> toppingIds1 = list1.stream()
+				.map(t -> t.getTopping().getId())
+				.collect(Collectors.toSet());
+
+		Set<Integer> toppingIds2 = list2.stream()
+				.map(t -> t.getTopping().getId())
+				.collect(Collectors.toSet());
+
+		return toppingIds1.equals(toppingIds2);
+	}
+
 	// Cartに商品を追加
 	@RequestMapping("/inCart")
 	public String inCart(ItemCartInForm form, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -106,7 +123,24 @@ public class CartController {
 				orderService.insertOrderItem(orderItem);
 			} else {
 				orderItem.setOrderId(cartOrder.getId());
-				orderService.insertOrderItem(orderItem);
+				List<OrderItem> cartOrderItem = cartOrder.getOrderItemList();
+				boolean isMerged = false;
+
+				for (OrderItem existingItem : cartOrderItem) {
+					if (existingItem.getItemId().equals(orderItem.getItemId())
+							&& existingItem.getSize().equals(orderItem.getSize())
+							&& toppingsEqual(existingItem.getOrderTopping(), orderItem.getOrderTopping())) {
+						orderService.addQuantity(existingItem.getQuantity() + orderItem.getQuantity());
+						existingItem.setQuantity(existingItem.getQuantity() + orderItem.getQuantity());
+						isMerged = true;
+						break;
+					}
+				}
+
+				if (!isMerged) {
+					orderService.insertOrderItem(orderItem);
+				}
+				orderService.updateTotlePrice(totalPrice);
 			}
 		} else {
 			if (cartOrder == null) {
@@ -115,9 +149,24 @@ public class CartController {
 				cartOrder.setTotalPrice(totalPrice);
 				session.setAttribute("cartOrder", cartOrder);
 			}
-			cartOrder.getOrderItemList().add(orderItem);
-		}
 
+			List<OrderItem> cartOrderItem = cartOrder.getOrderItemList();
+			boolean isMerged = false;
+
+			for (OrderItem existingItem : cartOrderItem) {
+				if (existingItem.getItemId().equals(orderItem.getItemId())
+						&& existingItem.getSize().equals(orderItem.getSize())
+						&& toppingsEqual(existingItem.getOrderTopping(), orderItem.getOrderTopping())) {
+					existingItem.setQuantity(existingItem.getQuantity() + orderItem.getQuantity());
+					isMerged = true;
+					break;
+				}
+			}
+
+			if (!isMerged) {
+				cartOrder.getOrderItemList().add(orderItem);
+			}
+		}
 		return "redirect:/showCart";
 	}
 

@@ -39,8 +39,8 @@
                                 <img th:src="@{/img_curry/}+${cart.item.imagePath}" class="img-responsive img-rounded item-img-center" width="100" height="300" />
                                 <span th:text="${cart.item.name}"></span>
                                 <div class="text-danger small" style="margin-top: 5px; min-height: 1.5em;">
-                                    <span th:if="${errorMessages != null and errorMessages[status.index] != null}"
-                                          th:text="${errorMessages[status.index]}"></span>
+                                    <span th:if="${errorMessages != null and errorMessages[cart.itemId] != null}"
+                                          th:text="${errorMessages[cart.itemId]}"></span>
                                 </div>
                             </div>
                         </td>
