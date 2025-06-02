@@ -5,6 +5,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,7 +23,6 @@ import com.example.domain.Order;
 import com.example.form.OrderForm;
 import com.example.service.OrderService;
 
-
 /**
  * 注文確認画面に遷移するためのコントローラー
  * 
@@ -30,6 +32,8 @@ import com.example.service.OrderService;
 @Controller
 @RequestMapping("")
 public class OrderController {
+
+	private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
 	@Autowired
 	private OrderService orderService;
@@ -139,10 +143,10 @@ public class OrderController {
 
 	@RequestMapping("orderdetail")
 	public String orderDetail(Integer id, Model model) {
-		System.out.println(id);
+		logger.debug("注文ID: {}", id);
 		List<Order> orderList = orderService.orderLoad(id);
 		model.addAttribute("orderList", orderList);
-		System.out.println(orderList);
+		logger.debug("注文詳細: {}", orderList);
 		return "/order/order_detail";
 	}
 }

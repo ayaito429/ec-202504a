@@ -5,6 +5,9 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,6 +16,8 @@ import jakarta.validation.constraints.Pattern;
 
 
 public class OrderForm {
+
+	private static final Logger logger = LoggerFactory.getLogger(OrderForm.class);
 	
 	//合計金額
 	private Integer totalPrice;
@@ -49,7 +54,7 @@ public class OrderForm {
 			try {
 				date = sdf.parse(deliveryTime);
 				Timestamp ts = new Timestamp(date.getTime());
-				System.out.println(ts);
+				logger.debug("変換されたTimestamp: {}", ts);
 				return ts;
 			} catch (ParseException e) {
 				e.printStackTrace();
