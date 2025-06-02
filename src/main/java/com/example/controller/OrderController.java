@@ -25,6 +25,12 @@ import com.example.form.OrderForm;
 import com.example.service.ItemService;
 import com.example.service.OrderService;
 
+/**
+ * 注文確認画面に遷移するためのコントローラー
+ * 
+ * @author MatsunagaDai,MiyazawaNami
+ *
+ */
 @Controller
 @RequestMapping("")
 public class OrderController {

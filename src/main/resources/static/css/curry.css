@@ -26,3 +26,9 @@ span#total-price {
 th {
   text-align: center;
 }
+
+tbody + tbody::before {
+  content: "";
+  display: block;
+  height: 50px;
+}
