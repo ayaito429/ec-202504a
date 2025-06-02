@@ -298,4 +298,15 @@ public class OrderRepository {
 		template.update(sql, param);
 	}
 
+	/**
+	 * Total金額の更新
+	 * 
+	 * @param totlePrice
+	 */
+	public void updateTotlePrice(Integer totlePrice) {
+		String sql = "UPDATE orders SET totle_price = :totlePrice";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("totlePrice", totlePrice);
+		template.update(sql, param);
+	}
+
 }

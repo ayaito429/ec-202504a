@@ -143,4 +143,13 @@ public class OrderService {
 		orderItemRepository.delete(id);
 	}
 
+	/**
+	 * Total金額の更新
+	 * 
+	 * @param totlePrice
+	 */
+	public void updateTotlePrice(Integer totlePrice) {
+		orderRepository.updateTotlePrice(totlePrice);
+	}
+
 }
