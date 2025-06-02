@@ -102,7 +102,7 @@ public class OrderController {
 		Timestamp deliveryTime = form.getTimestamp();
 		Timestamp minDeliveryTime = new Timestamp(System.currentTimeMillis() + (3 * 60 * 60 * 1000));
 		if (minDeliveryTime.after(deliveryTime)) {
-			model.addAttribute("errorDeliveryDate", "今から3時間後の日時をご入力ください");
+			model.addAttribute("errorDeliveryDate", "今から3時間後の日時をご入力ください。");
 			model.addAttribute("cartOrder", cartOrder);
 			model.addAttribute("orderForm", form);
 			return "order/order_confirm";
@@ -148,9 +148,9 @@ public class OrderController {
 
 			Integer stock = itemService.findForStockById(orderItem.getItemId());
 			if (stock == 0) {
-				errorMessages.put(i, "商品「" + orderItem.getItem().getName() + "」は在庫切れです。");
+				errorMessages.put(i, "「" + orderItem.getItem().getName() + "」は在庫切れです。");
 			} else if (stock < orderItem.getQuantity()) {
-				errorMessages.put(i, "商品「" + orderItem.getItem().getName()
+				errorMessages.put(i, "「" + orderItem.getItem().getName()
 						+ "」は在庫が足りません（在庫: " + stock + "）。");
 			}
 

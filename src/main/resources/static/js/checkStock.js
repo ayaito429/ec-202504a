@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
             event.preventDefault();
         } else if (quantity > stock) {
             if (errorLabel) {
-                errorLabel.innerHTML = '注文数量が在庫を超えています。<br>残りは ' + stock + ' 個です。';
+                errorLabel.innerHTML = '残りは ' + stock + ' 個です。<br>注文数量が在庫を超えています。';
             }
             event.preventDefault();
         }
