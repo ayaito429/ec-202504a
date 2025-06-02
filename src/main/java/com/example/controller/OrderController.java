@@ -137,6 +137,7 @@ public class OrderController {
 		Integer totalPrice = 0;
 
 		List<OrderItem> orderItems = cartOrder.getOrderItemList();
+		// Map<Integer, Integer> iteMap = new
 		for (int i = 0; i < orderItems.size(); i++) {
 			OrderItem orderItem = orderItems.get(i);
 
@@ -183,5 +184,10 @@ public class OrderController {
 		List<Order> orderList = orderService.orderLoad(id);
 		model.addAttribute("orderList", orderList);
 		return "/order/order_detail";
+	}
+
+	@RequestMapping("/orderCompletion")
+	public String orderCompletionPage() {
+		return "order/order_finished";
 	}
 }

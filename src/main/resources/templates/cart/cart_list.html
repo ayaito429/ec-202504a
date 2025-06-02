@@ -7,15 +7,6 @@
     <title>カレー屋のネット注文</title>
     <link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
     <link th:href="@{/css/curry.css}" rel="stylesheet" />
-    <style>
-        table.item-list-table {
-            table-layout: fixed;
-            width: 100%;
-        }
-        td, th {
-            word-wrap: break-word;
-        }
-    </style>
 </head>
 <body>
 <div class="container">
@@ -26,7 +17,6 @@
         <div class="table-responsive col-lg-offset-1 col-lg-10 col-md-offset-1 col-md-10 col-sm-offset-1 col-sm-10 col-xs-12">
             <h3 class="text-center">ショッピングカート</h3>
             <table class="table table-striped item-list-table">
-                <thead>
                 <tr>
                     <th style="width: 25%;"><div class="text-center">商品名</div></th>
                     <th style="width: 25%;"><div class="text-center">サイズ、価格(税込み)、数量</div></th>
@@ -34,13 +24,11 @@
                     <th style="width: 15%;"><div class="text-center">小計</div></th>
                     <th style="width: 10%;"></th>
                 </tr>
-                </thead>
 
                 <tbody>
-                <tr>
+                <tr th:if="${cartNothing != null}">
                     <td colspan="5">
-                        <br>
-                        <h3 class="text-center" th:if="${cartNothing != null}" th:text="${cartNothing}"></h3>
+                        <h3 class="text-center" th:text="${cartNothing}"></h3>
                     </td>
                 </tr>
 

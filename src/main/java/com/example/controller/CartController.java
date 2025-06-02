@@ -61,10 +61,6 @@ public class CartController {
 		orderItem.setSize(form.getSize());
 		orderItem.setOrderTopping(orderToppings);
 		orderItem.setItem(item);
-
-		Integer itemPrice = form.getSize().equals("M") ? item.getPriceM() : item.getPriceL();
-		orderItem.setItemPrice(itemPrice);
-
 		return orderItem;
 	}
 
@@ -91,6 +87,7 @@ public class CartController {
 		if (customUserDetails != null) {
 			if (cartOrder == null) {
 				Order newOrder = new Order();
+				newOrder.setUserId(customUserDetails.getUserId());
 				newOrder.setStatus(0);
 				Integer orderId = orderService.insert(newOrder);
 				orderItem.setOrderId(orderId);
@@ -128,12 +125,12 @@ public class CartController {
 				Integer itemPrice = orderItem.getSize().equals("M") ? orderItem.getItem().getPriceM()
 						: orderItem.getItem().getPriceL();
 				orderItem.setItemPrice(itemPrice);
-				totalPrice += itemPrice;
+				totalPrice += itemPrice * orderItem.getQuantity();
 				for (OrderTopping orderTopping : orderItem.getOrderTopping()) {
 					Integer toppingPrice = orderItem.getSize().equals("M") ? orderTopping.getTopping().getPriceM()
 							: orderTopping.getTopping().getPriceL();
 					orderTopping.setPrice(toppingPrice);
-					totalPrice += toppingPrice;
+					totalPrice += toppingPrice * orderItem.getQuantity();
 				}
 			}
 			cartOrder.setTotalPrice(totalPrice);
