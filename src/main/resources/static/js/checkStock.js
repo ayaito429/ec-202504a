@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (stock === 0) {
-            if (errorLabel) errorLabel.textContent = '在庫がありません。<br>在庫がない為カートに追加できません。';
+            if (errorLabel) errorLabel.innerHTML = '在庫がありません。<br>在庫がない為カートに追加できません。';
             event.preventDefault();
         } else if (quantity > stock) {
             if (errorLabel) {
