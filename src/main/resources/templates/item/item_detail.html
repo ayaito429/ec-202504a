@@ -157,54 +157,9 @@
       </form>
     </div>
     <!-- end container -->
-     <!-- 在庫チェック用JS -->
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-          const form = document.getElementById('cartForm');
-          if (!form) {
-              console.warn('cartForm が見つかりません。JSをスキップします。');
-              return;
-          }
-
-          const stockElement = document.getElementById('stock');
-          const stock = stockElement ? parseInt(stockElement.value, 10) : 0;
-          const quantitySelect = document.getElementById('currynum');
-          const errorLabel = document.getElementById('errorLabel');
-
-          // ★ 初期表示で10以下なら残り個数メッセージを表示
-          if (errorLabel) {
-              if (stock > 0 && stock <= 10) {
-                  errorLabel.textContent = '残り ' + stock + ' 個です。';
-                  errorLabel.style.display = 'inline';
-              } else if (stock == 0) {
-                errorLabel.textContent = '在庫がありません';
-                errorLabel.style.display = 'inline';
-              }
-          }
-
-          form.addEventListener('submit', function(event) {
-              const quantity = parseInt(quantitySelect.value, 10);
-
-              if (errorLabel) {
-                  errorLabel.textContent = '';
-                  errorLabel.style.display = 'inline';
-              }
-
-              if (stock === 0) {
-                  if (errorLabel) errorLabel.textContent = '在庫がありません';
-                  event.preventDefault();
-              } else if (quantity > stock) {
-                  if (errorLabel) {
-                      // 改行対応版
-                      errorLabel.innerHTML = '注文数量が在庫を超えています。<br>残りは ' + stock + ' 個です。';
-                  }
-                  event.preventDefault();
-              }
-          });
-      });
-    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	  <script type="text/javascript" src="js/item_deail.js"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/checkStock.min.js}"></script>
   </body>
 </html>
