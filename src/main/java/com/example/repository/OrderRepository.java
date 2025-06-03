@@ -292,8 +292,8 @@ public class OrderRepository {
 				+ "destination_address = :destinationAddress, "
 				+ "destination_tel = :destinationTel, "
 				+ "delivery_time = :deliveryTime, "
-				+ "payment_method = :paymentMethod "
-				+ "updated_at = NOW() "
+				+ "payment_method = :paymentMethod, "
+				+ "updated_at = NOW(), "
 				+ "WHERE id = :id;";
 		SqlParameterSource param = new BeanPropertySqlParameterSource(order);
 		template.update(sql, param);
