@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カレー屋のネット注文</title>
+    <link th:href="@{/css/bootstrap.css}" href="../../static/css/bootstrap.css" rel="stylesheet" />
+    <link th:href="@{/css/curry.css}" href="../../static/css/curry.css" rel="stylesheet" />
+</head>
+
+<body>
+    <form>
+        <div class="row">
+            <div class="col-xs-offset-1 col-xs-11 col-lg-offset-2 col-lg-8">
+
+                <h3 class="text-center">注文検索</h3>
+
+                <span th:if="${message} != null" class="margin-left-md" th:text="${message}" style="color:red"></span>
+                <div class="col-sm-9">
+
+                    <select name="searchField">
+                        <option value="1">注文ID</option>
+                        <option value="2">注文日</option>
+                        <option value="3">注文者</option>
+                        <option value="4">電話番号</option>
+                        <option value="5">ステータス</option>
+                        <option value="6">希望日時</option>
+                        <option value="7">完了日時</option>
+                        <option value="8">支払方法</option>
+                    </select>
+
+                    <div id="searchInputArea"></div>
+                    <input type="hidden" name="page" th:value="1">
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" value="検索" class="btn btn-primary">
+                検索
+            </button>
+            <button type="button" value="クリア" class="btn btn-default" id="reset_button">
+                クリア
+            </button>
+        </div>
+    </form>
+    <script type="text/javascript" src="js/admin.js"></script>
+</body>
+
+</html>
