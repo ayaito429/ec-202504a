@@ -1,8 +1,13 @@
 package com.example.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
@@ -11,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.domain.Order;
 import com.example.domain.OrderItem;
 import com.example.domain.OrderTopping;
+
+import com.example.domain.User;
+
 import com.example.repository.OrderItemRepository;
 import com.example.repository.OrderRepository;
 import com.example.repository.OrderToppingRepository;
@@ -37,6 +45,15 @@ public class OrderService {
 	@Autowired
 	private MailSender sender;
 
+	@Value("${custom.mail.from}")
+    private String from;
+
+    @Value("${custom.mail.subject}")
+    private String subject;
+
+	@Value("${custom.mail.template}")
+    private String templatePath;
+	
 	/**
 	 * 注文詳細一件を取得
 	 * 
@@ -132,16 +149,60 @@ public class OrderService {
 	 * 
 	 * @param email
 	 */
-	public void sendMail(String email) {
+    public void sendMail(String email, User user, List<OrderItem> orderItemList, Integer totalPrice) {
+
+		String body;
+		try {
+			body = generateMailBody(user, orderItemList, totalPrice);
+		} catch (IOException e) {
+			body = "ご注文ありがとうございます。\n" +
+				"メール送信システムにエラーが発生しました。\n" +
+				"注文処理は完了していますがご心配の方は、\n" +
+				"カスタマーサポート(0123-456-789)までお問い合わせください。";
+		}
+
 		SimpleMailMessage msg = new SimpleMailMessage();
-
-		msg.setFrom("curry-admin@example.com");
+		msg.setFrom(from);
 		msg.setTo(email);
-		msg.setSubject("注文完了！！！");// タイトルの設定
-		msg.setText("ラクラクカリー より　注文完了"); // 本文の設定
-
-		this.sender.send(msg);
+		msg.setSubject(subject);
+		msg.setText(body);
+		sender.send(msg);
 	}
+
+	/**
+	 * メール本文を生成するメソッド
+	 * 
+	 * @param user ユーザー情報
+	 * @param cartItemList カート内の商品リスト
+	 * @param totalPrice 合計金額
+	 * @return 生成されたメール本文
+	 * @throws IOException 
+	 */
+	private String generateMailBody(User user, List<OrderItem> orderItemList, int totalPrice) throws IOException {
+		String template = Files.readString(Path.of(templatePath));
+
+		String orderSummary = orderItemList.stream()
+			.map(item -> {
+				StringBuilder sb = new StringBuilder();
+				sb.append(item.getItem().getName())  // item名は item から取得
+				.append("（").append(item.getSize()).append("）×").append(item.getQuantity()).append("個");
+
+				if (item.getOrderTopping() != null && !item.getOrderTopping().isEmpty()) {
+					String toppings = item.getOrderTopping().stream()
+						.map(topping -> topping.getTopping().getName()) // トッピング名取得
+						.collect(Collectors.joining("・"));
+					sb.append("\nトッピング: ").append(toppings);
+				}
+				return sb.toString();
+			})
+			.collect(Collectors.joining("\n"));
+
+		return template
+			.replace("{userName}", user.getName())
+			.replace("{orderSummary}", orderSummary)
+			.replace("{totalPrice}", String.valueOf(totalPrice));
+	}
+
 
 	/**
 	 * カートの商品情報を削除
