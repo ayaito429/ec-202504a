@@ -71,4 +71,15 @@ public class OrderItemRepository {
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
 		template.update(sql, param);
 	}
+
+	/**
+	 * カート内の商品の重複
+	 * 
+	 * @param quantity
+	 */
+	public void addQuantity(Integer quantity) {
+		String sql = "UPDATE order_items SET quantity = :quantity";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("quantity", quantity);
+		template.update(sql, param);
+	}
 }

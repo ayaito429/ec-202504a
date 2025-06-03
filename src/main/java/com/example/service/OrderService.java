@@ -158,8 +158,17 @@ public class OrderService {
 	 * 
 	 * @param totlePrice
 	 */
-	public void updateTotlePrice(Integer totlePrice) {
-		orderRepository.updateTotlePrice(totlePrice);
+	public void updateTotlePrice(Integer totalPrice) {
+		orderRepository.updateTotlePrice(totalPrice);
+	}
+
+	/**
+	 * カート内の商品の重複
+	 * 
+	 * @param quantity
+	 */
+	public void addQuantity(Integer quantity) {
+		orderItemRepository.addQuantity(quantity);
 	}
 
 	/**

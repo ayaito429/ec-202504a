@@ -353,9 +353,9 @@ public class OrderRepository {
 	 * 
 	 * @param totlePrice
 	 */
-	public void updateTotlePrice(Integer totlePrice) {
-		String sql = "UPDATE orders SET totle_price = :totlePrice";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("totlePrice", totlePrice);
+	public void updateTotlePrice(Integer totalPrice) {
+		String sql = "UPDATE orders SET total_price = :totalPrice";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("totalPrice", totalPrice);
 		template.update(sql, param);
 	}
 

@@ -143,23 +143,39 @@ public class OrderController {
 		Integer totalPrice = 0;
 
 		List<OrderItem> orderItems = cartOrder.getOrderItemList();
-		// Map<Integer, Integer> iteMap = new
-		for (int i = 0; i < orderItems.size(); i++) {
-			OrderItem orderItem = orderItems.get(i);
 
+		Map<Integer, Integer> itemQuantityMap = new HashMap<>();
+		for (OrderItem orderItem : orderItems) {
+			Integer itemId = orderItem.getItemId();
+			Integer quantity = orderItem.getQuantity();
+			itemQuantityMap.put(itemId, itemQuantityMap.getOrDefault(itemId, 0) + quantity);
+		}
+
+		for (Map.Entry<Integer, Integer> entry : itemQuantityMap.entrySet()) {
+			Integer itemId = entry.getKey();
+			Integer totalQuantity = entry.getValue();
+
+			Integer stock = itemService.findForStockById(itemId);
+
+			String itemName = orderItems.stream()
+					.filter(oi -> oi.getItemId().equals(itemId))
+					.findFirst()
+					.map(oi -> oi.getItem().getName())
+					.orElse("商品ID " + itemId);
+
+			if (stock == 0) {
+				errorMessages.put(itemId, "「" + itemName + "」は在庫切れです。");
+			} else if (stock < totalQuantity) {
+				errorMessages.put(itemId, "「" + itemName + "」は在庫が足りません（在庫: " + stock + "）。");
+			}
+		}
+
+		for (OrderItem orderItem : orderItems) {
 			Integer itemPrice = orderItem.getSize().equals("M")
 					? orderItem.getItem().getPriceM()
 					: orderItem.getItem().getPriceL();
 			orderItem.setItemPrice(itemPrice);
 			totalPrice += itemPrice * orderItem.getQuantity();
-
-			Integer stock = itemService.findForStockById(orderItem.getItemId());
-			if (stock == 0) {
-				errorMessages.put(i, "「" + orderItem.getItem().getName() + "」は在庫切れです。");
-			} else if (stock < orderItem.getQuantity()) {
-				errorMessages.put(i, "「" + orderItem.getItem().getName()
-						+ "」は在庫が足りません（在庫: " + stock + "）。");
-			}
 
 			for (OrderTopping orderTopping : orderItem.getOrderTopping()) {
 				Integer toppingPrice = orderItem.getSize().equals("M")
@@ -169,6 +185,7 @@ public class OrderController {
 				totalPrice += toppingPrice * orderItem.getQuantity();
 			}
 		}
+
 		cartOrder.setTotalPrice(totalPrice);
 		return errorMessages;
 	}
