@@ -256,6 +256,56 @@ public class OrderRepository {
 	}
 
 	/**
+	 * 指定ユーザーの注文履歴（Orderヘッダ情報のみ）を取得する
+	 * 
+	 * @param userId ユーザーID
+	 * @return 該当ユーザーの注文リスト
+	 */
+	public List<Order> findByUserId(Integer userId) {
+		String sql = "SELECT id, user_id, status, total_price, order_date, "
+				+ "destination_name, destination_email, destination_zipcode, "
+				+ "destination_address, destination_tel, delivery_time, payment_method "
+				+ "FROM orders "
+				+ "WHERE user_id = :userId "
+				+ "ORDER BY order_date DESC, id DESC";
+
+		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
+
+		return template.query(sql, param, (rs, i) -> {
+			Order order = new Order();
+			order.setId(rs.getInt("id"));
+			order.setUserId(rs.getInt("user_id"));
+			order.setStatus(rs.getInt("status"));
+			order.setTotalPrice(rs.getInt("total_price"));
+			order.setOrderDate(rs.getDate("order_date"));
+			order.setDestinationName(rs.getString("destination_name"));
+			order.setDestinationEmail(rs.getString("destination_email"));
+			order.setDestinationZipcode(rs.getString("destination_zipcode"));
+			order.setDestinationAddress(rs.getString("destination_address"));
+			order.setDestinationTel(rs.getString("destination_tel"));
+			order.setDeliveryTime(rs.getTimestamp("delivery_time"));
+			order.setPaymentMethod(rs.getInt("payment_method"));
+			return order;
+		});
+	}
+
+	/**
+	 * 指定ユーザーの未確定注文（status = 0）の件数を取得.
+	 * 
+	 * @param userId ユーザーID
+	 * @return 件数（1件以上ならカートに商品がある）
+	 */
+	public int countCartItemsByUserId(Integer userId) {
+		String sql = "SELECT COUNT(DISTINCT o.id) "
+				+ "FROM orders o "
+				+ "JOIN order_items oi ON o.id = oi.order_id "
+				+ "WHERE o.user_id = :userId AND o.status = 0";
+
+		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
+		return template.queryForObject(sql, param, Integer.class);
+	}
+
+	/**
 	 * Orderの情報をSQLに登録
 	 * 
 	 * @param order
@@ -309,4 +359,14 @@ public class OrderRepository {
 		template.update(sql, param);
 	}
 
+	/**
+	 * 指定ユーザーの未確定注文（カート状態）のステータスをキャンセル（9）に更新する
+	 * 
+	 * @param userId ユーザーID
+	 */
+	public void cancelOrdersByUserId(Integer userId) {
+		String sql = "UPDATE orders SET status = 9 WHERE user_id = :userId AND status = 0";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
+		template.update(sql, param);
+	}
 }

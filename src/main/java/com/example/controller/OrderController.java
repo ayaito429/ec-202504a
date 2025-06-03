@@ -24,9 +24,6 @@ import com.example.domain.OrderTopping;
 import com.example.form.OrderForm;
 import com.example.service.ItemService;
 import com.example.service.OrderService;
-import com.example.service.UserService;
-
-import jakarta.servlet.http.HttpSession;
 
 /**
  * 注文確認画面に遷移するためのコントローラー

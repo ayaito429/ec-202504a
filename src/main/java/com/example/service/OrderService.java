@@ -58,6 +58,16 @@ public class OrderService {
 	}
 
 	/**
+	 * 注文情報を取得
+	 * 
+	 * @param userId ユーザーID
+	 * @return 注文情報
+	 */
+	public List<Order> findByUserId(Integer userId) {
+		return orderRepository.findByUserId(userId);
+	}
+
+	/**
 	 * 注文前のorderを取得
 	 * 
 	 * @param userId ユーザーID
@@ -152,4 +162,22 @@ public class OrderService {
 		orderRepository.updateTotlePrice(totlePrice);
 	}
 
+	/**
+	 * 指定ユーザーのカートに商品（未確定の注文status=0）があるか判定する.
+	 * 
+	 * @param userId ユーザーID
+	 * @return true：商品あり（カートに未確定注文がある）、false：なし
+	 */
+	public boolean hasCartItems(Integer userId) {
+		return orderRepository.countCartItemsByUserId(userId) > 0;
+	}
+
+	/**
+	 * 指定したユーザーの全てのカートをキャンセルする
+	 * 
+	 * @param userId
+	 */
+	public void cancelAllCarts(Integer userId) {
+		orderRepository.cancelOrdersByUserId(userId);
+	}
 }
