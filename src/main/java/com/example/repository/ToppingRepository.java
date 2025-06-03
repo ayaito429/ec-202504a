@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import com.example.domain.Topping;
@@ -17,29 +19,40 @@ import com.example.domain.Topping;
  */
 @Repository
 public class ToppingRepository {
-	
+
 	@Autowired
 	private NamedParameterJdbcTemplate template;
 
-	private static final RowMapper<Topping> TOPPING_ROW_MAPPER 
-	= (rs,i) -> {
-				Topping topping = new Topping();
-				topping.setId(rs.getInt("id"));
-				topping.setName(rs.getString("name"));
-				topping.setPriceM(rs.getInt("price_m"));
-				topping.setPriceL(rs.getInt("price_l"));
-				return topping;
-			};
-			
+	private static final RowMapper<Topping> TOPPING_ROW_MAPPER = (rs, i) -> {
+		Topping topping = new Topping();
+		topping.setId(rs.getInt("id"));
+		topping.setName(rs.getString("name"));
+		topping.setPriceM(rs.getInt("price_m"));
+		topping.setPriceL(rs.getInt("price_l"));
+		return topping;
+	};
+
 	/**
 	 * トッピングを全件探す
 	 * 
 	 * @return 検索されたトッピングテーブルの情報
 	 */
-	public List<Topping> findAllTopping(){
-		String findAllToppingSql = "SELECT * FROM toppings";
+	public List<Topping> findAllTopping() {
+		String findAllToppingSql = "SELECT * FROM toppings ORDER by id";
 		List<Topping> toppingList = template.query(findAllToppingSql, TOPPING_ROW_MAPPER);
 		return toppingList;
 	}
-			
+
+	/**
+	 * トッピング情報を取得
+	 * 
+	 * @param id トッピングID
+	 * @return トッピング情報
+	 */
+	public Topping findById(Integer id) {
+		String sql = "SELECT * FROM toppings WHERE id = :id";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+		return template.queryForObject(sql, param, TOPPING_ROW_MAPPER);
+	}
+
 }

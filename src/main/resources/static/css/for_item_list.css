@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 div.pagination {
-	font-size:40px;
+	font-size:25px;
 	color:green;
 }
 tbody.table{
@@ -14,4 +14,8 @@ div.text-center-2{
 div.text-center-3{
 	display:flex;
 }
-
+@media (min-width: 768px) {
+	.margin-left-md {
+		margin-left: 16px;
+	}
+}

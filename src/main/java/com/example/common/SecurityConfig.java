@@ -21,6 +21,9 @@ public class SecurityConfig {
         @Autowired
         private CustomUserDetailsService userDetailsService;
 
+        @Autowired
+        private CustomAuthenticationSuccessHandler successHandler;
+
         @Bean
         public PasswordEncoder passwordEncoder() {
                 return new BCryptPasswordEncoder();
@@ -30,33 +33,18 @@ public class SecurityConfig {
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                 http
                                 .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/login",
-                                                                "/css/**",
-                                                                "/js/**",
-                                                                "/img_curry/**",
-                                                                "/mailInsert",
-                                                                "/insert/**",
-                                                                "/inCart",
-                                                                "/searchItem",
-                                                                "/showCart",
-                                                                "/delete",
-                                                                "/showList",
-                                                                "/detail",
-                                                                "/orderHistory",
-                                                                "/mailsend",
-                                                                "/pass_check",
-                                                                "/check")
-                                                .permitAll()
-                                                .anyRequest().authenticated())
+                                                .requestMatchers("/toOrder", "/order", "/orderHistory", "/orderdetail")
+                                                .authenticated()
+                                                .anyRequest().permitAll())
                                 .formLogin(form -> form
                                                 .loginPage("/toLogin")
                                                 .loginProcessingUrl("/login")
-                                                .defaultSuccessUrl("/showList", true)
-                                                .failureUrl("/login?error=true")
+                                                .successHandler(successHandler)
+                                                .failureUrl("/toLogin?error=true")
                                                 .permitAll())
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")
-                                                .logoutSuccessUrl("/login?logout=true")
+                                                .logoutSuccessUrl("/toLogin?logout=true")
                                                 .invalidateHttpSession(true)
                                                 .permitAll())
                                 .userDetailsService(userDetailsService)

@@ -17,7 +17,7 @@
   </head>
   <body>
     <div class="container">
- 	<span th:insert="header::header"></span>
+ 	<span th:insert="~{header::header}"></span>
       <!-- search form -->
       <div class="row">
         <div
@@ -38,10 +38,8 @@
             <div class="panel-body">
               <form method="post" th:action="@{/showList}" class="form-horizontal">
                 <div class="form-group">
-                  <label for="code" class="control-label col-sm-2"
-                    >商品名</label
-                    >
-                    <span th:if="${message} != null" th:text="${message}" style="color:red"></span>
+                  <label for="name" class="control-label col-sm-2">商品名</label>
+                  <span th:if="${message} != null" class="margin-left-md" th:text="${message}" style="color:red"></span>
                   <div class="col-sm-9">
                   
                     <input
@@ -106,20 +104,20 @@
               </tr>
             </tbody>
           </table>
-         </div> 
+        </div> 
           <!-- ページング機能 -->
-         		<div style="text-align:center">
-				<div th:if="${itemPage.totalPages>0}" class="pagination"
-				    th:each="pageNumber : ${pageNumbers}" >
-				   <a th:href="@{/showList(size=${itemPage.size}, page=${pageNumber},searchName=${searchName})}"
-				        th:text=${pageNumber} 
-				        th:class="${pageNumber==itemPage.number + 1} ? active"></a>
-				</div>
-				 </div>
-          
+         		<div class="text-center">
+              <div th:if="${itemPage.totalPages>0}" class="pagination">
+                <span th:each="pageNumber : ${pageNumbers}" >
+				          <a th:href="@{/showList(size=${itemPage.size}, page=${pageNumber},searchName=${searchName})}"
+                  th:text="${pageNumber}"
+                  th:class="${pageNumber == itemPage.number + 1} ? 
+                  'btn btn-primary' : 'btn btn-secondary'"></a>
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
     <!-- end container -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script th:src="@{/js/auto_complete.js}"></script>

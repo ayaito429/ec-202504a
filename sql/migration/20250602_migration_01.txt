@@ -1,0 +1,6 @@
+-- item_stocks テーブルの追加
+CREATE TABLE item_stocks (
+    id serial primary key,
+    item_id integer NOT NULL,
+    stock integer NOT NULL
+);
