@@ -7,6 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -34,6 +38,8 @@ import com.example.service.OrderService;
 @Controller
 @RequestMapping("")
 public class OrderController {
+
+	private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
 	@Autowired
 	private OrderService orderService;
@@ -204,8 +210,10 @@ public class OrderController {
 
 	@RequestMapping("/orderdetail")
 	public String orderDetail(Integer id, Model model) {
+		logger.debug("注文ID: {}", id);
 		List<Order> orderList = orderService.orderLoad(id);
 		model.addAttribute("orderList", orderList);
+		logger.debug("注文詳細: {}", orderList);
 		return "/order/order_detail";
 	}
 
