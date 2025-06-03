@@ -1,5 +1,6 @@
 package com.example.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderItem {
@@ -19,7 +20,7 @@ public class OrderItem {
 	// item
 	private Item item;
 	// 注文したトッピングのList
-	private List<OrderTopping> orderTopping;
+	private List<OrderTopping> orderTopping = new ArrayList<>();
 	// 注文時の金額
 	private Integer itemPrice;
 
@@ -96,11 +97,11 @@ public class OrderItem {
 	}
 
 	public Integer getSubTotal() {
-		if (size.equals("M")) {
-			return (this.itemPrice + (this.getOrderTopping().size() * 200)) * this.getQuantity();
-		} else {
-			return (this.itemPrice + (this.getOrderTopping().size() * 300)) * this.getQuantity();
+		Integer totaleToppingPrice = 0;
+		for (OrderTopping topping : orderTopping) {
+			totaleToppingPrice += topping.getPrice();
 		}
+		return (this.getItemPrice() + totaleToppingPrice) * this.getQuantity();
 	}
 
 	public void setSubTotal(Integer subTotal) {

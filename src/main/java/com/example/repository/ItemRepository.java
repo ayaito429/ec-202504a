@@ -1,7 +1,6 @@
 package com.example.repository;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -11,15 +10,15 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import com.example.domain.Item;
+import com.example.domain.OrderItem;
 
 @Repository
 public class ItemRepository {
 
 	@Autowired
 	private NamedParameterJdbcTemplate template;
-	
-	private static final RowMapper<Item> ITEM_ROW_MAPPER
-	= (rs,i) -> {
+
+	private static final RowMapper<Item> ITEM_ROW_MAPPER = (rs, i) -> {
 		Item item = new Item();
 		item.setId(rs.getInt("id"));
 		item.setName(rs.getString("name"));
@@ -30,38 +29,39 @@ public class ItemRepository {
 		item.setDeleted(rs.getBoolean("deleted"));
 		return item;
 	};
-	
-	private static final RowMapper<String> NAME_ROW_MAPPER
-	= (rs,i) -> {
+
+	private static final RowMapper<String> NAME_ROW_MAPPER = (rs, i) -> {
 		String name = rs.getString("name");
 		return name;
 	};
-	
+
 	/**
 	 * 商品全件検索
+	 * 
 	 * @return
 	 */
-	public List<Item> findAll(){
+	public List<Item> findAll() {
 		String findAllSql = "SELECT id,name,description,price_m,price_l,image_path, deleted FROM items WHERE deleted = false ORDER BY price_m;";
 		List<Item> itemList = template.query(findAllSql, ITEM_ROW_MAPPER);
 		return itemList;
 	}
-	
+
 	/**
 	 * 商品名から検索
+	 * 
 	 * @param name
 	 * @return
 	 */
-	public List<Item> findByName(String name){
+	public List<Item> findByName(String name) {
 		String findByNameSql = "SELECT * FROM items WHERE name like :name and deleted = false ORDER BY price_m;";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%"+name+"%");
+		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%" + name + "%");
 		List<Item> itemList = template.query(findByNameSql, param, ITEM_ROW_MAPPER);
-		if(itemList.size() == 0) {
+		if (itemList.size() == 0) {
 			return null;
 		}
 		return itemList;
 	}
-	
+
 	/**
 	 * 商品詳細のSQLを発行
 	 * 
@@ -74,7 +74,7 @@ public class ItemRepository {
 		Item item = template.queryForObject(showItemDetailSql, param, ITEM_ROW_MAPPER);
 		return item;
 	}
-	
+
 	public void insert(Item item) {
 		SqlParameterSource param = new BeanPropertySqlParameterSource(item);
 		String sql = "INSERT INTO items (name, description, price_m, price_l, image_path, deleted)"
@@ -84,6 +84,7 @@ public class ItemRepository {
 
 	/**
 	 * 商品の名前をすべて返す
+	 * 
 	 * @return すべてのitemの名前
 	 */
 	public List<String> getAllNames() {
@@ -94,16 +95,46 @@ public class ItemRepository {
 
 	/**
 	 * 特定のidが存在するか調べる
+	 * 
 	 * @param id 検索するid
 	 * @return 調べた結果(真偽値)
 	 */
-	public boolean existsById(Integer id){
+	public boolean existsById(Integer id) {
 		String sql = "SELECT count(*) from items WHERE id = :id";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
 		String count = template.queryForObject(sql, param, String.class);
-		if("0".equals(count)){
+		if ("0".equals(count)) {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * 在庫情報の取得
+	 * 
+	 * @param name 商品名
+	 * @return 在庫情報
+	 */
+	public Integer findForStockById(Integer id) {
+		String sql = """
+				    SELECT s.stock
+				    FROM items i
+				    INNER JOIN item_stocks s ON i.id = s.item_id
+				    WHERE i.id = :id
+				""";
+
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+		return template.queryForObject(sql, param, Integer.class);
+	}
+
+	/**
+	 * 在庫情報の更新
+	 * 
+	 * @param orderItem 注文商品情報
+	 */
+	public void updateStock(OrderItem orderItem) {
+		String sql = "UPDATE item_stocks SET stock = stock - :quantity WHERE item_id = :itemId AND stock >= :quantity";
+		SqlParameterSource param = new BeanPropertySqlParameterSource(orderItem);
+		template.update(sql, param);
 	}
 }
