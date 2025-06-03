@@ -24,11 +24,11 @@ const fieldTypeMap = {
     },
     deliveryTime: {
         type: "input",
-        inputType: "datetime-local"
+        inputType: "date"
     },
     complationTime: {
         type: "input",
-        inputType: "datetime-local"
+        inputType: "date"
     },
     payMethod: {
         type: "select",
@@ -39,34 +39,61 @@ const fieldTypeMap = {
 };
 
 function changeInputTypeByMap() {
-     const selectedKey = document.getElementById("searchField").value;
-  const config = fieldTypeMap[selectedKey];
-  const container = document.getElementById("searchInputArea");
-
-  // 入力欄エリアを初期化
-  container.innerHTML = "";
-
-  if (!config) return;
-
-  if (config.type === "input") {
-    const input = document.createElement("input");
-    input.type = config.inputType || "text";
-    input.name = "searchValue";
-    input.id = "searchValue";
-    if (config.placeholder) input.placeholder = config.placeholder;
-    container.appendChild(input);
-  } else if (config.type === "select") {
-    const select = document.createElement("select");
-    select.name = "searchValue";
-    select.id = "searchValue";
-
-    config.options.forEach(optionValue => {
-      const option = document.createElement("option");
-      option.value = optionValue;
-      option.textContent = optionValue;
-      select.appendChild(option);
+    [1,2].forEach((num) => {
+        if(document.getElementById("searchValue" + num)){
+            console.log(document.getElementById("searchValue" + num).value)
+        }
     });
+    const selectedKey = document.getElementById("searchField");
+    const config = fieldTypeMap[selectedKey.value];
+    const container = document.getElementById("searchInputArea");
 
-    container.appendChild(select);
-  }
+    // 入力欄エリアを初期化
+    container.innerHTML = "";
+    console.log(config)
+
+    if (!config) return;
+
+    console.log(config.type)
+    if (config.type === "input") {
+        if(config.inputType === "date"){
+            ["開始日","終了日"].forEach((name,index) => {
+                const input = document.createElement("input");
+                input.type = config.inputType || "text";
+                input.name = "searchValue" + (index + 1);
+                input.id = "searchValue" + (index + 1);
+                if (config.placeholder) input.placeholder = config.placeholder;
+                container.appendChild(input);
+                
+                if(index === 0){
+                    const span = document.createElement("span")
+                    span.innerHTML = "～"
+                    container.appendChild(span)
+                }
+            })
+        }else{
+            const input = document.createElement("input");
+            input.type = config.inputType || "text";
+            input.name = "searchValue1";
+            input.id = "searchValue1";
+            if (config.placeholder) input.placeholder = config.placeholder;
+            container.appendChild(input);
+        }
+    } else if (config.type === "select") {
+        const select = document.createElement("select");
+        select.name = "searchValue";
+        select.id = "searchValue";
+
+        config.options.forEach(optionValue => {
+        const option = document.createElement("option");
+        option.value = optionValue;
+        option.textContent = optionValue;
+        select.appendChild(option);
+        });
+
+        container.appendChild(select);
+    }
 }
+
+const searchField = document.getElementById("searchField")
+searchField.addEventListener('change', changeInputTypeByMap)

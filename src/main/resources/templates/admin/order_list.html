@@ -8,35 +8,74 @@
     <title>カレー屋のネット注文</title>
     <link th:href="@{/css/bootstrap.css}" href="../../static/css/bootstrap.css" rel="stylesheet" />
     <link th:href="@{/css/curry.css}" href="../../static/css/curry.css" rel="stylesheet" />
+    <link th:href="@{/css/admin_order_list.css}"  href="../../static/css/admin_order_list.css" rel="stylesheet" />
 </head>
 
 <body>
+    <div th:fragment="header">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button
+                            type="button"
+                            class="navbar-toggle collapsed"
+                            data-toggle="collapse"
+                            data-target="#bs-example-navbar-collapse-1"
+                            aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span> <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" th:href="@{/showList}">
+                        <!-- 企業ロゴ -->
+                        <img
+                                alt="main logo"
+                                th:src="@{/img_curry/header_logo.png}"
+                                height="35"/>
+                    </a>
+                </div>
+    
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <p class="navbar-text navbar-right">
+                        <a th:href="@{/showList}" class="navbar-link">商品一覧</a>&nbsp;&nbsp;    
+                        <!-- Spring Securityの認証状態に応じて表示 -->
+                        <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="navbar-link">ログアウト</a>
+                    </p>
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
+    </div>
+
     <form>
         <div class="row">
-            <div class="col-xs-offset-1 col-xs-11 col-lg-offset-2 col-lg-8">
+            <h3 class="text-center">注文検索</h3>
 
-                <h3 class="text-center">注文検索</h3>
+            <span th:if="${message} != null" class="margin-left-md" th:text="${message}" style="color:red"></span>
+            <div class="flex-container mt-20 mb-20">
 
-                <span th:if="${message} != null" class="margin-left-md" th:text="${message}" style="color:red"></span>
-                <div class="col-sm-9">
+                <select id="searchField" class="w-30 h-25">
+                    <option value="id">注文ID</option>
+                    <option value="orderDate">注文日</option>
+                    <option value="name">注文者</option>
+                    <option value="telephone">電話番号</option>
+                    <option value="status">ステータス</option>
+                    <option value="deliveryTime">希望日時</option>
+                    <option value="complationTime">完了日時</option>
+                    <option value="payMethod">支払方法</option>
+                </select>
 
-                    <select name="searchField">
-                        <option value="1">注文ID</option>
-                        <option value="2">注文日</option>
-                        <option value="3">注文者</option>
-                        <option value="4">電話番号</option>
-                        <option value="5">ステータス</option>
-                        <option value="6">希望日時</option>
-                        <option value="7">完了日時</option>
-                        <option value="8">支払方法</option>
-                    </select>
-
-                    <div id="searchInputArea"></div>
-                    <input type="hidden" name="page" th:value="1">
+                <div id="searchInputArea">
+                    <div class="w-30 h-25">
+                        <input name="page" th:value="1">
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="text-center">
+        <div class="text-center mb-20">
             <button type="submit" value="検索" class="btn btn-primary">
                 検索
             </button>
@@ -45,7 +84,62 @@
             </button>
         </div>
     </form>
+    
+    <div class="col-sm-offset-1 col-sm-10">
+        <table class="table table-striped item-list-table">
+            <tbody>
+            <tr>
+                <th class="text-center">ID</th>
+                <th class="text-center">注文日</th>
+                <th class="text-center">注文者</th>
+                <th class="text-center">電話番号</th>
+                <th class="text-center">ステータス</th>
+                <th class="text-center">配達希望日時</th>
+                <th class="text-center">配達完了日時</th>
+                <th class="text-center">支払方法</th>
+            </tr>
+    
+            <tr th:if="false">
+                <td colspan="5">
+                    <h3 class="text-center">該当する注文はありません</h3>
+                </td>
+            </tr>
+    
+            <th:block>
+                <tr>
+                    <td class="text-center">1</td>
+                    <td class="text-center">2025年5月28日</td>
+                    <td class="text-center">山田太郎</td>
+                    <td class="text-center">080-7800-0000</td>
+                    <td class="text-center">配達完了</td>
+                    <td class="text-center">2025年5月30日 12時</td>
+                    <td class="text-center">2025年5月30日 14時</td>
+                    <td class="text-center">クレジットカード</td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+        <nav class="flex-container">
+            <ul class="pagination">
+                <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script type="text/javascript" src="js/admin.js"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 
 </html>
