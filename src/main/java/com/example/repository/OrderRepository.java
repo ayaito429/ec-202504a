@@ -263,8 +263,8 @@ public class OrderRepository {
 	 */
 	public Integer insert(Order order) {
 		SqlParameterSource param = new BeanPropertySqlParameterSource(order);
-		String insertSql = "INSERT INTO orders (user_id, status, total_price, order_date, destination_name, destination_email, destination_zipcode, destination_address, destination_tel, delivery_time, payment_method) "
-				+ "VALUES (:userId, :status, :totalPrice, :orderDate, :destinationName, :destinationEmail, :destinationZipcode, :destinationAddress, :destinationTel, :deliveryTime, :paymentMethod);";
+		String insertSql = "INSERT INTO orders (user_id, status, total_price, order_date, destination_name, destination_email, destination_zipcode, destination_address, destination_tel, delivery_time, payment_method, created_at, updated_at) "
+				+ "VALUES (:userId, :status, :totalPrice, :orderDate, :destinationName, :destinationEmail, :destinationZipcode, :destinationAddress, :destinationTel, :deliveryTime, :paymentMethod, NOW(), NOW());";
 
 		// 自動採番の際にidを取得する
 		KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -293,19 +293,9 @@ public class OrderRepository {
 				+ "destination_tel = :destinationTel, "
 				+ "delivery_time = :deliveryTime, "
 				+ "payment_method = :paymentMethod "
+				+ "updated_at = NOW() "
 				+ "WHERE id = :id;";
 		SqlParameterSource param = new BeanPropertySqlParameterSource(order);
-		template.update(sql, param);
-	}
-
-	/**
-	 * Total金額の更新
-	 * 
-	 * @param totlePrice
-	 */
-	public void updateTotlePrice(Integer totalPrice) {
-		String sql = "UPDATE orders SET total_price = :totalPrice";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("totalPrice", totalPrice);
 		template.update(sql, param);
 	}
 

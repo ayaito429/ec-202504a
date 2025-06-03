@@ -99,17 +99,19 @@ public class CartController {
 		}
 
 		OrderItem orderItem = createOrderItem(form, item, orderToppings);
-		Integer totalPrice = 0;
+
 		Integer itemPrice = orderItem.getSize().equals("M") ? orderItem.getItem().getPriceM()
 				: orderItem.getItem().getPriceL();
 		orderItem.setItemPrice(itemPrice);
-		totalPrice += itemPrice * orderItem.getQuantity();
+		Integer addedTotalPrice = itemPrice * orderItem.getQuantity();
+
 		for (OrderTopping orderTopping : orderItem.getOrderTopping()) {
 			Integer toppingPrice = orderItem.getSize().equals("M") ? orderTopping.getTopping().getPriceM()
 					: orderTopping.getTopping().getPriceL();
 			orderTopping.setPrice(toppingPrice);
-			totalPrice += toppingPrice * orderItem.getQuantity();
+			addedTotalPrice += toppingPrice * orderItem.getQuantity();
 		}
+
 		Order cartOrder = getCartOrder(customUserDetails);
 
 		if (customUserDetails != null) {
@@ -117,16 +119,16 @@ public class CartController {
 				Order newOrder = new Order();
 				newOrder.setUserId(customUserDetails.getUserId());
 				newOrder.setStatus(0);
-				newOrder.setTotalPrice(totalPrice);
+				newOrder.setTotalPrice(addedTotalPrice);
 				Integer orderId = orderService.insert(newOrder);
 				orderItem.setOrderId(orderId);
 				orderService.insertOrderItem(orderItem);
 			} else {
 				orderItem.setOrderId(cartOrder.getId());
-				List<OrderItem> cartOrderItem = cartOrder.getOrderItemList();
+				List<OrderItem> cartOrderItems = cartOrder.getOrderItemList();
 				boolean isMerged = false;
 
-				for (OrderItem existingItem : cartOrderItem) {
+				for (OrderItem existingItem : cartOrderItems) {
 					if (existingItem.getItemId().equals(orderItem.getItemId())
 							&& existingItem.getSize().equals(orderItem.getSize())
 							&& toppingsEqual(existingItem.getOrderTopping(), orderItem.getOrderTopping())) {
@@ -140,31 +142,38 @@ public class CartController {
 				if (!isMerged) {
 					orderService.insertOrderItem(orderItem);
 				}
-				orderService.updateTotlePrice(totalPrice);
+
+				cartOrder.setTotalPrice(cartOrder.getTotalPrice() + addedTotalPrice);
+				orderService.update(cartOrder);
 			}
 		} else {
 			if (cartOrder == null) {
 				cartOrder = new Order();
 				cartOrder.setStatus(0);
-				cartOrder.setTotalPrice(totalPrice);
+				cartOrder.setTotalPrice(addedTotalPrice);
+				List<OrderItem> orderItemList = new ArrayList<>();
+				orderItemList.add(orderItem);
+				cartOrder.setOrderItemList(orderItemList);
 				session.setAttribute("cartOrder", cartOrder);
-			}
+			} else {
+				List<OrderItem> cartOrderItems = cartOrder.getOrderItemList();
+				boolean isMerged = false;
 
-			List<OrderItem> cartOrderItem = cartOrder.getOrderItemList();
-			boolean isMerged = false;
-
-			for (OrderItem existingItem : cartOrderItem) {
-				if (existingItem.getItemId().equals(orderItem.getItemId())
-						&& existingItem.getSize().equals(orderItem.getSize())
-						&& toppingsEqual(existingItem.getOrderTopping(), orderItem.getOrderTopping())) {
-					existingItem.setQuantity(existingItem.getQuantity() + orderItem.getQuantity());
-					isMerged = true;
-					break;
+				for (OrderItem existingItem : cartOrderItems) {
+					if (existingItem.getItemId().equals(orderItem.getItemId())
+							&& existingItem.getSize().equals(orderItem.getSize())
+							&& toppingsEqual(existingItem.getOrderTopping(), orderItem.getOrderTopping())) {
+						existingItem.setQuantity(existingItem.getQuantity() + orderItem.getQuantity());
+						isMerged = true;
+						break;
+					}
 				}
-			}
 
-			if (!isMerged) {
-				cartOrder.getOrderItemList().add(orderItem);
+				if (!isMerged) {
+					cartOrder.getOrderItemList().add(orderItem);
+				}
+
+				cartOrder.setTotalPrice(cartOrder.getTotalPrice() + addedTotalPrice);
 			}
 		}
 		return "redirect:/showCart";

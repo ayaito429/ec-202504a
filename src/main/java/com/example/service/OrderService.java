@@ -144,15 +144,6 @@ public class OrderService {
 	}
 
 	/**
-	 * Total金額の更新
-	 * 
-	 * @param totlePrice
-	 */
-	public void updateTotlePrice(Integer totalPrice) {
-		orderRepository.updateTotlePrice(totalPrice);
-	}
-
-	/**
 	 * カート内の商品の重複
 	 * 
 	 * @param quantity
