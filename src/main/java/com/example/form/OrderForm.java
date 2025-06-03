@@ -5,6 +5,9 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,8 +15,13 @@ import jakarta.validation.constraints.Pattern;
 
 public class OrderForm {
 
-	// お届け先 氏名
-	@NotBlank(message = "名前を入力して下さい")
+	private static final Logger logger = LoggerFactory.getLogger(OrderForm.class);
+	
+	//合計金額
+	private Integer totalPrice;
+	//お届け先　氏名
+	@NotBlank(message="名前を入力して下さい")
+
 	private String destinationName;
 	// お届け先 メールアドレス
 	@NotBlank(message = "メールアドレスを入力して下さい")
@@ -45,7 +53,7 @@ public class OrderForm {
 		try {
 			java.util.Date date = sdf.parse(deliveryTime);
 			Timestamp ts = new Timestamp(date.getTime());
-			System.out.println(ts);
+			logger.debug("変換されたTimestamp: {}", ts);
 			return ts;
 		} catch (ParseException e) {
 			e.printStackTrace();

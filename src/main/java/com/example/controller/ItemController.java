@@ -3,6 +3,9 @@ package com.example.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,8 @@ import com.example.service.ItemService;
 @Controller
 @RequestMapping("")
 public class ItemController {
+
+	private static final Logger logger = LoggerFactory.getLogger(ItemController.class);
 
 	@Autowired
 	private ItemService itemService;
@@ -66,8 +71,8 @@ public class ItemController {
 		model.addAttribute("pageNumbers", pageNumbers);
 		return "item/item_list_curry";
 	}
-
-	/**
+	
+	 /**
 	 * ページングのリンクに使うページ数をスコープに格納 (例)28件あり1ページにつき10件表示させる場合→1,2,3がpageNumbersに入る
 	 * 
 	 * @param model        モデル
@@ -75,7 +80,7 @@ public class ItemController {
 	 */
 	private List<Integer> calcPageNumbers(Model model, Page<Item> itemPage) {
 		int totalPages = itemPage.getTotalPages();
-		System.out.println(totalPages);
+		logger.debug("総ページ数: {}", totalPages);
 		List<Integer> pageNumbers = null;
 		if (totalPages > 0) {
 			pageNumbers = new ArrayList<Integer>();
@@ -83,7 +88,7 @@ public class ItemController {
 				pageNumbers.add(i);
 			}
 		}
-		System.out.println(itemPage);
+		logger.debug("ページ番号: {}", pageNumbers);
 		model.addAttribute("itemPage", itemPage);
 		return pageNumbers;
 	}
