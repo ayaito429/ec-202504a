@@ -48,7 +48,7 @@ public class ProfileController {
     public String editProfile(Model model, @AuthenticationPrincipal CustomUserDetails userDetails) {
         User user = userDetails.getUser();
 
-        EditProfileForm editProfileForm = new EditProfileForm(); // ← 修正
+        EditProfileForm editProfileForm = new EditProfileForm();
         editProfileForm.setName(user.getName());
         editProfileForm.setZipcode(user.getZipcode());
         editProfileForm.setAddress(user.getAddress());
@@ -66,7 +66,7 @@ public class ProfileController {
      * @param insertForm 更新するプロフィール情報
      * @return プロフィール画面へのリダイレクト
      */
-@PostMapping("/updateProfile")
+    @PostMapping("/updateProfile")
     public String updateProfile(
         @AuthenticationPrincipal CustomUserDetails userDetails,
         @Validated EditProfileForm editProfileForm,

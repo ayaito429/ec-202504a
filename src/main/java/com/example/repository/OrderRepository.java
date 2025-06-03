@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -151,6 +152,23 @@ public class OrderRepository {
 		return orderList;
 	};
 
+	private static final RowMapper<Order> ORDER_ROW_MAPPER = (rs, i) -> {
+        Order order = new Order();
+        order.setId(rs.getInt("id"));
+        order.setUserId(rs.getInt("user_id"));
+        order.setStatus(rs.getInt("status"));
+        order.setTotalPrice(rs.getInt("total_price"));
+        order.setOrderDate(rs.getDate("order_date"));
+        order.setDestinationName(rs.getString("destination_name"));
+        order.setDestinationEmail(rs.getString("destination_email"));
+        order.setDestinationZipcode(rs.getString("destination_zipcode"));
+        order.setDestinationAddress(rs.getString("destination_address"));
+        order.setDestinationTel(rs.getString("destination_tel"));
+        order.setDeliveryTime(rs.getTimestamp("delivery_time"));
+        order.setPaymentMethod(rs.getInt("payment_method"));
+        return order;
+    };
+
 	/**
 	 * orderの詳細を表示するメゾット
 	 * 
@@ -271,22 +289,7 @@ public class OrderRepository {
 
 		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
 
-		return template.query(sql, param, (rs, i) -> {
-			Order order = new Order();
-			order.setId(rs.getInt("id"));
-			order.setUserId(rs.getInt("user_id"));
-			order.setStatus(rs.getInt("status"));
-			order.setTotalPrice(rs.getInt("total_price"));
-			order.setOrderDate(rs.getDate("order_date"));
-			order.setDestinationName(rs.getString("destination_name"));
-			order.setDestinationEmail(rs.getString("destination_email"));
-			order.setDestinationZipcode(rs.getString("destination_zipcode"));
-			order.setDestinationAddress(rs.getString("destination_address"));
-			order.setDestinationTel(rs.getString("destination_tel"));
-			order.setDeliveryTime(rs.getTimestamp("delivery_time"));
-			order.setPaymentMethod(rs.getInt("payment_method"));
-			return order;
-		});
+        return template.query(sql, param, ORDER_ROW_MAPPER);
 	}
 
 	/**
