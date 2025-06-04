@@ -60,6 +60,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             session.removeAttribute("cartOrder");
         }
 
-        response.sendRedirect("/showList");
+        response.sendRedirect(request.getContextPath() + "/showList");
     }
 }
