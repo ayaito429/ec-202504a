@@ -38,7 +38,6 @@ public class SecurityConfig {
                                                         "/profile/profile", "/profile/profile_edit",
                                                         "/withdraw/confirm","/withdraw/execute"
                                                 ).authenticated()
-                                                .requestMatchers("/withdraw/completed").permitAll()
                                                 .anyRequest().permitAll())
                                 .formLogin(form -> form
                                                 .loginPage("/toLogin")

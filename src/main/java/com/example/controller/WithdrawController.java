@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.common.CustomUserDetails;
 import com.example.domain.Order;
 import com.example.domain.User;
+import com.example.enums.OrderStatus;
 import com.example.service.OrderService;
 import com.example.service.UserService;
 
@@ -65,7 +66,13 @@ public class WithdrawController {
 
         // 未処理の注文があるかチェック（status 0〜3：未処理/進行中）
         List<Order> orderList = orderService.findByUserId(user.getId());
-        boolean hasPendingOrders = orderList.stream().anyMatch(order -> order.getStatus() >= 1 && order.getStatus() <= 3);
+        boolean hasPendingOrders = orderList.stream()
+            .map(order -> OrderStatus.of(order.getStatus()))
+            .anyMatch(status ->
+                status == OrderStatus.UNPAID ||
+                status == OrderStatus.PAID ||
+                status == OrderStatus.SHIPPED
+            );
 
         if (hasPendingOrders) {
             redirectAttributes.addFlashAttribute("error", "未処理の注文があります。退会できません。");
