@@ -21,11 +21,13 @@ public class User {
 	private String address;
 	//電話番号
 	private String telephone;
+	//ステータス
+	private Integer status;
 	
 	
 	//引数ありコンストラクタ
 	public User(Integer id, String name, String password, String email, String zipcode, String address,
-			String telephone) {
+			String telephone, Integer status) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -34,6 +36,7 @@ public class User {
 		this.zipcode = zipcode;
 		this.address = address;
 		this.telephone = telephone;
+		this.status = status;
 	}
 	//引数なしコンストラクタ
 	public User() {}
@@ -81,11 +84,17 @@ public class User {
 	public void setTelephone(String telephone) {
 		this.telephone = telephone;
 	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 	//toStringメソッド
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", password=" + password + ", email=" + email + ", zipcode="
-				+ zipcode + ", address=" + address + ", telephone=" + telephone + "]";
+				+ zipcode + ", address=" + address + ", telephone=" + telephone + ", status=" + status + "]";
 	}
 	
 	

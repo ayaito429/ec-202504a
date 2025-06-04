@@ -25,7 +25,9 @@ public class UserRepository {
 		user.setEmail(rs.getString("email"));
 		user.setPassword(rs.getString("password"));
 		user.setZipcode(rs.getString("zipcode"));
+		user.setAddress(rs.getString("address"));
 		user.setTelephone(rs.getString("telephone"));
+		user.setStatus(rs.getInt("status"));
 		return user;
 	};
 
@@ -54,6 +56,28 @@ public class UserRepository {
 		SqlParameterSource param = new BeanPropertySqlParameterSource(user);
 		String sql = "INSERT INTO users (name, email, password, zipcode, address, telephone) "
 				+ "VALUES (:name, :email, :password, :zipcode, :address, :telephone);";
+		template.update(sql, param);
+	}
+
+	/**
+	 * ユーザー情報を更新する
+	 * 
+	 * @param user 更新するユーザー情報
+	 */
+	public void update(User user) {
+		SqlParameterSource param = new BeanPropertySqlParameterSource(user);
+		String sql = "UPDATE users SET name=:name, zipcode=:zipcode, address=:address, telephone=:telephone WHERE id=:id";
+		template.update(sql, param);
+	}
+
+	/**
+	 * ユーザーのステータスを退会状態に更新（論理削除）
+	 * 
+	 * @param userId ユーザーID
+	 */
+	public void withdrawUser(Integer userId) {
+		String sql = "UPDATE users SET status = 9 WHERE id = :userId";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
 		template.update(sql, param);
 	}
 
