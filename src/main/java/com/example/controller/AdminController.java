@@ -27,8 +27,6 @@ public class AdminController {
 
 	@Autowired
 	private OrderService orderService;
-	@Autowired
-	private ItemService itemService;
 
 	// 1ページに表示する注文数は30件
 	private static final int VIEW_SIZE = 30;
@@ -115,6 +113,7 @@ public class AdminController {
 		AdminOrderDetailForm form = new AdminOrderDetailForm();
 		for (int i = 0; i < orderList.size(); i++) {
 			form.setStatus(orderList.get(i).getStatus());
+			form.setId(id);
 		}
 		model.addAttribute("adminOrderDetailForm", form);
 
@@ -133,7 +132,7 @@ public class AdminController {
 			model.addAttribute("errorFlg", errorFlg);
 			return "admin/order_detail";
 		} else {
-			orderService.updateCompletionTime(completionTime);
+			orderService.updateCompletionTime(completionTime, form.getId());
 		}
 		return "admin/order_list";
 	}

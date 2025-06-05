@@ -36,6 +36,7 @@
                             注文詳細</h3>
                         <br>
                         <form method="post" th:action="@{/admin/detail/update}" th:object="${adminOrderDetailForm}">
+                            <input type="hidden" th:field="*{id}">
                             <div th:each="orders : ${orderList}">
                                 <table class="table table-success table-striped item-list-table">
                                     <tbody>
