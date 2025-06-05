@@ -18,6 +18,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * カスタムサービスクラス
+ * 
+ * @author shirota sho
+ */
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
@@ -31,10 +36,13 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
 
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Integer userId = userDetails.getUserId();
+        String role = userDetails.getUser().getRole();
+
         Order cartOrder = (Order) session.getAttribute("cartOrder");
 
         if (cartOrder != null) {
-            Integer userId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
             cartOrder.setUserId(userId);
             Integer status = 0;
 
@@ -60,6 +68,14 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             session.removeAttribute("cartOrder");
         }
 
-        response.sendRedirect("/showList");
+        String redirectUrl;
+        if ("ADMIN".equals(role)) {
+            redirectUrl = request.getContextPath() + "/admin";
+        } else {
+            redirectUrl = request.getContextPath() + "/showList";
+        }
+
+        response.sendRedirect(redirectUrl);
     }
+
 }

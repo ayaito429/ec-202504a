@@ -39,7 +39,8 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return AuthorityUtils.createAuthorityList("ROLE_USER");
+        String role = user.getRole();
+        return AuthorityUtils.createAuthorityList("ROLE_" + role);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getEmail(); // Spring Securityのusernameはemailに設定
+        return user.getEmail();
     }
 
     @Override

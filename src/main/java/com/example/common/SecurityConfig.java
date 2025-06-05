@@ -33,11 +33,12 @@ public class SecurityConfig {
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                 http
                                 .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers("/admin/**").hasRole("ADMIN")
                                                 .requestMatchers(
-                                                        "/toOrder", "/order", "/orderHistory", "/orderdetail",
-                                                        "/profile/profile", "/profile/profile_edit",
-                                                        "/withdraw/confirm","/withdraw/execute"
-                                                ).authenticated()
+                                                                "/toOrder", "/order", "/orderHistory", "/orderdetail",
+                                                                "/profile/profile", "/profile/profile_edit",
+                                                                "/withdraw/confirm", "/withdraw/execute")
+                                                .authenticated()
                                                 .anyRequest().permitAll())
                                 .formLogin(form -> form
                                                 .loginPage("/toLogin")
