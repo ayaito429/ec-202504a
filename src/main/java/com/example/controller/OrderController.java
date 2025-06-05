@@ -140,7 +140,12 @@ public class OrderController {
 			}
 		}
 
-		orderService.sendMail(customUserDetails.getEmail());
+		orderService.sendMail(
+			cartOrder.getDestinationEmail(), 
+			customUserDetails.getUser(),     
+			cartOrder.getOrderItemList(),    
+			cartOrder.getTotalPrice()        
+		);
 		return "redirect:/orderCompletion";
 	}
 

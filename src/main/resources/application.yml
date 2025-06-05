@@ -2,8 +2,8 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:rakuraku-curry}
-    username: postgres
-    password: postgres
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:postgres}
   mail:
     host: ${MAIL_HOST:localhost}
     port: ${MAIL_PORT:1025}
@@ -20,3 +20,9 @@ server:
   servlet:
     session:
       tracking-modes: cookie
+# メール送信設定
+custom:
+  mail:
+    from: support@rakuraku-curry.com
+    subject: ご注文ありがとうございます【ラクラクカレー】
+    template: "src/main/resources/mail/order-complete.txt"

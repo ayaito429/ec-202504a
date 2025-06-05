@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>カレー屋のネット注文</title>
+    <link th:href="@{/css/bootstrap.css}" href="../../static/css/bootstrap.css" rel="stylesheet" />
+    <link th:href="@{/css/curry.css}" href="../../static/css/curry.css" rel="stylesheet" />
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+  <style>
+    .validation-msg {
+      color: red;
+      font-weight: bold;
+      margin-top: 15px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="text-center">
+      <span th:insert="~{header::header}"></span>
+      <h3 class="mb-4">退会確認</h3>
+      <h4>本当に退会しますか？<br>退会するとすべての情報が失われます。</h4>
+
+    <div class="d-flex justify-content-center gap-3">
+      <!-- カートに商品がある場合：モーダルボタン表示 -->
+      <div th:if="${hasCartItems}">
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#cartModal">
+          退会する
+        </button>
+        <a th:href="@{/profile}" class="btn btn-primary">キャンセル</a>
+      </div>
+
+      <!-- カートが空の場合：フォーム送信で退会処理 -->
+      <div th:if="${!hasCartItems}" class="text-center">
+        <div style="display: inline-block; margin-right: 10px;">
+          <form th:action="@{/withdraw/execute}" method="post" style="margin: 0;">
+            <button type="submit" class="btn btn-danger">退会する</button>
+          </form>
+        </div>
+        <div style="display: inline-block;">
+          <a th:href="@{/profile}" class="btn btn-primary">キャンセル</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div th:if="${error}" class="validation-msg">
+  <p th:text="${error}"></p>
+</div>
+  <!-- モーダル -->
+    <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="閉じる">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="cartModalLabel">確認</h4>
+        </div>
+
+        <div class="modal-body">
+            以前カートに入れた商品が残っています。<br>
+            退会する場合、カートの内容が失われますが本当によろしいですか？<br>
+        </div>
+
+        <div class="modal-footer">
+            <a class="btn btn-primary" th:href="@{/showCart}">カート情報を確認</a>
+            <form th:action="@{/withdraw/execute}" method="post" style="display:inline;">
+              <button type="submit" class="btn btn-danger">退会</button>
+            </form>
+        </div>
+        </div>
+        </div>
+    <!-- end container -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+  </body>
+</html>
