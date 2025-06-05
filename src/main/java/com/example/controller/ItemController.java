@@ -43,6 +43,7 @@ public class ItemController {
 
 		// viewサイズ機能追加
 		if(size == null){
+			// sizeの指定が無い場合はVIEW_SIZEの値を使用
 			size = VIEW_SIZE;
 		}
 
