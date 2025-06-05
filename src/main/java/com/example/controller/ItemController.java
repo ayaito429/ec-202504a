@@ -38,8 +38,13 @@ public class ItemController {
 	 * @return
 	 */
 	@RequestMapping("/showList")
-	public String showItem(Model model, Integer page, String searchName) {
+	public String showItem(Model model, Integer size, Integer page, String searchName) {
 		List<Item> itemList = null;
+
+		// viewサイズ機能追加
+		if(size == null){
+			size = VIEW_SIZE;
+		}
 
 		// ページング機能追加
 		if (page == null) {
@@ -63,7 +68,7 @@ public class ItemController {
 		}
 
 		// 表示させたいページ数、ページサイズ、従業員リストを渡し１ページに表示させる従業員リストを絞り込み
-		Page<Item> itemPage = itemService.showListPaging(page, VIEW_SIZE, itemList);
+		Page<Item> itemPage = itemService.showListPaging(page, size, itemList);
 		model.addAttribute("itemPage", itemPage);
 
 		// ページングのリンクに使うページ数をスコープに格納 (例)28件あり1ページにつき10件表示させる場合→1,2,3がpageNumbersに入る

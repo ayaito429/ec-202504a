@@ -3,6 +3,7 @@ package com.example.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -36,6 +37,15 @@ public class LoginController {
 
 		return "login/login";
 	}
+
+	/**
+	 * ルートのパスにリクエストを送信した際にリダイレクト処理
+	 * @return リダイレクト先
+	 */
+	@RequestMapping("")
+    public String redirectToList() {
+        return "redirect:/showList";
+    }
 
 	@GetMapping("/error500")
 public String throwError() {
