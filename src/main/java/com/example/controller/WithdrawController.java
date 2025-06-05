@@ -75,7 +75,7 @@ public class WithdrawController {
             );
 
         if (hasPendingOrders) {
-            redirectAttributes.addFlashAttribute("error", "未処理の注文があります。退会できません。");
+            redirectAttributes.addFlashAttribute("error", "{unable.withdraw}");
             return "redirect:/withdraw/confirm";
         }
 

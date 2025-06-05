@@ -73,7 +73,7 @@ public class InsertController {
 		
 		//パスワードと確認用パスワードが不一致の場合エラー文をリクエストスコープに格納してユーザー登録画面に遷移
 		if(!(form.getPassword().equals(form.getConfirmPassword()))) {
-			model.addAttribute("passwordNotMatchError", "パスワードと確認用パスワードが不一致です");
+			model.addAttribute("passwordNotMatchError", "{error.password.notmatch}");
 			return "register_user";
 		}
 		
@@ -92,7 +92,7 @@ public class InsertController {
 			return "redirect:/toLogin";
 		} catch (DataIntegrityViolationException e) {
 			e.printStackTrace();
-			model.addAttribute("emailRegistedError","そのメールアドレスはすでに使われています");
+			model.addAttribute("emailRegistedError","{error.email.duplicate}");
 			return "register_user";
 		}
 	}

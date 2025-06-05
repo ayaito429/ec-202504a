@@ -207,7 +207,7 @@ public class CartController {
 			cartOrder.setTotalPrice(totalPrice);
 			model.addAttribute("cartOrder", cartOrder);
 		} else {
-			model.addAttribute("cartNothing", "カートの中身はございません");
+			model.addAttribute("cartNothing", "{cartNothing}");
 		}
 
 		return "cart/cart_list";

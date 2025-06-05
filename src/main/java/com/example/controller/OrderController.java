@@ -59,7 +59,7 @@ public class OrderController {
 		List<Order> cartOrders = orderService.findByStatus(customUserDetails.getUserId(), 0);
 
 		if (cartOrders.isEmpty()) {
-			redirectAttributes.addFlashAttribute("errorMessage", "カートの中身はございません");
+			redirectAttributes.addFlashAttribute("errorMessage", "{cartNothing}");
 			return "redirect:/showCart";
 		}
 
@@ -92,7 +92,7 @@ public class OrderController {
 
 		List<Order> cartOrders = orderService.findByStatus(customUserDetails.getUserId(), 0);
 		if (cartOrders.isEmpty()) {
-			redirectAttributes.addFlashAttribute("errorMessage", "カートが空です");
+			redirectAttributes.addFlashAttribute("errorMessage", "{cartNothing}");
 			return "redirect:/showCart";
 		}
 
@@ -114,7 +114,7 @@ public class OrderController {
 		Timestamp deliveryTime = form.getTimestamp();
 		Timestamp minDeliveryTime = new Timestamp(System.currentTimeMillis() + (3 * 60 * 60 * 1000));
 		if (minDeliveryTime.after(deliveryTime)) {
-			model.addAttribute("errorDeliveryDate", "今から3時間後の日時をご入力ください。");
+			model.addAttribute("errorDeliveryDate", "{error.deliveryTime.tooEarly}");
 			model.addAttribute("cartOrder", cartOrder);
 			model.addAttribute("orderForm", form);
 			return "order/order_confirm";
@@ -206,7 +206,7 @@ public class OrderController {
 		Integer userId = customUserDetails.getUserId();
 		List<Order> orderList = orderService.findByOrder(userId);
 		if (orderList == null || orderList.isEmpty()) {
-			model.addAttribute("orderNothing", "注文履歴がありません");
+			model.addAttribute("orderNothing", "{orderNothing}");
 		} else {
 			model.addAttribute("orderList", orderList);
 		}

@@ -58,7 +58,7 @@ public class ItemController {
 			// 該当する検索結果がなければ全件返す
 			if (itemList == null) {
 				itemList = itemService.findAll();
-				model.addAttribute("message", "該当する商品がありません");
+				model.addAttribute("message", "{NoExist.item}");
 			}
 		}
 

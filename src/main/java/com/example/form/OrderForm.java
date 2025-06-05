@@ -20,32 +20,32 @@ public class OrderForm {
 	//合計金額
 	private Integer totalPrice;
 	//お届け先　氏名
-	@NotBlank(message="名前を入力して下さい")
+	@NotBlank(message="{NotBlank.form.name}")
 
 	private String destinationName;
 	// お届け先 メールアドレス
-	@NotBlank(message = "メールアドレスを入力して下さい")
-	@Email(message = "メールアドレスの形式が不正です")
+	@NotBlank(message = "{NotBlank.form.email}")
+	@Email(message = "{Email.form.email}")
 	private String destinationEmail;
 	// お届け先 郵便番号
-	@NotBlank(message = "郵便番号を入力して下さい")
-	@Pattern(regexp = "^[0-9]{3}-[0-9]{4}$", message = "郵便番号はXXX-XXXXの形式で入力してください")
+	@NotBlank(message = "{NotBlank.form.zipcode}")
+	@Pattern(regexp = "^[0-9]{3}-[0-9]{4}$", message = "{Pattern.form.zipcode}")
 	private String destinationZipcode;
 	// お届け先 住所
-	@NotBlank(message = "住所を入力して下さい")
+	@NotBlank(message = "{NotBlank.form.address}")
 	private String destinationAddress;
 	// お届け先 電話番号
-	@NotBlank(message = "電話番号を入力して下さい")
-	@Pattern(regexp = "^[0-9]+-[0-9]+-[0-9]+$", message = "電話番号はXXXX-XXXX-XXXXの形式で入力してください")
+	@NotBlank(message = "{NotBlank.form.tel}")
+	@Pattern(regexp = "^[0-9]+-[0-9]+-[0-9]+$", message = "{Pattern.form.tel}")
 	private String destinationTel;
 	// 日付
 	private Date orderDate;
 	// お届け時間
-	@NotNull(message = "配達日時を入力してください")
-	@Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}$", message = "配達日時を入力してください")
+	@NotNull(message = "{NotNull.form.orderDate}")
+	@Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}$", message = "{Pattern.form.orderDate}")
 	private String deliveryTime;
 	// 支払い方法
-	@NotNull(message = "支払い方法を入力してください")
+	@NotNull(message = "{NotNull.form.paymentMethod}")
 	private Integer paymentMethod;
 
 	public Timestamp getTimestamp() {

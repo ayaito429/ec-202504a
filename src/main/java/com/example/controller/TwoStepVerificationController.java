@@ -97,7 +97,7 @@ public class TwoStepVerificationController {
 			session.setAttribute("email", email);
 			return "redirect:/insert";
 		} else {
-			model.addAttribute("error","入力された値が違います");
+			model.addAttribute("error","{error.passcheck.invalid}");
 			return "/insert/pass_check";
 		}
 	}

@@ -60,9 +60,9 @@ public class UserApiController {
         User user = userService.login(loginInfoList[1], loginInfoList[0]);
 
         if (user == null) {
-            throw new LoginFailedException("ログインに失敗しました。");
+            throw new LoginFailedException("{LoginFailedException}");
         } else if (!userId.equals(user.getId())) {
-            throw new UnauthorizedAccessException("リクエストを処理できませんでした。");
+            throw new UnauthorizedAccessException("{UnauthorizedAccessException}");
         }
 
         // 注文履歴を取得

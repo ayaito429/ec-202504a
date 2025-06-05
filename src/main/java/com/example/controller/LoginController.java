@@ -27,11 +27,11 @@ public class LoginController {
 			Model model) {
 
 		if (error != null) {
-			model.addAttribute("loginError", "メールアドレス、またはパスワードが間違っています");
+			model.addAttribute("loginError", "{loginError}");
 		}
 
 		if (logout != null) {
-			model.addAttribute("logoutMessage", "ログアウトしました");
+			model.addAttribute("logoutMessage", "{logout}");
 		}
 
 		return "login/login";
