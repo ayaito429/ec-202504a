@@ -2,7 +2,10 @@ package com.example.controller;
 
 
 
+import java.util.Locale;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,6 +32,9 @@ public class TwoStepVerificationController {
 	
 	@Autowired
 	private HttpSession session;
+
+	@Autowired
+	private MessageSource messageSource;
 
 	@ModelAttribute
 	public RandomCheckForm setUprandomForm() {
@@ -97,7 +103,7 @@ public class TwoStepVerificationController {
 			session.setAttribute("email", email);
 			return "redirect:/insert";
 		} else {
-			model.addAttribute("error","{error.passcheck.invalid}");
+			model.addAttribute("error",messageSource.getMessage("error.passcheck.invalid", null, "入力された値が違います", Locale.JAPAN));
 			return "/insert/pass_check";
 		}
 	}

@@ -1,8 +1,10 @@
 package com.example.controller;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +38,9 @@ public class WithdrawController {
 
     @Autowired
     private HttpSession session;
+
+    @Autowired
+	private MessageSource messageSource;
 
     /**
      * 退会確認画面を表示する
@@ -75,7 +80,7 @@ public class WithdrawController {
             );
 
         if (hasPendingOrders) {
-            redirectAttributes.addFlashAttribute("error", "{unable.withdraw}");
+            redirectAttributes.addFlashAttribute("error", messageSource.getMessage("unable.withdraw", null, "退会できません", Locale.JAPAN));
             return "redirect:/withdraw/confirm";
         }
 
