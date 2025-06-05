@@ -5,7 +5,7 @@ spring:
     username: ${DB_USER:postgres}
     password: ${DB_PASS:Sho082012}
   mail:
-    host: ${MAIL_HOST:172.30.93.100}
+    host: ${MAIL_HOST:localhost}
     port: ${MAIL_PORT:1025}
 
 logging:
