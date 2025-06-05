@@ -33,7 +33,7 @@ public class SecurityConfig {
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                 http
                                 .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                                // .requestMatchers("/admin/**").hasRole("ADMIN")
                                                 .requestMatchers(
                                                                 "/toOrder", "/order", "/orderHistory", "/orderdetail",
                                                                 "/profile/profile", "/profile/profile_edit",

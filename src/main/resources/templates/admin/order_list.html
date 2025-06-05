@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
 
 <head>
     <meta charset="UTF-8">
@@ -8,7 +8,7 @@
     <title>カレー屋のネット注文</title>
     <link th:href="@{/css/bootstrap.css}" href="../../static/css/bootstrap.css" rel="stylesheet" />
     <link th:href="@{/css/curry.css}" href="../../static/css/curry.css" rel="stylesheet" />
-    <link th:href="@{/css/admin_order_list.css}"  href="../../static/css/admin_order_list.css" rel="stylesheet" />
+    <link th:href="@{/css/admin_order_list.css}" href="../../static/css/admin_order_list.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -17,29 +17,22 @@
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
-                    <button
-                            type="button"
-                            class="navbar-toggle collapsed"
-                            data-toggle="collapse"
-                            data-target="#bs-example-navbar-collapse-1"
-                            aria-expanded="false">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span> <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand" th:href="@{/showList}">
                         <!-- 企業ロゴ -->
-                        <img
-                                alt="main logo"
-                                th:src="@{/img_curry/header_logo.png}"
-                                height="35"/>
+                        <img alt="main logo" th:src="@{/img_curry/header_logo.png}" height="35" />
                     </a>
                 </div>
-    
+
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <p class="navbar-text navbar-right">
-                        <a th:href="@{/showList}" class="navbar-link">商品一覧</a>&nbsp;&nbsp;    
+                        <a th:href="@{/admin}" class="navbar-link">注文一覧</a>&nbsp;&nbsp;
                         <!-- Spring Securityの認証状態に応じて表示 -->
                         <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="navbar-link">ログアウト</a>
                     </p>
@@ -50,27 +43,26 @@
         </nav>
     </div>
 
-    <form>
+    <form method="get" th:action="@{/admin/list}">
         <div class="row">
             <h3 class="text-center">注文検索</h3>
 
-            <span th:if="${message} != null" class="margin-left-md" th:text="${message}" style="color:red"></span>
             <div class="flex-container mt-20 mb-20">
 
-                <select id="searchField" class="w-30 h-25">
+                <select id="searchField" name="searchField" class="w-30 h-25" th:value="${searchField}">
                     <option value="id">注文ID</option>
                     <option value="orderDate">注文日</option>
                     <option value="name">注文者</option>
                     <option value="telephone">電話番号</option>
                     <option value="status">ステータス</option>
                     <option value="deliveryTime">希望日時</option>
-                    <option value="complationTime">完了日時</option>
+                    <option value="completionTime">完了日時</option>
                     <option value="payMethod">支払方法</option>
                 </select>
 
-                <div id="searchInputArea">
+                <div id="searchInputArea" name="searchValue2">
                     <div class="w-30 h-25">
-                        <input name="page" th:value="1">
+                        <input name="searchValue1" th:value="1">
                     </div>
                 </div>
             </div>
@@ -84,61 +76,79 @@
             </button>
         </div>
     </form>
-    
+
+    <div class="col-sm-offset-9 col-sm-2">
+        検索結果：
+        <span th:text="${result} + '件'"></span>
+    </div>
     <div class="col-sm-offset-1 col-sm-10">
         <table class="table table-striped item-list-table">
             <tbody>
-            <tr>
-                <th class="text-center">ID</th>
-                <th class="text-center">注文日</th>
-                <th class="text-center">注文者</th>
-                <th class="text-center">電話番号</th>
-                <th class="text-center">ステータス</th>
-                <th class="text-center">配達希望日時</th>
-                <th class="text-center">配達完了日時</th>
-                <th class="text-center">支払方法</th>
-            </tr>
-    
-            <tr th:if="false">
-                <td colspan="5">
-                    <h3 class="text-center">該当する注文はありません</h3>
-                </td>
-            </tr>
-    
-            <th:block>
                 <tr>
-                    <td class="text-center">1</td>
-                    <td class="text-center">2025年5月28日</td>
-                    <td class="text-center">山田太郎</td>
-                    <td class="text-center">080-7800-0000</td>
-                    <td class="text-center">配達完了</td>
-                    <td class="text-center">2025年5月30日 12時</td>
-                    <td class="text-center">2025年5月30日 14時</td>
-                    <td class="text-center">クレジットカード</td>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">注文日</th>
+                    <th class="text-center">注文者</th>
+                    <th class="text-center">電話番号</th>
+                    <th class="text-center">ステータス</th>
+                    <th class="text-center">配達希望日時</th>
+                    <th class="text-center">配達完了日時</th>
+                    <th class="text-center">支払方法</th>
                 </tr>
-            </th:block>
+
+                <tr th:if="${#lists.isEmpty(orderList)}">
+                    <td colspan="8">
+                        <h3 class="text-center">該当する注文はありません</h3>
+                    </td>
+                </tr>
+
+                <th:block>
+                    <tr th:each="order : ${orderList}">
+                        <td class="text-center">
+                            <a th:href="@{'/admin/detail/' + ${order.id}}" th:text="${order.id}">1</a>
+                        </td>
+                        <td class="text-center" th:text="${#dates.format(order.orderDate, 'yyyy年M月d日')}">2025年5月28日
+                        </td>
+                        <td class="text-center" th:text="${order.user.name}">山田太郎</td>
+                        <td class="text-center" th:text="${order.user.telephone}">080-7800-0000</td>
+                        <td class="text-center" th:switch="${order.status}">
+                            <span th:case="1">未入金</span>
+                            <span th:case="2">入金済</span>
+                            <span th:case="3">発送済</span>
+                            <span th:case="4">配達完了</span>
+                            <span th:case="9">キャンセル</span>
+                        </td>
+                        <td class="text-center" th:if="${order.deliveryTime != null}"
+                            th:text="${#dates.format(order.deliveryTime, 'yyyy年M月d日 H時')}">
+                        </td>
+                        <td class="text-center" th:unless="${order.deliveryTime != null}">
+                            ---
+                        </td>
+                        <td class="text-center" th:if="${order.completionTime != null}"
+                            th:text="${#dates.format(order.completionTime.toLocalDate(), 'yyyy年M月d日 H時')}">
+                            2025年5月30日 14時</td>
+                        <td class="text-center" th:unless="${order.completionTime != null}" th:text="---">
+                        </td>
+                        <td class="text-center" th:switch="${order.paymentMethod}">
+                            <span th:case="1">代金引換</span>
+                            <span th:case="2">クレジットカード</span>
+                        </td>
+                    </tr>
+                </th:block>
             </tbody>
         </table>
-        <nav class="flex-container">
-            <ul class="pagination">
-                <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-                </li>
-            </ul>
-        </nav>
+        <!-- ページング機能 -->
+        <div class="text-center">
+            <div th:if="${orderPage != null and orderPage.totalPages > 0}" class="pagination">
+                <span th:each="pageNumber : ${pageNumbers}">
+                    <a th:href="@{/admin/list(size=${orderPage.size}, page=${pageNumber},searchName=${searchName})}"
+                        th:text="${pageNumber}" th:class="${pageNumber == orderPage.number + 1} ? 
+                  'btn btn-primary' : 'btn btn-secondary'"></a>
+                </span>
+            </div>
+        </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script type="text/javascript" src="js/admin.js"></script>
+    <script type="text/javascript" th:src="@{/js/admin_list.js}"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 

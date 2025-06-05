@@ -36,6 +36,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
 
+        System.out.println("Handlerクラス入った");
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Integer userId = userDetails.getUserId();
         String role = userDetails.getUser().getRole();
@@ -56,8 +57,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                 for (OrderItem orderItem : cartOrder.getOrderItemList()) {
                     orderItem.setOrderId(orderId);
                     orderService.insertOrderItem(orderItem);
-                }
-            } else {
+                }} else {
                 Integer newOrderId = orderService.insert(cartOrder);
                 for (OrderItem orderItem : cartOrder.getOrderItemList()) {
                     orderItem.setOrderId(newOrderId);

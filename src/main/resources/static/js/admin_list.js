@@ -20,58 +20,82 @@ const fieldTypeMap = {
     },
     status: {
         type: "select",
-        options: ["未入金", "入金済", "発送済", "配達完了", "キャンセル"]
+        options: [
+            {
+                "value": 1,
+                "text": "未入金"
+            },
+            {
+                "value": 2,
+                "text": "入金済"
+            },
+            {
+                "value": 3,
+                "text": "発送済"
+            },
+            {
+                "value": 4,
+                "text": "配達完了"
+            },
+            {
+                "value": 9,
+                "text": "キャンセル"
+            }
+        ]
     },
     deliveryTime: {
         type: "input",
         inputType: "date"
     },
-    complationTime: {
+    completionTime: {
         type: "input",
         inputType: "date"
     },
     payMethod: {
         type: "select",
-        options: ["代金引換", "クレジットカード"]
+        options: [
+            {
+                "value": 1,
+                "text": "代金引換"
+            },
+            {
+                "value": 2,
+                "text": "クレジットカード"
+            }
+        ]
     }
 
 
 };
 
 function changeInputTypeByMap() {
-    [1,2].forEach((num) => {
-        if(document.getElementById("searchValue" + num)){
-            console.log(document.getElementById("searchValue" + num).value)
-        }
-    });
+
     const selectedKey = document.getElementById("searchField");
     const config = fieldTypeMap[selectedKey.value];
     const container = document.getElementById("searchInputArea");
 
     // 入力欄エリアを初期化
     container.innerHTML = "";
-    console.log(config)
 
     if (!config) return;
 
-    console.log(config.type)
     if (config.type === "input") {
-        if(config.inputType === "date"){
-            ["開始日","終了日"].forEach((name,index) => {
+        if (config.inputType === "date") {
+            ["開始日", "終了日"].forEach((_, index) => {
                 const input = document.createElement("input");
                 input.type = config.inputType || "text";
                 input.name = "searchValue" + (index + 1);
                 input.id = "searchValue" + (index + 1);
                 if (config.placeholder) input.placeholder = config.placeholder;
                 container.appendChild(input);
-                
-                if(index === 0){
+
+                if (index === 0) {
                     const span = document.createElement("span")
                     span.innerHTML = "～"
                     container.appendChild(span)
                 }
             })
-        }else{
+        } else {
             const input = document.createElement("input");
             input.type = config.inputType || "text";
             input.name = "searchValue1";
@@ -81,14 +105,14 @@ function changeInputTypeByMap() {
         }
     } else if (config.type === "select") {
         const select = document.createElement("select");
-        select.name = "searchValue";
-        select.id = "searchValue";
+        select.name = "searchValue2";
+        select.id = "searchValue2";
 
         config.options.forEach(optionValue => {
-        const option = document.createElement("option");
-        option.value = optionValue;
-        option.textContent = optionValue;
-        select.appendChild(option);
+            const option = document.createElement("option");
+            option.value = optionValue.value;
+            option.textContent = optionValue.text;
+            select.appendChild(option);
         });
 
         container.appendChild(select);

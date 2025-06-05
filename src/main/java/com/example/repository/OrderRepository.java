@@ -1,5 +1,6 @@
 package com.example.repository;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,21 +154,21 @@ public class OrderRepository {
 	};
 
 	private static final RowMapper<Order> ORDER_ROW_MAPPER = (rs, i) -> {
-        Order order = new Order();
-        order.setId(rs.getInt("id"));
-        order.setUserId(rs.getInt("user_id"));
-        order.setStatus(rs.getInt("status"));
-        order.setTotalPrice(rs.getInt("total_price"));
-        order.setOrderDate(rs.getDate("order_date"));
-        order.setDestinationName(rs.getString("destination_name"));
-        order.setDestinationEmail(rs.getString("destination_email"));
-        order.setDestinationZipcode(rs.getString("destination_zipcode"));
-        order.setDestinationAddress(rs.getString("destination_address"));
-        order.setDestinationTel(rs.getString("destination_tel"));
-        order.setDeliveryTime(rs.getTimestamp("delivery_time"));
-        order.setPaymentMethod(rs.getInt("payment_method"));
-        return order;
-    };
+		Order order = new Order();
+		order.setId(rs.getInt("id"));
+		order.setUserId(rs.getInt("user_id"));
+		order.setStatus(rs.getInt("status"));
+		order.setTotalPrice(rs.getInt("total_price"));
+		order.setOrderDate(rs.getDate("order_date"));
+		order.setDestinationName(rs.getString("destination_name"));
+		order.setDestinationEmail(rs.getString("destination_email"));
+		order.setDestinationZipcode(rs.getString("destination_zipcode"));
+		order.setDestinationAddress(rs.getString("destination_address"));
+		order.setDestinationTel(rs.getString("destination_tel"));
+		order.setDeliveryTime(rs.getTimestamp("delivery_time"));
+		order.setPaymentMethod(rs.getInt("payment_method"));
+		return order;
+	};
 
 	/**
 	 * orderの詳細を表示するメゾット
@@ -289,7 +290,7 @@ public class OrderRepository {
 
 		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
 
-        return template.query(sql, param, ORDER_ROW_MAPPER);
+		return template.query(sql, param, ORDER_ROW_MAPPER);
 	}
 
 	/**
@@ -371,6 +372,17 @@ public class OrderRepository {
 	public void cancelOrdersByUserId(Integer userId) {
 		String sql = "UPDATE orders SET status = 9 WHERE user_id = :userId AND status = 0";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
+		template.update(sql, param);
+	}
+
+	/**
+	 * 配達完了日時の更新
+	 * 
+	 * @param completionTime 配達完了日時
+	 */
+	public void updateCompletionTime(Timestamp completionTime, Integer id) {
+		String sql = "UPDATE orders SET completion_time = :completionTime WHERE id = :id";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("completionTime", completionTime).addValue("id", id);
 		template.update(sql, param);
 	}
 }
