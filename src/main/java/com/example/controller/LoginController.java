@@ -36,4 +36,11 @@ public class LoginController {
 
 		return "login/login";
 	}
+
+	@GetMapping("/error500")
+public String throwError() {
+    String str = null;
+    str.length(); // ← NullPointerException 発生
+    return "some-view";
+}
 }

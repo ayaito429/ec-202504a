@@ -26,6 +26,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
+        if (user.getStatus() != null && user.getStatus() == 9) {
+            throw new UsernameNotFoundException("退会済みのユーザーです");
+        }
         return new CustomUserDetails(user);
     }
 }
