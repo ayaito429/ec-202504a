@@ -29,6 +29,13 @@ $(function () {
 		$('#inputConfirmationPassword').val('');
 		console.log("test");
 	})
+
+	$('#clear_button').on('click', function () {
+		console.log("test");
+		$('#searchValue1').val('');
+		$('#searchValue2').val('1');
+		
+	})
 	
 	
 });

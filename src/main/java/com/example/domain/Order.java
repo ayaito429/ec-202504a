@@ -41,6 +41,8 @@ public class Order {
 	private User user;
 	// OrderItemのリスト
 	private List<OrderItem> orderItemList = new ArrayList<>();
+	// 配達完了日時
+	private Timestamp completionTime;
 
 	// ゲッターとセッター
 	public Integer getId() {
@@ -155,13 +157,22 @@ public class Order {
 		this.orderItemList = orderItemList;
 	}
 
+	public Timestamp getCompletionTime() {
+		return completionTime;
+	}
+
+	public void setCompletionTime(Timestamp completionTime) {
+		this.completionTime = completionTime;
+	}
+
 	@Override
 	public String toString() {
 		return "Order [id=" + id + ", userId=" + userId + ", status=" + status + ", totalPrice=" + totalPrice
 				+ ", orderDate=" + orderDate + ", destinationName=" + destinationName + ", destinationEmail="
 				+ destinationEmail + ", destinationZipcode=" + destinationZipcode + ", destinationAddress="
 				+ destinationAddress + ", destinationTel=" + destinationTel + ", deliveryTime=" + deliveryTime
-				+ ", paymentMethod=" + paymentMethod + ", user=" + user + ", orderItemList=" + orderItemList + "]";
+				+ ", paymentMethod=" + paymentMethod + ", user=" + user + ", orderItemList=" + orderItemList
+				+ ", completionTime=" + completionTime + "]";
 	}
 
 }
