@@ -47,7 +47,7 @@
                         <!-- Spring Securityの認証状態に応じて表示 -->
                         <a sec:authorize="hasRole('ROLE_USER')" th:href="@{/profile}" class="navbar-link">プロフィール</a>&nbsp;&nbsp;
                         <a sec:authorize="isAnonymous()" th:href="@{/toLogin}" class="navbar-link">ログイン</a>
-                        <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin/list}" class="navbar-link">注文情報</a>
+                        <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin}" class="navbar-link">注文情報</a>
                         <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="navbar-link">ログアウト</a>
                     </p>
                 </div>

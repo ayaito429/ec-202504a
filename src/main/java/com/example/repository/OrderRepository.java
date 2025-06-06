@@ -72,6 +72,7 @@ public class OrderRepository {
 				order.setDestinationTel(rs.getString("o_destination_tel"));
 				order.setDeliveryTime(rs.getTimestamp("o_delivery_time"));
 				order.setPaymentMethod(rs.getInt("o_payment_method"));
+				order.setCompletionTime(rs.getTimestamp("o_completion_time"));
 
 				// Userをセット
 				User user = new User();
@@ -180,7 +181,7 @@ public class OrderRepository {
 		String sql = "SELECT o.id AS o_id, o.user_id AS o_user_id, o.status AS o_status, o.total_price AS o_total_price, "
 				+ "o.order_date AS o_order_date, o.destination_name AS o_destination_name, o.destination_email AS o_destination_email, "
 				+ "o.destination_zipcode AS o_destination_zipcode, o.destination_address AS o_destination_address, o.destination_tel AS o_destination_tel, "
-				+ "o.delivery_time AS o_delivery_time, o.payment_method AS o_payment_method, "
+				+ "o.delivery_time AS o_delivery_time, o.payment_method AS o_payment_method, o.completion_time AS  o_completion_time,"
 				+ "u.id AS u_id, u.name AS u_name, u.password AS u_password, u.email As u_email, u.zipcode AS u_zipcode, u.address AS u_address, u.telephone AS u_telephone, "
 				+ "oi.id AS oi_id, oi.item_id AS oi_item_id, oi.order_id AS oi_order_id, oi.quantity AS oi_quantity, "
 				+ "oi.size AS oi_size, oi.price AS oi_price, "
@@ -380,9 +381,10 @@ public class OrderRepository {
 	 * 
 	 * @param completionTime 配達完了日時
 	 */
-	public void updateCompletionTime(Timestamp completionTime, Integer id) {
-		String sql = "UPDATE orders SET completion_time = :completionTime WHERE id = :id";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("completionTime", completionTime).addValue("id", id);
+	public void updateCompletionTime(Timestamp completionTime, Integer id, Integer status) {
+		String sql = "UPDATE orders SET completion_time = :completionTime, status = :status WHERE id = :id";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("completionTime", completionTime)
+				.addValue("status", status).addValue("id", id);
 		template.update(sql, param);
 	}
 }
