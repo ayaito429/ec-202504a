@@ -183,45 +183,46 @@
                             type="date"
                             id="deliveryDate"
                             class="form-control input-sm"
+                            th:value="${deliveryDate}"
                           />
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-sm-12">
                           <label class="radio-inline">
-                            <input type="radio" name="deliveryHour" class="deliveryTimeRadio" value="10" checked="checked"/>
+                            <input th:checked="${deliveryHour == '10'}" type="radio" name="deliveryHour" class="deliveryTimeRadio" value="10" checked="checked"/>
                             10時
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="deliveryHour" class="deliveryTimeRadio" value="11"/>
+                            <input th:checked="${deliveryHour == '11'}" type="radio" name="deliveryHour" class="deliveryTimeRadio" value="11"/>
                             11時
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="deliveryHour" class="deliveryTimeRadio" value="12"/>
+                            <input th:checked="${deliveryHour == '12'}" type="radio" name="deliveryHour" class="deliveryTimeRadio" value="12"/>
                             12時 </label
                           ><br />
                           <label class="radio-inline">
-                            <input type="radio" name="deliveryHour" class="deliveryTimeRadio" value="13"/>
+                            <input th:checked="${deliveryHour == '13'}" type="radio" name="deliveryHour" class="deliveryTimeRadio" value="13"/>
                             13時
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="deliveryHour" class="deliveryTimeRadio" value="14"/>
+                            <input th:checked="${deliveryHour == '14'}" type="radio" name="deliveryHour" class="deliveryTimeRadio" value="14"/>
                             14時
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="deliveryHour" class="deliveryTimeRadio" value="15"/>
+                            <input th:checked="${deliveryHour == '15'}" type="radio" name="deliveryHour" class="deliveryTimeRadio" value="15"/>
                             15時 </label
                           ><br />
                           <label class="radio-inline">
-                            <input type="radio" name="deliveryHour" class="deliveryTimeRadio" value="16"/>
+                            <input th:checked="${deliveryHour == '16'}" type="radio" name="deliveryHour" class="deliveryTimeRadio" value="16"/>
                             16時
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="deliveryHour" class="deliveryTimeRadio" value="17"/>
+                            <input th:checked="${deliveryHour == '17'}" type="radio" name="deliveryHour" class="deliveryTimeRadio" value="17"/>
                             17時
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="deliveryHour" class="deliveryTimeRadio" value="18"/>
+                            <input th:checked="${deliveryHour == '18'}" type="radio" name="deliveryHour" class="deliveryTimeRadio" value="18"/>
                             18時 </label
                           ><br />
                         </div>

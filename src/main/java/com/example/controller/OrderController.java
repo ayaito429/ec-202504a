@@ -11,7 +11,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -64,7 +63,8 @@ public class OrderController {
 		List<Order> cartOrders = orderService.findByStatus(customUserDetails.getUserId(), 0);
 
 		if (cartOrders.isEmpty()) {
-			redirectAttributes.addFlashAttribute("errorMessage", messageSource.getMessage("cartNothing", null, "カートに商品がありません", Locale.JAPAN));
+			redirectAttributes.addFlashAttribute("errorMessage",
+					messageSource.getMessage("cartNothing", null, "カートに商品がありません", Locale.JAPAN));
 			return "redirect:/showCart";
 		}
 
@@ -97,7 +97,8 @@ public class OrderController {
 
 		List<Order> cartOrders = orderService.findByStatus(customUserDetails.getUserId(), 0);
 		if (cartOrders.isEmpty()) {
-			redirectAttributes.addFlashAttribute("errorMessage", messageSource.getMessage("cartNothing", null, "カートに商品がありません", Locale.JAPAN));
+			redirectAttributes.addFlashAttribute("errorMessage",
+					messageSource.getMessage("cartNothing", null, "カートに商品がありません", Locale.JAPAN));
 			return "redirect:/showCart";
 		}
 
@@ -113,15 +114,32 @@ public class OrderController {
 		if (result.hasErrors()) {
 			model.addAttribute("cartOrder", cartOrder);
 			model.addAttribute("orderForm", form);
+			if (form.getDeliveryTime() != null && form.getDeliveryTime().contains(" ")) {
+				String[] parts = form.getDeliveryTime().split(" ");
+				String deliveryDate = parts[0];
+				String deliveryHour = parts[1];
+
+				model.addAttribute("deliveryDate", deliveryDate);
+				model.addAttribute("deliveryHour", deliveryHour);
+			}
 			return "order/order_confirm";
 		}
 
 		Timestamp deliveryTime = form.getTimestamp();
 		Timestamp minDeliveryTime = new Timestamp(System.currentTimeMillis() + (3 * 60 * 60 * 1000));
 		if (minDeliveryTime.after(deliveryTime)) {
-			model.addAttribute("errorDeliveryDate", messageSource.getMessage("error.deliveryTime.tooEarly", null, "配達日時を確認してください", Locale.JAPAN));
+			model.addAttribute("errorDeliveryDate",
+					messageSource.getMessage("error.deliveryTime.tooEarly", null, "配達日時を確認してください", Locale.JAPAN));
 			model.addAttribute("cartOrder", cartOrder);
 			model.addAttribute("orderForm", form);
+			if (form.getDeliveryTime() != null && form.getDeliveryTime().contains(" ")) {
+				String[] parts = form.getDeliveryTime().split(" ");
+				String deliveryDate = parts[0];
+				String deliveryHour = parts[1];
+
+				model.addAttribute("deliveryDate", deliveryDate);
+				model.addAttribute("deliveryHour", deliveryHour);
+			}
 			return "order/order_confirm";
 		}
 
@@ -146,11 +164,10 @@ public class OrderController {
 		}
 
 		orderService.sendMail(
-			cartOrder.getDestinationEmail(), 
-			customUserDetails.getUser(),     
-			cartOrder.getOrderItemList(),    
-			cartOrder.getTotalPrice()        
-		);
+				cartOrder.getDestinationEmail(),
+				customUserDetails.getUser(),
+				cartOrder.getOrderItemList(),
+				cartOrder.getTotalPrice());
 		return "redirect:/orderCompletion";
 	}
 
@@ -211,7 +228,8 @@ public class OrderController {
 		Integer userId = customUserDetails.getUserId();
 		List<Order> orderList = orderService.findByOrder(userId);
 		if (orderList == null || orderList.isEmpty()) {
-			model.addAttribute("orderNothing", messageSource.getMessage("orderNothing", null, "注文履歴がありません", Locale.JAPAN));
+			model.addAttribute("orderNothing",
+					messageSource.getMessage("orderNothing", null, "注文履歴がありません", Locale.JAPAN));
 		} else {
 			model.addAttribute("orderList", orderList);
 		}

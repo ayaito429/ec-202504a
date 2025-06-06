@@ -18,7 +18,7 @@ public class OrderForm {
 	private static final Logger logger = LoggerFactory.getLogger(OrderForm.class);
 
 	// お届け先 氏名
-	@NotBlank(message = "名前を入力して下さい")
+	@NotBlank(message = "{NotBlank.form.name}")
 
 	private String destinationName;
 	// お届け先 メールアドレス
