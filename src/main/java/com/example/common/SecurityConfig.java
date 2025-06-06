@@ -36,7 +36,7 @@ public class SecurityConfig {
                                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                                 .requestMatchers(
                                                                 "/toOrder", "/order", "/orderHistory", "/orderdetail",
-                                                                "/profile/profile", "/profile/profile_edit",
+                                                                "/profile", "/editProfile", "/updateProfile",
                                                                 "/withdraw/confirm", "/withdraw/execute")
                                                 .authenticated()
                                                 .anyRequest().permitAll())
