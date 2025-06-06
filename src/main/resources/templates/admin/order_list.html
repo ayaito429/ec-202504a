@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>カレー屋のネット注文</title>
+    <title>カレー屋のネット注文 管理者注文一覧</title>
+    <link rel="icon" href="/img_curry/curry_pot.png" type="image/x-icon" />
     <link th:href="@{/css/bootstrap.css}" href="../../static/css/bootstrap.css" rel="stylesheet" />
     <link th:href="@{/css/curry.css}" href="../../static/css/curry.css" rel="stylesheet" />
     <link th:href="@{/css/admin_order_list.css}" href="../../static/css/admin_order_list.css" rel="stylesheet" />
@@ -95,9 +96,14 @@
                     <th class="text-center">支払方法</th>
                 </tr>
 
-                <tr th:if="${#lists.isEmpty(orderList)}">
+                <tr th:if="${emptyFlg}">
                     <td colspan="8">
                         <h3 class="text-center">該当する注文はありません</h3>
+                    </td>
+                </tr>
+                <tr th:if="${completeFlg}">
+                    <td colspan="8">
+                        <h3 class="text-center">更新が完了しました</h3>
                     </td>
                 </tr>
 

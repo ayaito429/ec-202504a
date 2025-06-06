@@ -12,32 +12,35 @@ public class AdminOrderDetailForm {
     // 配達完了日時
     @NotNull(message = "配達日時を入力してください")
     @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}$", message = "配達日時を入力してください")
-    private String completionTime;
+    private String completionTimestamp;
     private Integer status;
     private Integer id;
 
     public Timestamp getTimestamp() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH");
         try {
-            java.util.Date date = sdf.parse(completionTime);
+            java.util.Date date = sdf.parse(completionTimestamp);
             Timestamp ts = new Timestamp(date.getTime());
             return ts;
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
-    public Integer getIntegerDeliveryTime() {
-        return Integer.parseInt(completionTime);
+    // public Integer getIntegerDeliveryTime() {
+    //     return Integer.parseInt(completionTime);
+    // }
+
+    public String getCompletionTimestamp() {
+        return completionTimestamp;
     }
 
-    public String getCompletionTime() {
-        return completionTime;
-    }
-
-    public void setCompletionTime(String completionTime) {
-        this.completionTime = completionTime;
+    public void setCompletionTimestamp(String completionTimestamp) {
+        this.completionTimestamp = completionTimestamp;
     }
 
     public Integer getStatus() {
@@ -51,14 +54,13 @@ public class AdminOrderDetailForm {
     public Integer getId() {
         return id;
     }
-
     public void setId(Integer id) {
         this.id = id;
     }
 
     @Override
     public String toString() {
-        return "AdminOrderDetailForm [completionTime=" + completionTime + ", status="
+        return "AdminOrderDetailForm [completionTimestamp=" + completionTimestamp + ", status="
                 + status + "]";
     }
 

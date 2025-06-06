@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.domain.Order;
 import com.example.domain.User;
@@ -21,19 +23,39 @@ import com.example.service.OrderService;
 @RequestMapping("/admin")
 public class AdminController {
 
+	@ModelAttribute
+	public AdminOrderDetailForm setUpForm() {
+		return new AdminOrderDetailForm();
+	}
+
 	@Autowired
 	private OrderService orderService;
 
 	// 1ページに表示する注文数は30件
 	private static final int VIEW_SIZE = 30;
 
+	/**
+	 * 初期表示画面
+	 * 
+	 * @return 注文一覧画面
+	 * 
+	 */
 	@RequestMapping("")
 	public String index() {
 		return "admin/order_list";
 	}
 
+	/**
+	 * 検索結果を表示
+	 * 
+	 * @param form  検索値入力フォーム
+	 * @param model 情報を格納するオブジェクト
+	 * @return 注文一覧画面
+	 */
 	@RequestMapping("/list")
 	public String getOrders(AdminOrderListForm form, Model model) {
+
+		boolean emptyFlg = false;
 
 		// 検索件数
 		Integer result = 0;
@@ -45,6 +67,7 @@ public class AdminController {
 		}
 
 		List<Order> orderList = new ArrayList<>();
+		// 日付検索をする場合
 		if (form.getSearchField().equals("orderDate") || form.getSearchField().equals("deliveryTime")
 				|| form.getSearchField().equals("completionTime")) {
 			orderList = orderService.searchOrders(form.getSearchField(), form.getSearchValue1(),
@@ -58,6 +81,7 @@ public class AdminController {
 		// 該当する注文が無かった場合
 		if (orderList.isEmpty()) {
 			result = 0;
+			emptyFlg = true;
 		} else {
 			for (int i = 0; i < orderList.size(); i++) {
 				User user = orderList.get(i).getUser();
@@ -66,7 +90,7 @@ public class AdminController {
 			result = orderList.size();
 		}
 
-		// 表示させたいページ数、ページサイズ、注文リストを渡し１ページに表示させる注文リストを絞り込み
+		// 表示させたいページ数、ページサイズ、注文リストを渡し１ページに表示させる注文情報を絞り込み
 		Page<Order> orderPage = orderService.showListPaging(form.getPage(), VIEW_SIZE, orderList);
 		model.addAttribute("orderPage", orderPage);
 
@@ -79,6 +103,8 @@ public class AdminController {
 		model.addAttribute("searchField", form.getSearchField());
 		model.addAttribute("searchValue1", form.getSearchValue1());
 		model.addAttribute("searchValue2", form.getSearchValue2());
+		model.addAttribute("emptyFlg", emptyFlg);
+
 		return "admin/order_list";
 	}
 
@@ -103,33 +129,65 @@ public class AdminController {
 		return pageNumbers;
 	}
 
+	/**
+	 * 注文詳細画面を表示
+	 * 
+	 * @param id    注文ID
+	 * @param model 情報を格納するオブジェクト
+	 * @return 注文詳細画面
+	 */
 	@RequestMapping("/detail/{id}")
-	public String detail(@PathVariable("id") Integer id, Model model) {
-		List<Order> orderList = orderService.orderLoad(id);
-		AdminOrderDetailForm form = new AdminOrderDetailForm();
-		for (int i = 0; i < orderList.size(); i++) {
-			form.setStatus(orderList.get(i).getStatus());
-			form.setId(id);
-		}
-		model.addAttribute("adminOrderDetailForm", form);
+	public String detail(@PathVariable("id") Integer id, Model model, AdminOrderDetailForm redirectForm) {
 
-		System.out.println(orderList);
+		List<Order> orderList = orderService.orderLoad(id);
+
+		if (redirectForm.getStatus() != null) {
+			redirectForm.setId(id);
+			model.addAttribute("adminOrderDetailForm", redirectForm);
+		} else {
+			AdminOrderDetailForm form = new AdminOrderDetailForm();
+			System.out.println(form);
+
+			for (int i = 0; i < orderList.size(); i++) {
+				form.setStatus(orderList.get(i).getStatus());
+				form.setId(id);
+			}
+			model.addAttribute("adminOrderDetailForm", form);
+		}
+
 		model.addAttribute("orderList", orderList);
+
 		return "admin/order_detail";
 	}
 
+	/**
+	 * 注文情報を更新
+	 * 
+	 * @param form  更新情報入力フォーム
+	 * @param model 情報を格納するオブジェクト
+	 * @return 注文一覧画面
+	 */
 	@RequestMapping("/detail/update")
-	public String update(AdminOrderDetailForm form, Model model) {
-		boolean errorFlg = false;
+	public String update(@ModelAttribute AdminOrderDetailForm form, Model model,
+			RedirectAttributes redirectAttributes) {
 
+		boolean errorFlg = false;
+		boolean completeFlg = false;
 		Timestamp completionTime = form.getTimestamp();
 
-		if (completionTime == null) {
+		if (completionTime == null && form.getStatus() == 4) {
+
 			errorFlg = true;
-			model.addAttribute("errorFlg", errorFlg);
-			return "admin/order_detail";
+
+			redirectAttributes.addFlashAttribute("errorFlg", errorFlg);
+			redirectAttributes.addFlashAttribute("adminOrderDetailForm", form);
+
+			return "redirect:/admin/detail/" + form.getId();
 		} else {
+			
 			orderService.updateCompletionTime(completionTime, form.getId(), form.getStatus());
+			completeFlg = true;
+			model.addAttribute("completeFlg", completeFlg);
 		}
 		return "admin/order_list";
 	}

@@ -5,7 +5,8 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>カレー屋のネット注文</title>
+    <title>カレー屋のネット注文 管理者注文詳細</title>
+    <link rel="icon" href="/img_curry/curry_pot.png" type="image/x-icon" />
     <link th:href="@{/css/bootstrap.css}" href="../../static/css/bootstrap.css" rel="stylesheet" />
     <link th:href="@{/css/curry.css}" href="../../static/css/curry.css" rel="stylesheet" />
     <!--[if lt IE 9]>
@@ -84,21 +85,22 @@
                                         </tr>
                                         <tr>
                                             <th><label>配達完了日時</label></th>
-                                            <input type="hidden" th:field="*{completionTime}" id="deliveryTimestamp" />
                                             <th class="text-center" name="completionTime">
                                                 <div th:if="${orders.status == 4 or orders.status == 9}">
-                                                    <span th:text="${#dates.format(orders.completionTime, 'yyyy年MM月dd日 HH時mm分')}"></span>
+                                                    <span
+                                                        th:text="${#dates.format(orders.completionTime, 'yyyy年MM月dd日 HH時mm分')}"></span>
                                                 </div>
-                                                <div class="form-group" th:unless="${orders.status == 4 or orders.status == 9}">
+                                                <div class="form-group"
+                                                    th:unless="${orders.status == 4 or orders.status == 9}">
                                                     <div class="row col-xs-offset-2 col-xs-10">
                                                         <div>
                                                             <!--
                                                                 <label th:errors="*{deliveryTime}" class="control-label"
-                                                                    style="color: red"></label>
-                                                                <label th:text="${errorDeliveryDate}" class="control-label"
-                                                                    style="color: red" for="inputPeriod">
-                                                                    配達日時を入力してください</label>
-                                                            -->
+                                                                    style="color: red"></label>-->
+                                                            <span th:if="${errorFlg}" th:text="配達日時を入力してください"
+                                                                class="control-label" style="color: red"></span>
+                                                            </span>
+
                                                         </div>
                                                         <div class="col-xs-10">
                                                             <input type="date" id="deliveryDate"
@@ -153,6 +155,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <input type="hidden" id="completionTimestamp"
+                                                    name="completionTimestamp">
                                             </th>
                                         </tr>
                                         <tr>
@@ -171,12 +175,13 @@
                                         </tr>
                                         <tr>
                                             <th><label>注文ステータス</label></th>
-                                            <th>
-                                                <span th:switch="${orders.status}" th:if="${orders.status == 4 or orders.status == 9}">
+                                            <td>
+                                                <!-- <span th:switch="${orders.status}" th:if="${orders.status == 4 or orders.status == 9}">
                                                     <span th:case="4">配達完了</span>
                                                     <span th:case="9">キャンセル</span>
-                                                </span>
-                                                <select name="status" class="form-control" th:field="*{status}" th:unless="${orders.status == 4 or orders.status == 9}">
+                                                </span> -->
+                                                <select name="status" class="form-control col-sm-10"
+                                                    th:field="*{status}">
                                                     <option th:value="1">未入金
                                                     </option>
                                                     <option th:value="2">入金済
@@ -188,7 +193,7 @@
                                                     <option th:value="9">キャンセル
                                                     </option>
                                                 </select>
-                                            </th>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -212,7 +217,7 @@
                                                     <label>詳細</label>
                                                 </th>
                                             </tr>
-                                            <tr th:each=" orderItem : ${orders.orderItemList}">
+                                            <tr th:each="orderItem : ${orders.orderItemList}">
                                                 <th>
                                                     <img th:src="@{/img_curry/} + ${orderItem.item.imagePath}"
                                                         width="250" height="150"></img>
