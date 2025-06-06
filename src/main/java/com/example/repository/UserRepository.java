@@ -17,8 +17,8 @@ import com.example.domain.User;
 public class UserRepository {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);
-	
-	private static final RowMapper<User> USER_ROW_MAPPER =(rs,i)->{
+
+	private static final RowMapper<User> USER_ROW_MAPPER = (rs, i) -> {
 		User user = new User();
 		user.setId(rs.getInt("id"));
 		user.setName(rs.getString("name"));
@@ -28,6 +28,7 @@ public class UserRepository {
 		user.setAddress(rs.getString("address"));
 		user.setTelephone(rs.getString("telephone"));
 		user.setStatus(rs.getInt("status"));
+		user.setRole(rs.getString("role"));
 		return user;
 	};
 
@@ -40,7 +41,7 @@ public class UserRepository {
 		SqlParameterSource param = new MapSqlParameterSource().addValue("email", email);
 
 		try {
-			User user= template.queryForObject(sql, param, USER_ROW_MAPPER);
+			User user = template.queryForObject(sql, param, USER_ROW_MAPPER);
 			logger.debug("取得したユーザー情報: {}", user);
 
 			return user;
@@ -54,8 +55,8 @@ public class UserRepository {
 		logger.debug("登録するユーザー情報: {}", user);
 
 		SqlParameterSource param = new BeanPropertySqlParameterSource(user);
-		String sql = "INSERT INTO users (name, email, password, zipcode, address, telephone) "
-				+ "VALUES (:name, :email, :password, :zipcode, :address, :telephone);";
+		String sql = "INSERT INTO users (name, email, password, zipcode, address, telephone, role) "
+				+ "VALUES (:name, :email, :password, :zipcode, :address, :telephone, 'USER');";
 		template.update(sql, param);
 	}
 
