@@ -12,31 +12,34 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public class OrderForm {
 
 	private static final Logger logger = LoggerFactory.getLogger(OrderForm.class);
-	
-	//合計金額
-	private Integer totalPrice;
-	//お届け先　氏名
-	@NotBlank(message="{NotBlank.form.name}")
 
+	// お届け先 氏名
+	@NotBlank(message = "{NotBlank.form.name}")
+	@Size(max = 100, message = "{Name.form.size}")
 	private String destinationName;
 	// お届け先 メールアドレス
 	@NotBlank(message = "{NotBlank.form.email}")
 	@Email(message = "{Email.form.email}")
+	@Size(max = 100, message = "{Email.form.size}")
 	private String destinationEmail;
 	// お届け先 郵便番号
 	@NotBlank(message = "{NotBlank.form.zipcode}")
 	@Pattern(regexp = "^[0-9]{3}-[0-9]{4}$", message = "{Pattern.form.zipcode}")
+	@Size(max = 8, message = "{Post.form.size}")
 	private String destinationZipcode;
 	// お届け先 住所
 	@NotBlank(message = "{NotBlank.form.address}")
+	@Size(max = 200, message = "{Address.form.size}")
 	private String destinationAddress;
 	// お届け先 電話番号
 	@NotBlank(message = "{NotBlank.form.tel}")
 	@Pattern(regexp = "^[0-9]+-[0-9]+-[0-9]+$", message = "{Pattern.form.tel}")
+	@Size(max = 15, message = "{Phone.form.size}")
 	private String destinationTel;
 	// 日付
 	private Date orderDate;

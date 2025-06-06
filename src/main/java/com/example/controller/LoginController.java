@@ -47,17 +47,12 @@ public class LoginController {
 
 	/**
 	 * ルートのパスにリクエストを送信した際にリダイレクト処理
+	 * 
 	 * @return リダイレクト先
 	 */
 	@RequestMapping("")
-    public String redirectToList() {
-        return "redirect:/showList";
-    }
+	public String redirectToList() {
+		return "redirect:/showList";
+	}
 
-	@GetMapping("/error500")
-public String throwError() {
-    String str = null;
-    str.length(); // ← NullPointerException 発生
-    return "some-view";
-}
 }
