@@ -1,0 +1,5 @@
+-- orders カラムの追加
+ALTER TABLE orders ADD COLUMN completion_time timestamp
+
+-- users カラムの追加
+ALTER TABLE users ADD COLUMN role character varying(20)
