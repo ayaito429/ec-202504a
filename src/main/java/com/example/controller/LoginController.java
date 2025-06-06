@@ -1,5 +1,9 @@
 package com.example.controller;
 
+import java.util.Locale;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 public class LoginController {
+
+	@Autowired
+	private MessageSource messageSource;
 
 	/**
 	 * ログイン画面の表示
@@ -28,11 +35,11 @@ public class LoginController {
 			Model model) {
 
 		if (error != null) {
-			model.addAttribute("loginError", "メールアドレス、またはパスワードが間違っています");
+			model.addAttribute("loginError", messageSource.getMessage("loginError", null, "ログインエラー", Locale.JAPAN));
 		}
 
 		if (logout != null) {
-			model.addAttribute("logoutMessage", "ログアウトしました");
+			model.addAttribute("logoutMessage", messageSource.getMessage("logout", null, "ログアウトしました", Locale.JAPAN));
 		}
 
 		return "login/login";

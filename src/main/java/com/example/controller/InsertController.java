@@ -2,8 +2,11 @@ package com.example.controller;
 
 
 
+import java.util.Locale;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,6 +43,8 @@ public class InsertController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private MessageSource messageSource;
 	
 	/**
 	 * ユーザー登録画面に遷移
@@ -73,7 +78,7 @@ public class InsertController {
 		
 		//パスワードと確認用パスワードが不一致の場合エラー文をリクエストスコープに格納してユーザー登録画面に遷移
 		if(!(form.getPassword().equals(form.getConfirmPassword()))) {
-			model.addAttribute("passwordNotMatchError", "パスワードと確認用パスワードが不一致です");
+			model.addAttribute("passwordNotMatchError", messageSource.getMessage("error.password.notmatch", null, "パスワードが違います", Locale.JAPAN));
 			return "register_user";
 		}
 		
@@ -92,7 +97,7 @@ public class InsertController {
 			return "redirect:/toLogin";
 		} catch (DataIntegrityViolationException e) {
 			e.printStackTrace();
-			model.addAttribute("emailRegistedError","そのメールアドレスはすでに使われています");
+			model.addAttribute("emailRegistedError",messageSource.getMessage("error.email.duplicate", null, "登録済みのメールアドレスです", Locale.JAPAN));
 			return "register_user";
 		}
 	}

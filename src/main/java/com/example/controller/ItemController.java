@@ -2,11 +2,13 @@ package com.example.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +29,9 @@ public class ItemController {
 
 	@Autowired
 	private ItemService itemService;
+
+	@Autowired
+	private MessageSource messageSource;
 
 	// 1ページに表示する従業員数は5名
 	private static final int VIEW_SIZE = 5;
@@ -64,7 +69,7 @@ public class ItemController {
 			// 該当する検索結果がなければ全件返す
 			if (itemList == null) {
 				itemList = itemService.findAll();
-				model.addAttribute("message", "該当する商品がありません");
+				model.addAttribute("message", messageSource.getMessage("NoExist.item", null, "商品が見つかりません", Locale.JAPAN));
 			}
 		}
 

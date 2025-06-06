@@ -2,10 +2,12 @@ package com.example.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +41,9 @@ public class CartController {
 
 	@Autowired
 	private HttpSession session;
+
+	@Autowired
+	private MessageSource messageSource;
 
 	public ItemCartInForm setupForm() {
 		return new ItemCartInForm();
@@ -207,7 +212,7 @@ public class CartController {
 			cartOrder.setTotalPrice(totalPrice);
 			model.addAttribute("cartOrder", cartOrder);
 		} else {
-			model.addAttribute("cartNothing", "カートの中身はございません");
+			model.addAttribute("cartNothing", messageSource.getMessage("cartNothing", null, "カートに商品がありません", Locale.JAPAN));
 		}
 
 		return "cart/cart_list";
