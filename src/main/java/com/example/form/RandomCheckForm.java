@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 
 public class RandomCheckForm {
 
-	@NotBlank(message="メールアドレスを入力して下さい")
-	@Email(message="メールアドレスの形式が不正です")
+	@NotBlank(message="{NotBlank.form.email}")
+	@Email(message="{Email.form.email}")
 	private String mail;
 	private String passCheck;
 	

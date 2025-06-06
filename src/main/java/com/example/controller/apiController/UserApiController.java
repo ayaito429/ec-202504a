@@ -4,8 +4,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +40,8 @@ public class UserApiController {
     private UserService userService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+	private MessageSource messageSource;
 
     /**
      * ログイン情報から注文履歴を取得する
@@ -60,9 +64,9 @@ public class UserApiController {
         User user = userService.login(loginInfoList[1], loginInfoList[0]);
 
         if (user == null) {
-            throw new LoginFailedException("ログインに失敗しました。");
+            throw new LoginFailedException(messageSource.getMessage("LoginFailedException", null, Locale.JAPAN));
         } else if (!userId.equals(user.getId())) {
-            throw new UnauthorizedAccessException("リクエストを処理できませんでした。");
+            throw new UnauthorizedAccessException(messageSource.getMessage("UnauthorizedAccessException", null, Locale.JAPAN));
         }
 
         // 注文履歴を取得

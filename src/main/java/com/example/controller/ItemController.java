@@ -2,11 +2,13 @@ package com.example.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +30,9 @@ public class ItemController {
 	@Autowired
 	private ItemService itemService;
 
+	@Autowired
+	private MessageSource messageSource;
+
 	// 1ページに表示する従業員数は5名
 	private static final int VIEW_SIZE = 5;
 
@@ -38,8 +43,14 @@ public class ItemController {
 	 * @return
 	 */
 	@RequestMapping("/showList")
-	public String showItem(Model model, Integer page, String searchName) {
+	public String showItem(Model model, Integer size, Integer page, String searchName) {
 		List<Item> itemList = null;
+
+		// viewサイズ機能追加
+		if(size == null){
+			// sizeの指定が無い場合はVIEW_SIZEの値を使用
+			size = VIEW_SIZE;
+		}
 
 		// ページング機能追加
 		if (page == null) {
@@ -58,12 +69,12 @@ public class ItemController {
 			// 該当する検索結果がなければ全件返す
 			if (itemList == null) {
 				itemList = itemService.findAll();
-				model.addAttribute("message", "該当する商品がありません");
+				model.addAttribute("message", messageSource.getMessage("NoExist.item", null, "商品が見つかりません", Locale.JAPAN));
 			}
 		}
 
 		// 表示させたいページ数、ページサイズ、従業員リストを渡し１ページに表示させる従業員リストを絞り込み
-		Page<Item> itemPage = itemService.showListPaging(page, VIEW_SIZE, itemList);
+		Page<Item> itemPage = itemService.showListPaging(page, size, itemList);
 		model.addAttribute("itemPage", itemPage);
 
 		// ページングのリンクに使うページ数をスコープに格納 (例)28件あり1ページにつき10件表示させる場合→1,2,3がpageNumbersに入る
