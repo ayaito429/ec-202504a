@@ -307,7 +307,7 @@ public class OrderService {
 	 * 
 	 * @param completionTime 配達完了日時
 	 */
-	public void updateCompletionTime(Timestamp completionTime, Integer id) {
-		orderRepository.updateCompletionTime(completionTime, id);
+	public void updateCompletionTime(Timestamp completionTime, Integer id, Integer status) {
+		orderRepository.updateCompletionTime(completionTime, id, status);
 	}
 }

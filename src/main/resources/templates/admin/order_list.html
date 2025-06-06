@@ -79,7 +79,7 @@
 
     <div class="col-sm-offset-9 col-sm-2">
         検索結果：
-        <span th:text="${result} + '件'"></span>
+        <span th:text="${result != null} ? ${result + '件'} : '0件'"></span>
     </div>
     <div class="col-sm-offset-1 col-sm-10">
         <table class="table table-striped item-list-table">
@@ -124,7 +124,7 @@
                             ---
                         </td>
                         <td class="text-center" th:if="${order.completionTime != null}"
-                            th:text="${#dates.format(order.completionTime.toLocalDate(), 'yyyy年M月d日 H時')}">
+                            th:text="${#dates.format(order.completionTime, 'yyyy年MM月dd日 HH時mm分')}">
                             2025年5月30日 14時</td>
                         <td class="text-center" th:unless="${order.completionTime != null}" th:text="---">
                         </td>

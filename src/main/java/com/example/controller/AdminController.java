@@ -11,14 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.domain.Item;
 import com.example.domain.Order;
-import com.example.domain.Topping;
 import com.example.domain.User;
 import com.example.form.AdminOrderDetailForm;
 import com.example.form.AdminOrderListForm;
-import com.example.form.OrderForm;
-import com.example.service.ItemService;
 import com.example.service.OrderService;
 
 @Controller
@@ -117,6 +113,7 @@ public class AdminController {
 		}
 		model.addAttribute("adminOrderDetailForm", form);
 
+		System.out.println(orderList);
 		model.addAttribute("orderList", orderList);
 		return "admin/order_detail";
 	}
@@ -126,13 +123,13 @@ public class AdminController {
 		boolean errorFlg = false;
 
 		Timestamp completionTime = form.getTimestamp();
-		
-		if(completionTime == null){
+
+		if (completionTime == null) {
 			errorFlg = true;
 			model.addAttribute("errorFlg", errorFlg);
 			return "admin/order_detail";
 		} else {
-			orderService.updateCompletionTime(completionTime, form.getId());
+			orderService.updateCompletionTime(completionTime, form.getId(), form.getStatus());
 		}
 		return "admin/order_list";
 	}
