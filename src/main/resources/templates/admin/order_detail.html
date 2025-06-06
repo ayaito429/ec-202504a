@@ -176,12 +176,14 @@
                                         <tr>
                                             <th><label>注文ステータス</label></th>
                                             <td>
-                                                <!-- <span th:switch="${orders.status}" th:if="${orders.status == 4 or orders.status == 9}">
-                                                    <span th:case="4">配達完了</span>
-                                                    <span th:case="9">キャンセル</span>
-                                                </span> -->
+                                                <div th:switch="${orders.status}"
+                                                    th:if="${orders.status == 4 or orders.status == 9}"
+                                                    class="text-center">
+                                                    <span th:case="4" th:text="配達完了"></span>
+                                                    <span th:case="9" th:text="キャンセル"></span>
+                                            </div>
                                                 <select name="status" class="form-control col-sm-10"
-                                                    th:field="*{status}">
+                                                    th:field="*{status}" th:unless="${orders.status == 4 or orders.status == 9}">
                                                     <option th:value="1">未入金
                                                     </option>
                                                     <option th:value="2">入金済

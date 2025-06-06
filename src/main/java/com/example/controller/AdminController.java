@@ -19,6 +19,11 @@ import com.example.form.AdminOrderDetailForm;
 import com.example.form.AdminOrderListForm;
 import com.example.service.OrderService;
 
+/**
+ * 注文一覧画面を操作するController
+ * 
+ * @author aya_ito
+ */
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -56,6 +61,7 @@ public class AdminController {
 	public String getOrders(AdminOrderListForm form, Model model) {
 
 		boolean emptyFlg = false;
+		boolean errorFlg = false;
 
 		// 検索件数
 		Integer result = 0;
@@ -72,10 +78,10 @@ public class AdminController {
 				|| form.getSearchField().equals("completionTime")) {
 			orderList = orderService.searchOrders(form.getSearchField(), form.getSearchValue1(),
 					form.getSearchValue2());
-		} else if (form.getSearchValue1() != null) {
+		} else if (form.getSearchValue1() != null || !form.getSearchValue1().isEmpty()) {
 			orderList = orderService.searchOrders(form.getSearchField(), form.getSearchValue1());
 		} else {
-			orderList = orderService.searchOrders(form.getSearchField(), form.getSearchValue2());
+			errorFlg = true;
 		}
 
 		// 該当する注文が無かった場合
@@ -104,6 +110,7 @@ public class AdminController {
 		model.addAttribute("searchValue1", form.getSearchValue1());
 		model.addAttribute("searchValue2", form.getSearchValue2());
 		model.addAttribute("emptyFlg", emptyFlg);
+		model.addAttribute("errorFlg", errorFlg);
 
 		return "admin/order_list";
 	}
@@ -146,7 +153,6 @@ public class AdminController {
 			model.addAttribute("adminOrderDetailForm", redirectForm);
 		} else {
 			AdminOrderDetailForm form = new AdminOrderDetailForm();
-			System.out.println(form);
 
 			for (int i = 0; i < orderList.size(); i++) {
 				form.setStatus(orderList.get(i).getStatus());
@@ -184,7 +190,7 @@ public class AdminController {
 
 			return "redirect:/admin/detail/" + form.getId();
 		} else {
-			
+
 			orderService.updateCompletionTime(completionTime, form.getId(), form.getStatus());
 			completeFlg = true;
 			model.addAttribute("completeFlg", completeFlg);

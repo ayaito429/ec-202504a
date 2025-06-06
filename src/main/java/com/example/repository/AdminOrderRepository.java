@@ -145,6 +145,8 @@ public class AdminOrderRepository {
                 } else if (hasEnd) {
                     sql.append("o.order_date < :endDate");
                     params.addValue("endDate", LocalDate.parse(searchValueEnd, formatter));
+                } else {
+                    sql.append("1=2");
                 }
                 break;
 
@@ -161,6 +163,8 @@ public class AdminOrderRepository {
                 } else if (hasEnd) {
                     sql.append("o.delivery_time < :endDate");
                     params.addValue("endDate", LocalDate.parse(searchValueEnd, formatter));
+                } else {
+                    sql.append("1=2");
                 }
                 break;
 
@@ -177,8 +181,11 @@ public class AdminOrderRepository {
                 } else if (hasEnd) {
                     sql.append("o.completion_time < :endDate");
                     params.addValue("endDate", LocalDate.parse(searchValueEnd, formatter));
+                } else {
+                    sql.append("1=2");
                 }
                 break;
+            
         }
         sql.append(" ORDER BY o.id");
         return template.query(sql.toString(), params, ORDER_WITH_USER_ROW_MAPPER);

@@ -105,8 +105,8 @@ function changeInputTypeByMap() {
         }
     } else if (config.type === "select") {
         const select = document.createElement("select");
-        select.name = "searchValue2";
-        select.id = "searchValue2";
+        select.name = "searchValue1";
+        select.id = "searchValue1";
 
         config.options.forEach(optionValue => {
             const option = document.createElement("option");

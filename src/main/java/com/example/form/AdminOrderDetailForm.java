@@ -4,14 +4,9 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-
 public class AdminOrderDetailForm {
 
     // 配達完了日時
-    @NotNull(message = "配達日時を入力してください")
-    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}$", message = "配達日時を入力してください")
     private String completionTimestamp;
     private Integer status;
     private Integer id;
@@ -30,10 +25,6 @@ public class AdminOrderDetailForm {
             return null;
         }
     }
-
-    // public Integer getIntegerDeliveryTime() {
-    //     return Integer.parseInt(completionTime);
-    // }
 
     public String getCompletionTimestamp() {
         return completionTimestamp;
