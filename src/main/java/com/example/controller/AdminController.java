@@ -123,7 +123,6 @@ public class AdminController {
 	 */
 	private List<Integer> calcPageNumbers(Model model, Page<Order> orderPage) {
 		int totalPages = orderPage.getTotalPages();
-		System.out.println(totalPages);
 		List<Integer> pageNumbers = null;
 		if (totalPages > 0) {
 			pageNumbers = new ArrayList<Integer>();
@@ -131,7 +130,6 @@ public class AdminController {
 				pageNumbers.add(i);
 			}
 		}
-		System.out.println(orderPage);
 		model.addAttribute("orderPage", orderPage);
 		return pageNumbers;
 	}

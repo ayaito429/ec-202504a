@@ -20,7 +20,7 @@ import com.example.domain.Order;
  */
 @Repository
 public class AdminOrderRepository {
-    
+
     @Autowired
     private NamedParameterJdbcTemplate template;
 
@@ -63,9 +63,12 @@ public class AdminOrderRepository {
     public List<Order> searchOrders(String searchField, String searchValue) {
         StringBuilder sql = new StringBuilder(
                 "SELECT o.id AS o_id, o.user_id AS o_user_id, o.status AS o_status, o.total_price AS o_total_price, " +
-                        "o.order_date AS o_order_date, o.destination_name AS o_destination_name, o.destination_email AS o_destination_email, " +
-                        "o.destination_zipcode AS o_destination_zipcode, o.destination_address AS o_destination_address, o.destination_tel AS o_destination_tel, " +
-                        "o.delivery_time AS o_delivery_time, o.payment_method AS o_payment_method, o.completion_time AS o_completion_time, " +
+                        "o.order_date AS o_order_date, o.destination_name AS o_destination_name, o.destination_email AS o_destination_email, "
+                        +
+                        "o.destination_zipcode AS o_destination_zipcode, o.destination_address AS o_destination_address, o.destination_tel AS o_destination_tel, "
+                        +
+                        "o.delivery_time AS o_delivery_time, o.payment_method AS o_payment_method, o.completion_time AS o_completion_time, "
+                        +
                         "u.id AS u_id, u.name AS u_name, u.password AS u_password, u.email As u_email, u.zipcode AS u_zipcode, u.address AS u_address, u.telephone AS u_telephone FROM orders o JOIN users u ON u.id = o.user_id WHERE ");
         MapSqlParameterSource params = new MapSqlParameterSource();
         // 検索条件がなければ空リスト返却
@@ -120,9 +123,12 @@ public class AdminOrderRepository {
     public List<Order> searchOrders(String searchField, String searchValueStart, String searchValueEnd) {
         StringBuilder sql = new StringBuilder(
                 "SELECT o.id AS o_id, o.user_id AS o_user_id, o.status AS o_status, o.total_price AS o_total_price, " +
-                        "o.order_date AS o_order_date, o.destination_name AS o_destination_name, o.destination_email AS o_destination_email, " +
-                        "o.destination_zipcode AS o_destination_zipcode, o.destination_address AS o_destination_address, o.destination_tel AS o_destination_tel, " +
-                        "o.delivery_time AS o_delivery_time, o.payment_method AS o_payment_method, o.completion_time AS o_completion_time," +
+                        "o.order_date AS o_order_date, o.destination_name AS o_destination_name, o.destination_email AS o_destination_email, "
+                        +
+                        "o.destination_zipcode AS o_destination_zipcode, o.destination_address AS o_destination_address, o.destination_tel AS o_destination_tel, "
+                        +
+                        "o.delivery_time AS o_delivery_time, o.payment_method AS o_payment_method, o.completion_time AS o_completion_time,"
+                        +
                         "u.id AS u_id, u.name AS u_name, u.password AS u_password, u.email As u_email, u.zipcode AS u_zipcode, u.address AS u_address, u.telephone AS u_telephone FROM orders o JOIN users u ON u.id = o.user_id WHERE ");
         MapSqlParameterSource params = new MapSqlParameterSource();
 
@@ -134,17 +140,16 @@ public class AdminOrderRepository {
         switch (searchField) {
             // 注文日
             case "orderDate":
-
                 if (hasStart && hasEnd) {
                     sql.append("o.order_date >= :startDate AND o.order_date < :endDate");
                     params.addValue("startDate", LocalDate.parse(searchValueStart, formatter))
-                            .addValue("endDate", LocalDate.parse(searchValueEnd, formatter));
+                            .addValue("endDate", LocalDate.parse(searchValueEnd, formatter).plusDays(1));
                 } else if (hasStart) {
                     sql.append("o.order_date >= :startDate");
                     params.addValue("startDate", LocalDate.parse(searchValueStart, formatter));
                 } else if (hasEnd) {
                     sql.append("o.order_date < :endDate");
-                    params.addValue("endDate", LocalDate.parse(searchValueEnd, formatter));
+                    params.addValue("endDate", LocalDate.parse(searchValueEnd, formatter).plusDays(1));
                 } else {
                     sql.append("1=2");
                 }
@@ -152,17 +157,16 @@ public class AdminOrderRepository {
 
             // 配達希望日時
             case "deliveryTime":
-
                 if (hasStart && hasEnd) {
                     sql.append("o.delivery_time >= :startDate AND o.delivery_time < :endDate");
                     params.addValue("startDate", LocalDate.parse(searchValueStart, formatter))
-                            .addValue("endDate", LocalDate.parse(searchValueEnd, formatter));
+                            .addValue("endDate", LocalDate.parse(searchValueEnd, formatter).plusDays(1));
                 } else if (hasStart) {
                     sql.append("o.delivery_time >= :startDate");
                     params.addValue("startDate", LocalDate.parse(searchValueStart, formatter));
                 } else if (hasEnd) {
                     sql.append("o.delivery_time < :endDate");
-                    params.addValue("endDate", LocalDate.parse(searchValueEnd, formatter));
+                    params.addValue("endDate", LocalDate.parse(searchValueEnd, formatter).plusDays(1));
                 } else {
                     sql.append("1=2");
                 }
@@ -170,22 +174,21 @@ public class AdminOrderRepository {
 
             // 配達完了日時
             case "completionTime":
-
                 if (hasStart && hasEnd) {
                     sql.append("o.completion_time >= :startDate AND o.completion_time < :endDate");
                     params.addValue("startDate", LocalDate.parse(searchValueStart, formatter))
-                            .addValue("endDate", LocalDate.parse(searchValueEnd, formatter));
+                            .addValue("endDate", LocalDate.parse(searchValueEnd, formatter).plusDays(1));
                 } else if (hasStart) {
                     sql.append("o.completion_time >= :startDate");
                     params.addValue("startDate", LocalDate.parse(searchValueStart, formatter));
                 } else if (hasEnd) {
                     sql.append("o.completion_time < :endDate");
-                    params.addValue("endDate", LocalDate.parse(searchValueEnd, formatter));
+                    params.addValue("endDate", LocalDate.parse(searchValueEnd, formatter).plusDays(1));
                 } else {
                     sql.append("1=2");
                 }
                 break;
-            
+
         }
         sql.append(" ORDER BY o.id");
         return template.query(sql.toString(), params, ORDER_WITH_USER_ROW_MAPPER);

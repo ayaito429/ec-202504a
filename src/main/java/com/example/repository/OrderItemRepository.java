@@ -77,9 +77,11 @@ public class OrderItemRepository {
 	 * 
 	 * @param quantity
 	 */
-	public void addQuantity(Integer quantity) {
-		String sql = "UPDATE order_items SET quantity = :quantity";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("quantity", quantity);
+	public void addQuantity(Integer orderItemId, Integer quantity) {
+		String sql = "UPDATE order_items SET quantity = :quantity WHERE id = :id";
+		SqlParameterSource param = new MapSqlParameterSource()
+				.addValue("id", orderItemId)
+				.addValue("quantity", quantity);
 		template.update(sql, param);
 	}
 }

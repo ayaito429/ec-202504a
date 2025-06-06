@@ -137,7 +137,8 @@ public class CartController {
 					if (existingItem.getItemId().equals(orderItem.getItemId())
 							&& existingItem.getSize().equals(orderItem.getSize())
 							&& toppingsEqual(existingItem.getOrderTopping(), orderItem.getOrderTopping())) {
-						orderService.addQuantity(existingItem.getQuantity() + orderItem.getQuantity());
+						orderService.addQuantity(existingItem.getId(),
+								existingItem.getQuantity() + orderItem.getQuantity());
 						existingItem.setQuantity(existingItem.getQuantity() + orderItem.getQuantity());
 						isMerged = true;
 						break;
@@ -212,7 +213,8 @@ public class CartController {
 			cartOrder.setTotalPrice(totalPrice);
 			model.addAttribute("cartOrder", cartOrder);
 		} else {
-			model.addAttribute("cartNothing", messageSource.getMessage("cartNothing", null, "カートに商品がありません", Locale.JAPAN));
+			model.addAttribute("cartNothing",
+					messageSource.getMessage("cartNothing", null, "カートに商品がありません", Locale.JAPAN));
 		}
 
 		return "cart/cart_list";

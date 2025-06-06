@@ -226,8 +226,8 @@ public class OrderService {
 	 * 
 	 * @param quantity
 	 */
-	public void addQuantity(Integer quantity) {
-		orderItemRepository.addQuantity(quantity);
+	public void addQuantity(Integer orderItemId, Integer quantity) {
+		orderItemRepository.addQuantity(orderItemId, quantity);
 	}
 
 	/**
@@ -296,7 +296,6 @@ public class OrderService {
 			list = orderList.subList(startItemCount, toIndex);
 		}
 
-		System.out.println(orderList + "！");
 		// 上記で作成した該当ページに表示させる注文一覧をページングできる形に変換して返す
 		Page<Order> orderPage = new PageImpl<Order>(list, PageRequest.of(page, size), orderList.size());
 		return orderPage;
