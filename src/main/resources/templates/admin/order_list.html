@@ -149,7 +149,7 @@
         <div class="text-center">
             <div th:if="${orderPage != null and orderPage.totalPages > 0}" class="pagination">
                 <span th:each="pageNumber : ${pageNumbers}">
-                    <a th:href="@{/admin/list(size=${orderPage.size}, page=${pageNumber},searchName=${searchName})}"
+                    <a th:href="@{/admin/list(size=${orderPage.size}, page=${pageNumber},searchField=${searchField},searchValue1=${searchValue1},searchValue2=${searchValue2})}"
                         th:text="${pageNumber}" th:class="${pageNumber == orderPage.number + 1} ? 
                   'btn btn-primary' : 'btn btn-secondary'"></a>
                 </span>

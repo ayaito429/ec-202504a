@@ -31,7 +31,6 @@ public class ItemService {
 
 	public List<Item> findByName(String name) {
 		if (name == null || "".equals(name)) {
-			System.out.println("here!!");
 			return repository.findAll();
 		} else {
 			return repository.findByName(name);
@@ -88,7 +87,6 @@ public class ItemService {
 			list = itemList.subList(startItemCount, toIndex);
 		}
 
-		System.out.println(itemList + "！");
 		// 上記で作成した該当ページに表示させる従業員一覧をページングできる形に変換して返す
 		Page<Item> employeePage = new PageImpl<Item>(list, PageRequest.of(page, size), itemList.size());
 		return employeePage;
