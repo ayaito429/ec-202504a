@@ -121,6 +121,28 @@ public class AdminOrderRepositoryTest {
     }
 
     /**
+     * 注文日で検索（異常系）
+     * 未来の日付を指定
+     */
+    @Test
+    void testSearchOrders_byOrderDate_noMatch() {
+        List<Order> results = adminOrderRepository.searchOrders("orderDate", "2026-06-12", "");
+        assertNotNull(results);
+        assertTrue(results.isEmpty());
+    }
+
+    /**
+     * 注文日で検索（異常系）
+     * nullで検索
+     */
+    @Test
+    void testSearchOrders_byOrderDate_null() {
+        List<Order> results = adminOrderRepository.searchOrders("orderDate", "", "");
+        assertNotNull(results);
+        assertTrue(results.isEmpty());
+    }
+
+    /**
      * 配達希望日で検索
      * 開始日と終了日を入力
      */
@@ -151,7 +173,29 @@ public class AdminOrderRepositoryTest {
     }
 
     /**
-     * 配達希望日で検索
+     * 配達希望日で検索（異常系）
+     * 未来の日付を指定
+     */
+    @Test
+    void testSearchOrders_byDeliveryTime_noMatch() {
+        List<Order> results = adminOrderRepository.searchOrders("deliveryTime", "2026-06-12", "");
+        assertNotNull(results);
+        assertTrue(results.isEmpty());
+    }
+
+    /**
+     * 配達希望日で検索（異常系）
+     * nullで検索
+     */
+    @Test
+    void testSearchOrders_byDeliveryTime_null() {
+        List<Order> results = adminOrderRepository.searchOrders("deliveryTime", "", "");
+        assertNotNull(results);
+        assertTrue(results.isEmpty());
+    }
+
+    /**
+     * 配達完了日で検索
      * 開始日と終了日を入力
      */
     @Test
@@ -161,7 +205,7 @@ public class AdminOrderRepositoryTest {
     }
 
     /**
-     * 配達希望日で検索
+     * 配達完了日で検索
      * 開始日のみを入力
      */
     @Test
@@ -171,13 +215,35 @@ public class AdminOrderRepositoryTest {
     }
 
     /**
-     * 配達希望日で検索
+     * 配達完了日で検索
      * 終了日のみを入力
      */
     @Test
     void testSearchOrders_byCompletionTime_end() {
         List<Order> results = adminOrderRepository.searchOrders("completionTime", "", "2025-06-12");
         assertNotNull(results);
+    }
+
+    /**
+     * 配達完了日で検索（異常系）
+     * 未来の日付を指定
+     */
+    @Test
+    void testSearchOrders_byCompletionTime_noMatch() {
+        List<Order> results = adminOrderRepository.searchOrders("completionTime", "2026-06-12", "");
+        assertNotNull(results);
+        assertTrue(results.isEmpty());
+    }
+
+    /**
+     * 配達完了日で検索（異常系）
+     * nullで検索
+     */
+    @Test
+    void testSearchOrders_byCompletionTime_null() {
+        List<Order> results = adminOrderRepository.searchOrders("completionTime", "", "");
+        assertNotNull(results);
+        assertTrue(results.isEmpty());
     }
 
 }
