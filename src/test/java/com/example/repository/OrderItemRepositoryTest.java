@@ -14,6 +14,11 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import com.example.domain.OrderItem;
 
+/**
+ * OrderItemRepositoryのテストクラス
+ * 
+ * @author aya_ito
+ */
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OrderItemRepositoryTest {

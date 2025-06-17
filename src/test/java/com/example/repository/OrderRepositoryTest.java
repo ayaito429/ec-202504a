@@ -20,6 +20,11 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import com.example.domain.Order;
 
+/**
+ * OrderRepositoryのテストクラス
+ * 
+ * @author aya_ito
+ */
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OrderRepositoryTest {
@@ -106,7 +111,7 @@ public class OrderRepositoryTest {
         assertEquals(1, orderList.size());
     }
 
-     /**
+    /**
      * userIdとstatusで検索(該当するデータが存在しない場合)
      */
     @Test

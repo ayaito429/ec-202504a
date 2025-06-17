@@ -1,7 +1,6 @@
 package com.example.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -14,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.example.domain.Order;
 
 /**
- * 管理者の注文一覧画面に検索結果を表示させるリポジトリのテストクラス
+ * AdminOrderRepositoryのテストクラス
  * 
  * @author aya_ito
  */
