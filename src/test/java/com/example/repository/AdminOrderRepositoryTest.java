@@ -59,7 +59,7 @@ public class AdminOrderRepositoryTest {
     @Test
     void testSearchOrders_byTelephone() {
         List<Order> results = adminOrderRepository.searchOrders("telephone", "090");
-        assertFalse(results.size() >= 1);
+        assertTrue(results.size() >= 1);
     }
 
     /**
